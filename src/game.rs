@@ -3,7 +3,7 @@ use std::io;
 use std::path::Path;
 use std::process;
 
-use crate::{level, ui};
+use crate::{level, profile::Profile, ui};
 
 pub fn start() -> io::Result<()> {
     println!("Welcome to Rust Warrior");
@@ -12,12 +12,21 @@ pub fn start() -> io::Result<()> {
     if Path::new(".profile").exists() {
         // TODO: load profile
         println!("Profile already exists");
+        process::exit(0);
     } else {
         make_game_directory()?;
-    }
+        let profile = choose_profile();
 
-    // TODO: epic mode?
-    play()
+        // TODO: epic mode?
+        play(profile)
+    }
+}
+
+fn choose_profile() -> Profile {
+    // TODO: menu to select profile
+    // TODO: menu to select difficulty
+    let name = ui::request("Enter a name for your warrior: ");
+    Profile::new(name)
 }
 
 fn make_game_directory() -> io::Result<()> {
@@ -35,20 +44,20 @@ fn make_game_directory() -> io::Result<()> {
     Ok(())
 }
 
-fn play() -> io::Result<()> {
-    // TODO: practice?
-    println!("Play!");
-
+fn play(profile: Profile) -> io::Result<()> {
     // TODO: check loaded profile current level
-    prepare_next_level()?;
+    // TODO: only prepare here if at level zero
+    prepare_next_level(&profile)?;
     // TODO: increment profile's level
 
-    // TODO: configure directory name instead of "player"
-    println!("First level has been generated. See the rustwarrior/player/README for instructions.");
+    println!(
+        "First level has been generated. See the rustwarrior/{}/README for instructions.",
+        &profile.directory
+    );
 
     Ok(())
 }
 
-fn prepare_next_level() -> io::Result<()> {
-    level::generate_player_files()
+fn prepare_next_level(profile: &Profile) -> io::Result<()> {
+    level::generate_player_files(profile)
 }

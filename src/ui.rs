@@ -7,7 +7,7 @@ pub fn ask(message: &str) -> bool {
     request(&message).to_lowercase() == "y"
 }
 
-fn request(message: &str) -> String {
+pub fn request(message: &str) -> String {
     print!("{}", message);
     io::stdout().flush().unwrap();
     let mut response = String::new();

@@ -1,5 +1,6 @@
 pub mod game;
 pub mod level;
+pub mod profile;
 pub mod templates;
 pub mod ui;
 pub mod warrior;
