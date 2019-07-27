@@ -1,3 +1,7 @@
-fn main() {
-    println!("Welcome to Rust Warrior");
+use std::io;
+
+use rust_warrior::game::start;
+
+fn main() -> io::Result<()> {
+    start()
 }

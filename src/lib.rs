@@ -1,3 +1,6 @@
+pub mod game;
+pub mod ui;
+
 #[cfg(test)]
 mod tests {
     #[test]
