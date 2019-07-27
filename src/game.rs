@@ -9,7 +9,7 @@ pub fn start() -> io::Result<()> {
     println!("Welcome to Rust Warrior");
 
     // TODO: path prefix config?
-    if Path::new(".profile").exists() {
+    if Path::new("profile.toml").exists() {
         // TODO: load profile
         println!("Profile already exists");
         process::exit(0);
@@ -44,11 +44,10 @@ fn make_game_directory() -> io::Result<()> {
     Ok(())
 }
 
-fn play(profile: Profile) -> io::Result<()> {
+fn play(mut profile: Profile) -> io::Result<()> {
     // TODO: check loaded profile current level
     // TODO: only prepare here if at level zero
-    prepare_next_level(&profile)?;
-    // TODO: increment profile's level
+    prepare_next_level(&mut profile)?;
 
     println!(
         "First level has been generated. See the rustwarrior/{}/README for instructions.",
@@ -58,6 +57,9 @@ fn play(profile: Profile) -> io::Result<()> {
     Ok(())
 }
 
-fn prepare_next_level(profile: &Profile) -> io::Result<()> {
-    level::generate_player_files(profile)
+fn prepare_next_level(profile: &mut Profile) -> io::Result<()> {
+    // TODO: get next level, generate its files
+    level::generate_player_files(profile)?;
+    profile.level += 1;
+    profile.save()
 }
