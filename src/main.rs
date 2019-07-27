@@ -1,7 +1,7 @@
 use std::io;
 
-use rust_warrior::game::start;
+use rust_warrior::game;
 
 fn main() -> io::Result<()> {
-    start()
+    game::start()
 }
