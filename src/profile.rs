@@ -1,7 +1,4 @@
 use std::collections::BTreeMap;
-use std::fs;
-use std::io;
-use std::path::Path;
 use toml::Value;
 
 pub struct Profile {
@@ -13,7 +10,7 @@ pub struct Profile {
 impl Profile {
     pub fn new(name: String) -> Profile {
         let directory = name.to_lowercase().replace(r"[^a-z0-9]+", "-");
-        let level = 0;
+        let level = 1;
         Profile {
             name,
             directory,
@@ -21,14 +18,10 @@ impl Profile {
         }
     }
 
-    pub fn save(&self) -> io::Result<()> {
+    pub fn to_toml(&self) -> String {
         let mut profile = BTreeMap::new();
         profile.insert(String::from("name"), Value::String(self.name.clone()));
         profile.insert(String::from("level"), Value::Integer(self.level as i64));
-        let contents = toml::to_string(&profile).unwrap();
-        let path = Path::new("rustwarrior")
-            .join(&self.directory)
-            .join("profile.toml");
-        fs::write(path, contents)
+        toml::to_string(&profile).unwrap()
     }
 }
