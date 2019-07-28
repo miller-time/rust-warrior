@@ -1,5 +1,7 @@
 # rust-warrior
 
+https://crates.io/crates/rust-warrior
+
 This game is inspired by [Ruby Warrior][ruby-warrior], which I played many
 years ago. This project started as a direct port, but because Ruby is an
 interpreted language and allows (encourages?) meta programming... I've
@@ -29,5 +31,7 @@ Then navigate to `rustwarrior/<name>` and run the program.
 $ cd rustwarrior/<name>
 $ cargo run
 ```
+
+Docs: https://docs.rs/rust-warrior/
 
 [ruby-warrior]: https://github.com/ryanb/ruby-warrior
