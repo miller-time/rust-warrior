@@ -1,6 +1,9 @@
 [package]
 name = "rust-warrior"
+description = "Game for learning Rust, inspired by Ruby Warrior"
 version = "0.1.0"
+repository = "https://gitlab.com/rcousineau/rust-warrior"
+license = "MIT"
 authors = ["Russell Cousineau <miller.time.baby@gmail.com>"]
 edition = "2018"
 
