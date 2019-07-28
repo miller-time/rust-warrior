@@ -1,9 +1,16 @@
+use crate::level::Level;
+
 /// The protagonist of rust-warrior!
-#[derive(Default)]
-pub struct Warrior;
+pub struct Warrior {
+    pub level: Level,
+}
 
 impl Warrior {
-    pub fn walk(&self) {
-        println!("walking forward!");
+    pub fn new(level: Level) -> Warrior {
+        Warrior { level }
+    }
+
+    pub fn walk(&mut self) {
+        self.level.move_warrior();
     }
 }

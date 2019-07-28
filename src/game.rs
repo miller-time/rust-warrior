@@ -1,6 +1,7 @@
 use std::fs;
+use std::{thread, time};
 
-use crate::{profile::Profile, Player, Warrior};
+use crate::{level::Level, profile::Profile, Player, Warrior};
 
 /// The main entry point when playing the game.
 ///
@@ -9,12 +10,21 @@ use crate::{profile::Profile, Player, Warrior};
 /// on the player's `Player` instance.
 pub fn play(player: impl Player) {
     // TODO: epic mode?
-    let warrior = Warrior::default();
     let profile = load_profile();
-    println!("Starting level {}", profile.level);
-    // TODO: load current level/floor
-    // TODO: game loop
-    player.play_turn(&warrior);
+    let level = Level::new(profile.level);
+    let mut warrior = Warrior::new(level);
+    loop {
+        println!("{}", warrior.level);
+
+        if warrior.level.is_complete() {
+            println!("You did it!");
+            break;
+        }
+
+        player.play_turn(&mut warrior);
+
+        thread::sleep(time::Duration::from_millis(500));
+    }
 }
 
 fn load_profile() -> Profile {

@@ -7,6 +7,7 @@
 //! `rust-warrior`, the player will import the game engine as a library.
 
 pub mod game;
+pub mod level;
 pub mod player;
 pub mod profile;
 pub mod starter;
