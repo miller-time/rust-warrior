@@ -1,9 +1,11 @@
+use base64;
 use std::collections::BTreeMap;
 use std::convert::TryInto;
+use std::str;
 use toml::Value;
 
 /// The player profile is the player's name and the current level.
-/// This is saved in profile.toml at the root of the player's
+/// This is saved in .profile at the root of the player's
 /// project directory.
 pub struct Profile {
     pub name: String,
@@ -23,10 +25,12 @@ impl Profile {
         }
     }
 
-    /// load Profile from TOML String
+    /// load Profile from base64 encoded TOML String
     pub fn from_toml(contents: &str) -> Profile {
-        let err = "failed to parse profile.toml";
-        let parsed = contents.parse::<Value>().expect(err);
+        let err = "failed to parse .profile";
+        let bytes = base64::decode(contents).expect(err);
+        let decoded = str::from_utf8(&bytes).expect(err);
+        let parsed = decoded.parse::<Value>().expect(err);
         let table = parsed.as_table().expect(err);
 
         let name = table["name"].as_str().expect(err).to_string();
@@ -44,12 +48,13 @@ impl Profile {
         }
     }
 
-    /// convert Profile to TOML String
+    /// convert Profile to base64 encoded TOML String
     pub fn to_toml(&self) -> String {
         let mut profile = BTreeMap::new();
         profile.insert(String::from("name"), Value::String(self.name.clone()));
         profile.insert(String::from("level"), Value::Integer(self.level as i64));
-        toml::to_string(&profile).unwrap()
+        let profile_toml = toml::to_string(&profile).unwrap();
+        base64::encode(&profile_toml.as_bytes())
     }
 
     fn directory_name(name: &str) -> String {

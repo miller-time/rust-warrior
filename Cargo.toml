@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 toml = "0.5.1"
+base64 = "0.2.0"

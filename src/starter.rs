@@ -65,7 +65,7 @@ rust-warrior = { path = \"../..\" }
 ///
 /// * `src/main.rs`
 /// * `Cargo.toml`
-/// * `profile.toml`
+/// * `.profile`
 ///
 /// From there, the newly generated crate can be used to start level one.
 pub fn generate() -> io::Result<()> {
@@ -113,7 +113,7 @@ fn create_game_files(profile: &mut Profile) -> io::Result<()> {
     fs::write(main_rs, generate_main_rs(&profile.name))?;
     let cargo_toml = player_dir.join("Cargo.toml");
     fs::write(cargo_toml, CARGO_TOML)?;
-    let profile_toml = player_dir.join("profile.toml");
+    let profile_toml = player_dir.join(".profile");
     fs::write(profile_toml, &profile.to_toml())?;
     let readme = player_dir.join("README.md");
     fs::write(readme, README)

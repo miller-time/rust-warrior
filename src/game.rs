@@ -18,6 +18,6 @@ pub fn play(player: impl Player) {
 }
 
 fn load_profile() -> Profile {
-    let contents = fs::read_to_string("profile.toml").expect("error loading profile.toml");
+    let contents = fs::read_to_string(".profile").expect("error loading .profile");
     Profile::from_toml(&contents)
 }
