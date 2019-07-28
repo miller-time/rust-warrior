@@ -5,6 +5,28 @@ use std::process;
 
 use crate::{profile::Profile, ui};
 
+// TODO: add link to Warrior cargo doc
+const README: &str = "# Level 1
+
+You see before yourself a long hallway with stairs at the end.
+There is nothing in the way.
+
+Tip: Call `warrior.walk()` in the `Player::play_turn` method.
+
+```
+ --------
+|@      >|
+ --------
+
+  > = Stairs
+  @ = Russell (20 HP)
+```
+
+----------
+
+When you're ready, use `cargo run` to attempt this challenge.
+";
+
 fn generate_main_rs(player: &str) -> String {
     format!(
         "use rust_warrior::{{play, Player, Warrior}};
@@ -92,5 +114,7 @@ fn create_game_files(profile: &mut Profile) -> io::Result<()> {
     let cargo_toml = player_dir.join("Cargo.toml");
     fs::write(cargo_toml, CARGO_TOML)?;
     let profile_toml = player_dir.join("profile.toml");
-    fs::write(profile_toml, &profile.to_toml())
+    fs::write(profile_toml, &profile.to_toml())?;
+    let readme = player_dir.join("README.md");
+    fs::write(readme, README)
 }
