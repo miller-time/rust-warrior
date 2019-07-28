@@ -2,6 +2,11 @@ use std::fs;
 
 use crate::{profile::Profile, Player, Warrior};
 
+/// The main entry point when playing the game.
+///
+/// After loading the player profile and initializing the current
+/// level, the game consists of repeatedly calling `play_turn`
+/// on the player's `Player` instance.
 pub fn play(player: impl Player) {
     // TODO: epic mode?
     let warrior = Warrior::default();

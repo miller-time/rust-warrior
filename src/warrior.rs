@@ -1,3 +1,4 @@
+/// The protagonist of rust-warrior!
 #[derive(Default)]
 pub struct Warrior;
 
