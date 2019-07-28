@@ -14,7 +14,7 @@ pub mod starter;
 pub mod ui;
 pub mod warrior;
 
-pub use game::play;
+pub use game::Game;
 pub use player::Player;
 pub use warrior::Warrior;
 

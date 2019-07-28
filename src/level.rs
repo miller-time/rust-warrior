@@ -10,15 +10,14 @@ pub struct Level {
 
 impl Level {
     pub fn new(level: usize) -> Level {
-        match level {
-            1 => Level {
-                width: 8,
-                height: 1,
-                warrior: (0, 0),
-                stairs: (7, 0),
-            },
+        match Level::get(level) {
+            Some(level) => level,
             _ => unimplemented!(),
         }
+    }
+
+    pub fn exists(level: usize) -> bool {
+        Level::get(level).is_some()
     }
 
     pub fn move_warrior(&mut self) {
@@ -28,6 +27,25 @@ impl Level {
 
     pub fn is_complete(&self) -> bool {
         self.warrior == self.stairs
+    }
+
+    fn get(level: usize) -> Option<Level> {
+        match level {
+            1 => Some(Level {
+                width: 8,
+                height: 1,
+                warrior: (0, 0),
+                stairs: (7, 0),
+            }),
+            2 => Some(Level {
+                width: 8,
+                height: 1,
+                warrior: (0, 0),
+                stairs: (7, 0),
+                // TODO: sludge
+            }),
+            _ => None,
+        }
     }
 }
 

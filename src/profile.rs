@@ -25,6 +25,10 @@ impl Profile {
         }
     }
 
+    pub fn increment_level(&mut self) {
+        self.level += 1;
+    }
+
     /// load Profile from base64 encoded TOML String
     pub fn from_toml(contents: &str) -> Profile {
         let err = "failed to parse .profile";

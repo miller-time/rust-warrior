@@ -6,7 +6,10 @@ use std::process;
 use crate::{profile::Profile, ui};
 
 // TODO: add link to Warrior cargo doc
-const README: &str = "# Level 1
+fn generate_readme(level: usize) -> &'static str {
+    match level {
+        1 => {
+            "# Level 1
 
 You see before yourself a long hallway with stairs at the end.
 There is nothing in the way.
@@ -25,11 +28,38 @@ Tip: Call `warrior.walk()` in the `Player::play_turn` method.
 ----------
 
 When you're ready, use `cargo run` to attempt this challenge.
-";
+"
+        }
+        2 => {
+            "# Level 2
+
+It is too dark to see anything, but you smell sludge nearby.
+
+Tip: Use `warrior.empty_ahead()` to see if there is anything in front of you,
+and `warrior.attack()` to fight it.
+
+```
+ --------
+|@   s  >|
+ --------
+
+  > = Stairs
+  @ = Russell (20 HP)
+  s = Sludge (12 HP)
+```
+
+----------
+
+When you're ready, use `cargo run` to attempt this challenge.
+"
+        }
+        _ => unimplemented!(),
+    }
+}
 
 fn generate_main_rs(player: &str) -> String {
     format!(
-        "use rust_warrior::{{play, Player, Warrior}};
+        "use rust_warrior::{{Game, Player, Warrior}};
 
 #[derive(Default)]
 pub struct {player};
@@ -40,7 +70,7 @@ impl Player for {player} {{
 
 fn main() {{
     let player = {player}::default();
-    play(player);
+    Game::play(player);
 }}
 ",
         player = player
@@ -104,6 +134,26 @@ fn create_profile() -> Profile {
     Profile::new(name)
 }
 
+pub fn write_readme(profile: &Profile, directory: Option<&Path>) {
+    let readme = if let Some(player_dir) = directory {
+        player_dir.join("README.md")
+    } else {
+        Path::new("README.md").to_path_buf()
+    };
+    let contents = generate_readme(profile.level);
+    fs::write(readme, contents)
+        .unwrap_or_else(|_| panic!("failed to generate level {} README.md", profile.level));
+}
+
+pub fn write_profile(profile: &Profile, directory: Option<&Path>) {
+    let profile_toml = if let Some(player_dir) = directory {
+        player_dir.join(".profile")
+    } else {
+        Path::new(".profile").to_path_buf()
+    };
+    fs::write(profile_toml, &profile.to_toml()).expect("failed to write .profile");
+}
+
 fn create_game_files(profile: &mut Profile) -> io::Result<()> {
     let player_dir = Path::new("rustwarrior").join(&profile.directory);
     fs::create_dir(&player_dir)?;
@@ -113,8 +163,9 @@ fn create_game_files(profile: &mut Profile) -> io::Result<()> {
     fs::write(main_rs, generate_main_rs(&profile.name))?;
     let cargo_toml = player_dir.join("Cargo.toml");
     fs::write(cargo_toml, CARGO_TOML)?;
-    let profile_toml = player_dir.join(".profile");
-    fs::write(profile_toml, &profile.to_toml())?;
-    let readme = player_dir.join("README.md");
-    fs::write(readme, README)
+
+    write_profile(profile, Some(&player_dir));
+    write_readme(&profile, Some(&player_dir));
+
+    Ok(())
 }
