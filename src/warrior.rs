@@ -1,16 +1,26 @@
-use crate::level::Level;
+use crate::engine::components::WarriorComponent;
 
-/// The protagonist of rust-warrior!
-pub struct Warrior {
-    pub level: Level,
+pub struct Warrior<'a> {
+    component: &'a mut WarriorComponent,
+    performed_action: bool,
 }
 
-impl Warrior {
-    pub fn new(level: Level) -> Warrior {
-        Warrior { level }
+impl<'a> Warrior<'a> {
+    pub fn new(component: &'a mut WarriorComponent) -> Warrior<'a> {
+        Warrior {
+            component,
+            performed_action: false,
+        }
     }
 
     pub fn walk(&mut self) {
-        self.level.move_warrior();
+        if self.performed_action {
+            println!("Warrior already performed action!");
+            return;
+        }
+        println!("Warrior moves forward");
+        let (x, y) = self.component.position;
+        self.component.position = (x + 1, y);
+        self.performed_action = true;
     }
 }
