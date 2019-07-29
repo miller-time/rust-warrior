@@ -77,15 +77,19 @@ fn main() {{
     )
 }
 
-// TODO: use git repo instead of relative path
-const CARGO_TOML: &str = "[package]
-name = \"testwarrior\"
+fn generate_cargo_toml(name: &str) -> String {
+    format!(
+        "[package]
+name = \"rustwarrior-{name}\"
 version = \"0.1.0\"
 edition = \"2018\"
 
 [dependencies]
-rust-warrior = { path = \"../..\" }
-";
+rust-warrior = \"0.1.0\"
+",
+        name = name
+    )
+}
 
 /// Set up a new game directory and player profile
 ///
@@ -162,7 +166,7 @@ fn create_game_files(profile: &mut Profile) -> io::Result<()> {
     let main_rs = src_dir.join("main.rs");
     fs::write(main_rs, generate_main_rs(&profile.name))?;
     let cargo_toml = player_dir.join("Cargo.toml");
-    fs::write(cargo_toml, CARGO_TOML)?;
+    fs::write(cargo_toml, generate_cargo_toml(&profile.directory))?;
 
     write_profile(profile, Some(&player_dir));
     write_readme(&profile, Some(&player_dir));
