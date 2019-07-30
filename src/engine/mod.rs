@@ -2,25 +2,34 @@ use std::{thread, time};
 
 use specs::{prelude::*, World};
 
-use crate::Player;
+use crate::{floor::Floor, Player};
 
 pub mod components;
 pub mod systems;
 
-pub use components::WarriorComponent;
-use systems::{PlayerSystem, UiSystem};
+use components::{UnitComponent, UnitType};
+use systems::{PlayerSystem, SludgeSystem, UiSystem};
 
-pub fn start(player: impl Player + Send + Sync + 'static) -> Result<(), String> {
+pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Result<(), String> {
     let mut world = World::new();
-    let player_system = PlayerSystem {
-        player: Box::new(player),
-    };
+
+    let player_system = PlayerSystem::new(player);
+    let ui_system = UiSystem::new(floor);
     let mut dispatcher = DispatcherBuilder::new()
         .with(player_system, "player", &[])
-        .with(UiSystem, "ui", &["player"])
+        .with(SludgeSystem, "sludge", &["player"])
+        .with(ui_system, "ui", &["player", "sludge"])
         .build();
+
     dispatcher.setup(&mut world);
-    WarriorComponent::create(&mut world);
+
+    UnitComponent::create_warrior(&mut world, floor.warrior);
+
+    if let Some(sludge) = floor.sludge {
+        UnitComponent::create_sludge(&mut world, sludge);
+    }
+
+    floor.draw();
 
     let mut step = 0;
     loop {
@@ -31,12 +40,19 @@ pub fn start(player: impl Player + Send + Sync + 'static) -> Result<(), String> 
         }
 
         {
-            let warriors = world.read_storage::<WarriorComponent>();
+            let units = world.read_storage::<UnitComponent>();
             for entity in world.entities().join() {
-                if let Some(warrior) = warriors.get(entity) {
-                    if warrior.position == (7, 0) {
-                        return Ok(());
+                match units.get(entity) {
+                    Some(warrior) if warrior.unit_type == UnitType::Warrior => {
+                        let (current, _) = warrior.hp;
+                        if current == 0 {
+                            return Err("You died!".to_owned());
+                        }
+                        if warrior.position == floor.stairs {
+                            return Ok(());
+                        }
                     }
+                    _ => {}
                 }
             }
         }

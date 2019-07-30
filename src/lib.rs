@@ -6,6 +6,7 @@
 //! command invokes the game engine which runs that script. In
 //! `rust-warrior`, the player will import the game engine as a library.
 
+pub mod actions;
 pub mod engine;
 pub mod floor;
 pub mod game;

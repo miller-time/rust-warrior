@@ -1,26 +1,37 @@
-use crate::engine::components::WarriorComponent;
+use crate::actions::Action;
 
-pub struct Warrior<'a> {
-    component: &'a mut WarriorComponent,
-    performed_action: bool,
+pub struct Warrior {
+    pub path_clear: bool,
+    pub action: Option<Action>,
 }
 
-impl<'a> Warrior<'a> {
-    pub fn new(component: &'a mut WarriorComponent) -> Warrior<'a> {
+impl Warrior {
+    pub fn new(path_clear: bool) -> Warrior {
         Warrior {
-            component,
-            performed_action: false,
+            path_clear,
+            action: None,
         }
     }
 
     pub fn walk(&mut self) {
-        if self.performed_action {
+        if self.action.is_some() {
             println!("Warrior already performed action!");
             return;
         }
-        println!("Warrior moves forward");
-        let (x, y) = self.component.position;
-        self.component.position = (x + 1, y);
-        self.performed_action = true;
+
+        self.action = Some(Action::Walk);
+    }
+
+    pub fn path_clear(&self) -> bool {
+        self.path_clear
+    }
+
+    pub fn attack(&mut self) {
+        if self.action.is_some() {
+            println!("Warrior already performed action!");
+            return;
+        }
+
+        self.action = Some(Action::Attack);
     }
 }

@@ -8,7 +8,7 @@ pub fn ask(message: &str) -> bool {
     request(&message).to_lowercase() == "y"
 }
 
-// Helper function for prompting the player for a response
+/// Helper function for prompting the player for a response
 pub fn request(message: &str) -> String {
     print!("{}", message);
     io::stdout().flush().unwrap();

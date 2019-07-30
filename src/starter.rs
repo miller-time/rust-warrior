@@ -35,7 +35,7 @@ When you're ready, use `cargo run` to attempt this challenge.
 
 It is too dark to see anything, but you smell sludge nearby.
 
-Tip: Use `warrior.empty_ahead()` to see if there is anything in front of you,
+Tip: Use `warrior.path_clear()` to see if there is anything in front of you,
 and `warrior.attack()` to fight it.
 
 ```

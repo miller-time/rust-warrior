@@ -26,9 +26,8 @@ impl Game {
 
     fn start(&mut self, player: impl Player + Send + Sync + 'static) {
         println!("Starting Level {}", self.profile.level);
-        let floor = Floor::new((0, 0));
-        floor.draw();
-        match engine::start(player) {
+        let floor = Floor::load(self.profile.level);
+        match engine::start(floor, player) {
             Ok(_) => {
                 self.level_completed();
             }
@@ -40,18 +39,19 @@ impl Game {
 
     fn level_completed(&mut self) {
         // TODO: tally points
-        println!("Success! You have found the stairs.");
-        if ui::ask("Would you like to continue on to the next level?") {
-            self.profile.increment_level();
-            starter::write_readme(&self.profile, None);
-            starter::write_profile(&self.profile, None);
-            println!(
-                "See rustwarrior/{}/README.md for your next instructions.",
-                &self.profile.directory
-            );
+        if Floor::exists(self.profile.level + 1) {
+            println!("Success! You have found the stairs.");
+            if ui::ask("Would you like to continue on to the next level?") {
+                self.profile.increment_level();
+                starter::write_readme(&self.profile, None);
+                starter::write_profile(&self.profile, None);
+                println!("See (updated) README.md for your next instructions.");
+            } else {
+                // TODO: "Try to earn more points next time."
+                println!("Staying on current level.");
+            }
         } else {
-            // TODO: "Try to earn more points next time."
-            println!("Staying on current level.");
+            println!("CONGRATULATIONS! You have climbed to the top of the tower and have earned the title Maximus Oxidus.");
         }
     }
 }
