@@ -85,7 +85,7 @@ version = \"0.1.0\"
 edition = \"2018\"
 
 [dependencies]
-rust-warrior = \"0.1.1\"
+rust-warrior = \"0.2.0\"
 ",
         name = name
     )
