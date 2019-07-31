@@ -37,7 +37,8 @@ impl<'a> System<'a> for PlayerSystem {
                 (wx - sx).abs() > 1
             })
         };
-        let mut warrior = Warrior::new(path_clear);
+        let (health, _) = warrior_comp.unit.hp;
+        let mut warrior = Warrior::new(path_clear, health);
         self.player.play_turn(&mut warrior);
 
         if let Some(action) = warrior.action {
@@ -78,6 +79,24 @@ impl<'a> System<'a> for PlayerSystem {
                             entities.delete(*sludge_entity).unwrap();
                         }
                     }
+                }
+                Action::Rest => {
+                    let (current, max) = warrior_comp.unit.hp;
+                    if current < max {
+                        let restored = if (current + 2) > max {
+                            max - current
+                        } else {
+                            2
+                        };
+                        println!(
+                            "Warrior regains {} HP from resting! Now {} left",
+                            restored,
+                            current + restored
+                        );
+                        warrior_comp.unit.hp = (current + restored, max);
+                    } else {
+                        println!("Warrior rests but is already at max HP");
+                    };
                 }
             }
         }

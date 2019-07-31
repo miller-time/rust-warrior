@@ -35,7 +35,7 @@ pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Resul
     loop {
         step += 1;
 
-        if step > 20 {
+        if step > 100 {
             return Err("You seem to have gotten lost...".to_owned());
         }
 

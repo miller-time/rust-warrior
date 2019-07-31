@@ -2,4 +2,5 @@
 pub enum Action {
     Walk,
     Attack,
+    Rest,
 }
