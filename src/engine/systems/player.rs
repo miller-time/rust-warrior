@@ -2,11 +2,7 @@ use std::cmp;
 
 use specs::{prelude::*, System};
 
-use crate::{
-    actions::Action,
-    engine::components::{UnitComponent, UnitType},
-    Player, Warrior,
-};
+use crate::{actions::Action, engine::components::UnitComponent, unit::UnitType, Player, Warrior};
 
 pub struct PlayerSystem {
     pub player: Box<dyn Player + Send + Sync>,
@@ -26,17 +22,17 @@ impl<'a> System<'a> for PlayerSystem {
     fn run(&mut self, (entities, mut units): Self::SystemData) {
         let mut all_units = (&entities, &mut units).join();
         let warrior_unit = all_units
-            .find(|(_, comp)| comp.unit_type == UnitType::Warrior)
+            .find(|(_, comp)| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
         let (_, mut warrior_comp) = warrior_unit;
         let sludge = all_units
             .by_ref()
-            .find(|(_, comp)| comp.unit_type == UnitType::Sludge);
+            .find(|(_, comp)| comp.unit.unit_type == UnitType::Sludge);
         let path_clear = {
             match &sludge {
                 Some((_, sludge_comp)) => {
-                    let (wx, _) = warrior_comp.position;
-                    let (sx, _) = sludge_comp.position;
+                    let (wx, _) = warrior_comp.unit.position;
+                    let (sx, _) = sludge_comp.unit.position;
                     (wx - sx).abs() > 1
                 }
                 None => true,
@@ -50,8 +46,8 @@ impl<'a> System<'a> for PlayerSystem {
                 Action::Walk => {
                     if path_clear {
                         println!("Warrior walks forward");
-                        let (x, y) = warrior_comp.position;
-                        warrior_comp.position = (x + 1, y);
+                        let (x, y) = warrior_comp.unit.position;
+                        warrior_comp.unit.position = (x + 1, y);
                     } else {
                         println!("Warrior bumps into Sludge");
                     }
@@ -63,13 +59,13 @@ impl<'a> System<'a> for PlayerSystem {
                         match sludge {
                             Some((sludge_entity, sludge_comp)) => {
                                 println!("Warrior attacks Sludge");
-                                let (current, max) = sludge_comp.hp;
-                                let remaining = cmp::max(current - warrior_comp.atk, 0);
+                                let (current, max) = sludge_comp.unit.hp;
+                                let remaining = cmp::max(current - warrior_comp.unit.atk, 0);
                                 println!(
                                     "Sludge takes {} damage, {} HP left",
-                                    warrior_comp.atk, remaining
+                                    warrior_comp.unit.atk, remaining
                                 );
-                                sludge_comp.hp = (remaining, max);
+                                sludge_comp.unit.hp = (remaining, max);
 
                                 if remaining == 0 {
                                     println!("Sludge is dead!");

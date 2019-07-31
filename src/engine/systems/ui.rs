@@ -1,8 +1,9 @@
 use specs::{prelude::*, System};
 
 use crate::{
-    engine::components::{UnitComponent, UnitType},
+    engine::components::UnitComponent,
     floor::Floor,
+    unit::{Unit, UnitType},
 };
 
 pub struct UiSystem {
@@ -19,18 +20,18 @@ impl<'a> System<'a> for UiSystem {
     type SystemData = ReadStorage<'a, UnitComponent>;
 
     fn run(&mut self, units: Self::SystemData) {
-        let mut units = (&units).join();
-        let warrior_comp = units
-            .find(|comp| comp.unit_type == UnitType::Warrior)
+        let mut unit_comps = (&units).join();
+        let mut units = Vec::new();
+        let warrior_comp = unit_comps
+            .find(|comp| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
-        self.floor.warrior = warrior_comp.position;
+        units.push(Unit::warrior(warrior_comp.unit.position));
 
-        if let Some(sludge_comp) = units.find(|comp| comp.unit_type == UnitType::Sludge) {
-            self.floor.sludge = Some(sludge_comp.position);
-        } else {
-            self.floor.sludge = None;
+        if let Some(sludge_comp) = unit_comps.find(|comp| comp.unit.unit_type == UnitType::Sludge) {
+            units.push(Unit::sludge(sludge_comp.unit.position));
         }
 
+        self.floor.units = units;
         self.floor.draw();
     }
 }

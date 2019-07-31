@@ -2,19 +2,19 @@ use std::{thread, time};
 
 use specs::{prelude::*, World};
 
-use crate::{floor::Floor, Player};
+use crate::{floor::Floor, unit::UnitType, Player};
 
 pub mod components;
 pub mod systems;
 
-use components::{UnitComponent, UnitType};
+use components::UnitComponent;
 use systems::{PlayerSystem, SludgeSystem, UiSystem};
 
 pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Result<(), String> {
     let mut world = World::new();
 
     let player_system = PlayerSystem::new(player);
-    let ui_system = UiSystem::new(floor);
+    let ui_system = UiSystem::new(floor.clone());
     let mut dispatcher = DispatcherBuilder::new()
         .with(player_system, "player", &[])
         .with(SludgeSystem, "sludge", &["player"])
@@ -23,10 +23,10 @@ pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Resul
 
     dispatcher.setup(&mut world);
 
-    UnitComponent::create_warrior(&mut world, floor.warrior);
+    UnitComponent::create(&mut world, *floor.warrior());
 
-    if let Some(sludge) = floor.sludge {
-        UnitComponent::create_sludge(&mut world, sludge);
+    if let Some(sludge) = floor.sludge() {
+        UnitComponent::create(&mut world, *sludge);
     }
 
     floor.draw();
@@ -43,12 +43,12 @@ pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Resul
             let units = world.read_storage::<UnitComponent>();
             for entity in world.entities().join() {
                 match units.get(entity) {
-                    Some(warrior) if warrior.unit_type == UnitType::Warrior => {
-                        let (current, _) = warrior.hp;
+                    Some(warrior_comp) if warrior_comp.unit.unit_type == UnitType::Warrior => {
+                        let (current, _) = warrior_comp.unit.hp;
                         if current == 0 {
                             return Err("You died!".to_owned());
                         }
-                        if warrior.position == floor.stairs {
+                        if warrior_comp.unit.position == floor.stairs {
                             return Ok(());
                         }
                     }

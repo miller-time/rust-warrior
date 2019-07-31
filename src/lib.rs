@@ -14,6 +14,7 @@ pub mod player;
 pub mod profile;
 pub mod starter;
 pub mod ui;
+pub mod unit;
 pub mod warrior;
 
 pub use game::Game;
