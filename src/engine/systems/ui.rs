@@ -27,7 +27,7 @@ impl<'a> System<'a> for UiSystem {
             .unwrap();
         units.push(Unit::warrior(warrior_comp.unit.position));
 
-        if let Some(sludge_comp) = unit_comps.find(|comp| comp.unit.unit_type == UnitType::Sludge) {
+        for sludge_comp in unit_comps.filter(|comp| comp.unit.unit_type == UnitType::Sludge) {
             units.push(Unit::sludge(sludge_comp.unit.position));
         }
 

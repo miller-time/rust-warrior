@@ -25,7 +25,7 @@ pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Resul
 
     UnitComponent::create(&mut world, *floor.warrior());
 
-    if let Some(sludge) = floor.sludge() {
+    for sludge in floor.sludges() {
         UnitComponent::create(&mut world, *sludge);
     }
 

@@ -53,6 +53,27 @@ and `warrior.attack()` to fight it.
 When you're ready, use `cargo run` to attempt this challenge.
 "
         }
+        3 => {
+            "# Level 3
+
+The air feels thicker than before. There must be a horde of sludge.
+
+Tip: Be careful not to die! Use `warrior.health()` to keep an eye on your health
+and `warrior.rest()` to earn 10% of max health back.
+
+```
+ ---------
+|@ s ss s>|
+ ---------
+
+  > = Stairs
+  @ = Russell (20 HP)
+  s = Sludge (12 HP)
+```
+
+When you're ready, use `cargo run` to attempt this challenge.
+"
+        }
         _ => unimplemented!(),
     }
 }

@@ -14,7 +14,7 @@ impl<'a> System<'a> for SludgeSystem {
         let warrior_comp = units
             .find(|comp| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
-        if let Some(sludge_comp) = units.find(|comp| comp.unit.unit_type == UnitType::Sludge) {
+        for sludge_comp in units.filter(|comp| comp.unit.unit_type == UnitType::Sludge) {
             let (wx, _) = warrior_comp.unit.position;
             let (sx, _) = sludge_comp.unit.position;
             let (hp, _) = sludge_comp.unit.hp;

@@ -25,18 +25,17 @@ impl<'a> System<'a> for PlayerSystem {
             .find(|(_, comp)| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
         let (_, mut warrior_comp) = warrior_unit;
-        let sludge = all_units
+        let mut sludges: Vec<(Entity, &mut UnitComponent)> = all_units
             .by_ref()
-            .find(|(_, comp)| comp.unit.unit_type == UnitType::Sludge);
+            .filter(|(_, comp)| comp.unit.unit_type == UnitType::Sludge)
+            .collect();
         let path_clear = {
-            match &sludge {
-                Some((_, sludge_comp)) => {
-                    let (wx, _) = warrior_comp.unit.position;
-                    let (sx, _) = sludge_comp.unit.position;
-                    (wx - sx).abs() > 1
-                }
-                None => true,
-            }
+            let (wx, _) = warrior_comp.unit.position;
+            // the path is clear if all sludges are more than a space away
+            sludges.iter().all(|(_, comp)| {
+                let (sx, _) = comp.unit.position;
+                (wx - sx).abs() > 1
+            })
         };
         let mut warrior = Warrior::new(path_clear);
         self.player.play_turn(&mut warrior);
@@ -56,25 +55,27 @@ impl<'a> System<'a> for PlayerSystem {
                     if path_clear {
                         println!("Warrior attacks and hits nothing");
                     } else {
-                        match sludge {
-                            Some((sludge_entity, sludge_comp)) => {
-                                println!("Warrior attacks Sludge");
-                                let (current, max) = sludge_comp.unit.hp;
-                                let remaining = cmp::max(current - warrior_comp.unit.atk, 0);
-                                println!(
-                                    "Sludge takes {} damage, {} HP left",
-                                    warrior_comp.unit.atk, remaining
-                                );
-                                sludge_comp.unit.hp = (remaining, max);
+                        let (wx, _) = warrior_comp.unit.position;
+                        // since the path is not clear, we can definitely find a sludge one space away
+                        let (sludge_entity, sludge_comp) = sludges
+                            .iter_mut()
+                            .find(|(_, comp)| {
+                                let (sx, _) = comp.unit.position;
+                                (wx - sx).abs() == 1
+                            })
+                            .unwrap();
+                        println!("Warrior attacks Sludge");
+                        let (current, max) = sludge_comp.unit.hp;
+                        let remaining = cmp::max(current - warrior_comp.unit.atk, 0);
+                        println!(
+                            "Sludge takes {} damage, {} HP left",
+                            warrior_comp.unit.atk, remaining
+                        );
+                        sludge_comp.unit.hp = (remaining, max);
 
-                                if remaining == 0 {
-                                    println!("Sludge is dead!");
-                                    entities.delete(sludge_entity).unwrap();
-                                }
-                            }
-                            None => {
-                                println!("Warrior attacks but there is nothing there");
-                            }
+                        if remaining == 0 {
+                            println!("Sludge is dead!");
+                            entities.delete(*sludge_entity).unwrap();
                         }
                     }
                 }
