@@ -1,12 +1,14 @@
+//! contains the struct for saving player name and current level
+
 use base64;
 use std::collections::BTreeMap;
 use std::convert::TryInto;
 use std::str;
 use toml::Value;
 
-/// The player profile is the player's name and the current level.
-/// This is saved in .profile at the root of the player's
-/// project directory.
+/// The player profile is essentially just the player's chosen name and
+/// the level they are currently working on completing. This is saved in
+/// .profile at the root of the player's generated project.
 pub struct Profile {
     pub name: String,
     pub directory: String,

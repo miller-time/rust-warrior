@@ -1,3 +1,5 @@
+//! contains some methods for generating the game files
+
 use std::fs;
 use std::io;
 use std::path::Path;
@@ -159,6 +161,7 @@ fn create_profile() -> Profile {
     Profile::new(name)
 }
 
+/// Write the README.md for the current level into the player's game directory
 pub fn write_readme(profile: &Profile, directory: Option<&Path>) {
     let readme = if let Some(player_dir) = directory {
         player_dir.join("README.md")
@@ -170,6 +173,8 @@ pub fn write_readme(profile: &Profile, directory: Option<&Path>) {
         .unwrap_or_else(|_| panic!("failed to generate level {} README.md", profile.level));
 }
 
+/// Save the player's [`Profile`](crate::profile::Profile) to .profile in their
+/// game directory
 pub fn write_profile(profile: &Profile, directory: Option<&Path>) {
     let profile_toml = if let Some(player_dir) = directory {
         player_dir.join(".profile")

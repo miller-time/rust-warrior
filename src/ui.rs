@@ -1,3 +1,5 @@
+//! contains some helper functions for prompting input from the player
+
 use std::io;
 use std::io::prelude::*;
 

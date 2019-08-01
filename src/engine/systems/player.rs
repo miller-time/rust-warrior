@@ -1,9 +1,15 @@
+//! contains system for player-controlled interactions
+
 use std::cmp;
 
 use specs::{prelude::*, System};
 
 use crate::{actions::Action, engine::components::UnitComponent, unit::UnitType, Player, Warrior};
 
+/// This system defines all of the interactions that are possible for the
+/// player-controlled [`Warrior`](crate::warrior::Warrior). The `play_turn`
+/// method is called on [`Player`](crate::player::Player), passing a `&mut`
+/// warrior whose actions must be specified.
 pub struct PlayerSystem {
     pub player: Box<dyn Player + Send + Sync>,
 }

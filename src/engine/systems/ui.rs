@@ -1,3 +1,5 @@
+//! contains system which prints out the state of the world
+
 use specs::{prelude::*, System};
 
 use crate::{
@@ -6,6 +8,8 @@ use crate::{
     unit::{Unit, UnitType},
 };
 
+/// This system simply calls the `draw` method of
+/// [`Floor`](crate::floor::Floor) after each turn is executed.
 pub struct UiSystem {
     pub floor: Floor,
 }

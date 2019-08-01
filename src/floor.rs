@@ -1,5 +1,9 @@
+//! contains types that represent the topology of a level
+
 use crate::unit::{Unit, UnitType};
 
+/// The `Floor::tile` method constructs a conceptual representation of the
+/// floor using the `Tile` enum.
 #[derive(Clone, Copy, Debug)]
 pub enum Tile {
     Empty,
@@ -9,6 +13,7 @@ pub enum Tile {
 }
 
 impl Tile {
+    /// A character (`&str` for convenience) representation of the tile
     pub fn draw(self) -> &'static str {
         match self {
             Tile::Empty => " ",
@@ -19,15 +24,24 @@ impl Tile {
     }
 }
 
+/// Each level has a `Floor` with a predefined `width` and `height`,
+/// `stairs` positioned at the exit, and one or more `units`. There
+/// is a player-controlled [`Warrior`](crate::warrior::Warrior) unit
+/// for every level.
 #[derive(Clone, Debug)]
 pub struct Floor {
+    /// the east/west count of tiles
     pub width: usize,
+    /// the north/south count of tiles
     pub height: usize,
+    /// the position (x, y) of the exit
     pub stairs: (i32, i32),
+    /// all of the units that the level contains
     pub units: Vec<Unit>,
 }
 
 impl Floor {
+    /// Returns the predefined configuration for a given `level` number.
     pub fn load(level: usize) -> Floor {
         match Floor::get(level) {
             Some(level) => level,
@@ -35,10 +49,12 @@ impl Floor {
         }
     }
 
+    /// Returns `true` if a configuration exists for a given `level` number.
     pub fn exists(level: usize) -> bool {
         Floor::get(level).is_some()
     }
 
+    /// Extracts the warrior from the `units`
     pub fn warrior(&self) -> &Unit {
         self.units
             .iter()
@@ -46,6 +62,8 @@ impl Floor {
             .unwrap()
     }
 
+    /// Returns all of the sludges (if there are any) in `units`.
+    /// The `UnitType::Sludge` unit type is introduced in level 2.
     pub fn sludges(&self) -> Vec<&Unit> {
         self.units
             .iter()
@@ -53,6 +71,8 @@ impl Floor {
             .collect()
     }
 
+    /// Returns a `Tile` representing the current state of a tile
+    /// of the floor at `position`.
     pub fn tile(&self, position: (i32, i32)) -> Tile {
         if position == self.stairs {
             return Tile::Stairs;
@@ -75,6 +95,8 @@ impl Floor {
         }
     }
 
+    /// Prints a textual representation of the floor and all
+    /// of its units.
     pub fn draw(&self) {
         println!(" {}", "-".repeat(self.width));
 

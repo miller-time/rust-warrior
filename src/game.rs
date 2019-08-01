@@ -1,7 +1,14 @@
+//! where it all starts
+
 use std::fs;
 
 use crate::{engine, floor::Floor, profile::Profile, starter, ui, Player};
 
+/// This is exposed to the [`Player`](crate::player::Player) to get things
+/// started. Their profile is loaded (from .profile) and then the
+/// [`engine`](crate::engine) is fired up. If the current level is
+/// completed successfully, then the README.md file and their profile are
+/// updated.
 pub struct Game {
     pub profile: Profile,
 }

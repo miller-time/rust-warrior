@@ -1,3 +1,25 @@
+//! ECS-based game engine
+//!
+//! This module contains the [specs][specs] implementation, which defines the
+//! interactions that occur when levels are played. Unsurprisingly, this
+//! [ECS][ecs]-based engine has Entities, Components, and Systems.
+//!
+//! ### Entities
+//!
+//! There are one or more entities created, depending on the level. There
+//! is always a warrior. There can be one or more sludge enemies.
+//!
+//! ### Components
+//!
+//! See `components` module.
+//!
+//! ### Systems
+//!
+//! See `systems` module.
+//!
+//! [specs]: https://github.com/slide-rs/specs
+//! [ecs]: https://en.wikipedia.org/wiki/Entity_component_system
+
 use std::{thread, time};
 
 use specs::{prelude::*, World};
@@ -10,6 +32,7 @@ pub mod systems;
 use components::UnitComponent;
 use systems::{PlayerSystem, SludgeSystem, UiSystem};
 
+/// The entry point for the engine, called by [`Game`](crate::game::Game)
 pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Result<(), String> {
     let mut world = World::new();
 

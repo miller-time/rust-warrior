@@ -1,9 +1,13 @@
+//! contains system for sludge enemy AI
+
 use std::cmp;
 
 use specs::{prelude::*, System};
 
 use crate::{engine::components::UnitComponent, unit::UnitType};
 
+/// This system acts as an enemy AI, attacking the player if a sludge
+/// exists and is in range of the [`Warrior`](crate::warrior::Warrior).
 pub struct SludgeSystem;
 
 impl<'a> System<'a> for SludgeSystem {
