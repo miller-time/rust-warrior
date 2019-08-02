@@ -6,12 +6,12 @@ repository = "https://github.com/miller-time/rust-warrior"
 documentation = "https://docs.rs/rust-warrior/"
 readme = "README.md"
 keywords = ["game", "learning", "rust", "specs"]
-categories = ["Games"]
+categories = ["games"]
 license = "MIT"
 authors = ["Russell Cousineau <miller.time.baby@gmail.com>"]
 edition = "2018"
 
-[badges.gitlab]
+[badges.github]
 repository = "https://github.com/miller-time/rust-warrior"
 branch = "master"
 
