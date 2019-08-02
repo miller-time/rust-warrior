@@ -11,10 +11,6 @@ license = "MIT"
 authors = ["Russell Cousineau <miller.time.baby@gmail.com>"]
 edition = "2018"
 
-[badges.github]
-repository = "https://github.com/miller-time/rust-warrior"
-branch = "master"
-
 [badges.maintenance]
 status = "actively-developed"
 
