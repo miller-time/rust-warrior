@@ -2,7 +2,7 @@
 name = "rust-warrior"
 description = "Game for learning Rust, inspired by Ruby Warrior"
 version = "0.3.1"
-repository = "https://gitlab.com/rcousineau/rust-warrior"
+repository = "https://github.com/miller-time/rust-warrior"
 documentation = "https://docs.rs/rust-warrior/"
 readme = "README.md"
 keywords = ["game", "learning", "rust", "specs"]
@@ -12,7 +12,7 @@ authors = ["Russell Cousineau <miller.time.baby@gmail.com>"]
 edition = "2018"
 
 [badges.gitlab]
-repository = "https://gitlab.com/rcousineau/rust-warrior"
+repository = "https://github.com/miller-time/rust-warrior"
 branch = "master"
 
 [badges.maintenance]
