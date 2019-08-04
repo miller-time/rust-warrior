@@ -18,14 +18,16 @@ impl<'a> System<'a> for SludgeSystem {
         let warrior_comp = units
             .find(|comp| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
-        for sludge_comp in units.filter(|comp| comp.unit.unit_type == UnitType::Sludge) {
+        for sludge_comp in units.filter(|comp| {
+            comp.unit.unit_type == UnitType::Sludge || comp.unit.unit_type == UnitType::ThickSludge
+        }) {
             let (wx, _) = warrior_comp.unit.position;
             let (sx, _) = sludge_comp.unit.position;
             let (hp, _) = sludge_comp.unit.hp;
             // if the Sludge is killed and the entity is deleted, but `world.maintain()` hasn't
             // been called yet, then we need to see if the Sludge is at 0 hp (dead) here.
             if hp > 0 && (wx - sx).abs() <= 1 {
-                println!("Sludge attacks Warrior");
+                println!("{:?} attacks Warrior", sludge_comp.unit.unit_type);
                 let (current, max) = warrior_comp.unit.hp;
                 let remaining = cmp::max(current - sludge_comp.unit.atk, 0);
                 println!(

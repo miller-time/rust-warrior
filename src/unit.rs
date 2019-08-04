@@ -61,12 +61,12 @@ impl Unit {
         }
     }
 
-    /// Create a unit of type ThickSludge (24 HP, 3 ATK) at `position`.
+    /// Create a unit of type ThickSludge (18 HP, 3 ATK) at `position`.
     pub fn thick_sludge(position: (i32, i32)) -> Unit {
         Unit {
             unit_type: UnitType::ThickSludge,
             position,
-            hp: (24, 24),
+            hp: (18, 18),
             atk: 3,
         }
     }

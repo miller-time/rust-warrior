@@ -30,7 +30,7 @@ pub mod components;
 pub mod systems;
 
 use components::UnitComponent;
-use systems::{PlayerSystem, SludgeSystem, UiSystem};
+use systems::{ArcherSystem, PlayerSystem, SludgeSystem, UiSystem};
 
 /// The entry point for the engine, called by [`Game`](crate::game::Game)
 pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Result<(), String> {
@@ -41,7 +41,8 @@ pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Resul
     let mut dispatcher = DispatcherBuilder::new()
         .with(player_system, "player", &[])
         .with(SludgeSystem, "sludge", &["player"])
-        .with(ui_system, "ui", &["player", "sludge"])
+        .with(ArcherSystem, "archer", &["player", "sludge"])
+        .with(ui_system, "ui", &["player", "sludge", "archer"])
         .build();
 
     dispatcher.setup(&mut world);

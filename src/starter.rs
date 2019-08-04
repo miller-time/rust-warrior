@@ -92,7 +92,7 @@ each turn to see if you're taking damage.
 
   > = Stairs
   @ = Russell (20 HP)
-  S = Thick Sludge (24 HP)
+  S = Thick Sludge (18 HP)
   a = Archer (7 HP)
 ```
 
@@ -111,7 +111,7 @@ fn generate_main_rs(player: &str) -> String {
 pub struct {player};
 
 impl Player for {player} {{
-    fn play_turn(&self, warrior: &mut Warrior) {{}}
+    fn play_turn(&mut self, warrior: &mut Warrior) {{}}
 }}
 
 fn main() {{
