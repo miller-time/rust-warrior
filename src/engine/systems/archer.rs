@@ -39,6 +39,8 @@ impl<'a> System<'a> for ArcherSystem {
             let (sx, _) = archer_comp.unit.position;
             let (hp, _) = archer_comp.unit.hp;
 
+            let in_range = (sx - wx).abs() < 4;
+
             let obstructions: Vec<&&mut UnitComponent> = enemy_comps
                 .iter()
                 .filter(|comp| {
@@ -49,7 +51,7 @@ impl<'a> System<'a> for ArcherSystem {
 
             // if the Archer is killed and the entity is deleted, but `world.maintain()` hasn't
             // been called yet, then we need to see if the Archer is at 0 hp (dead) here.
-            if hp > 0 && obstructions.is_empty() {
+            if hp > 0 && in_range && obstructions.is_empty() {
                 println!(
                     "{archer:?} attacks {warrior:?}",
                     archer = archer_comp.unit.unit_type,
