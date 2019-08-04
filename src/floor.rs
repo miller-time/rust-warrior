@@ -120,6 +120,19 @@ impl Floor {
                     Unit::thick_sludge((5, 0)),
                 ],
             }),
+            5 => Some(Floor {
+                width: 8,
+                height: 1,
+                stairs: (7, 0),
+                units: vec![
+                    Unit::warrior((0, 0)),
+                    Unit::captive((2, 0)),
+                    Unit::archer((3, 0)),
+                    Unit::archer((4, 0)),
+                    Unit::thick_sludge((5, 0)),
+                    Unit::captive((6, 0)),
+                ]
+            }),
             _ => None,
         }
     }

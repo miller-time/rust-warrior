@@ -24,7 +24,7 @@ Tip: Call `warrior.walk()` in the `Player::play_turn` method.
  --------
 
   > = Stairs
-  @ = Russell (20 HP)
+  @ = Warrior (20 HP)
 ```
 
 ----------
@@ -46,7 +46,7 @@ and `warrior.attack()` to fight it.
  --------
 
   > = Stairs
-  @ = Russell (20 HP)
+  @ = Warrior (20 HP)
   s = Sludge (12 HP)
 ```
 
@@ -69,7 +69,7 @@ and `warrior.rest()` to earn 10% of max health back.
  ---------
 
   > = Stairs
-  @ = Russell (20 HP)
+  @ = Warrior (20 HP)
   s = Sludge (12 HP)
 ```
 
@@ -91,9 +91,32 @@ each turn to see if you're taking damage.
  -------
 
   > = Stairs
-  @ = Russell (20 HP)
+  @ = Warrior (20 HP)
   S = Thick Sludge (18 HP)
   a = Archer (7 HP)
+```
+
+When you're ready, use `cargo run` to attempt this challenge.
+"
+        }
+        5 => {
+            "# Level 5
+
+You hear cries for help. Captives must need rescuing.
+
+Tip: Use `warrior.captive_found()` to see if there is a captive and
+`warrior.rescue()` to rescue them. Don't attack captives.
+
+```
+ --------
+|@ CaaSC>|
+ --------
+
+  > = Stairs
+  @ = Warrior (20 HP)
+  C = Captive (1 HP)
+  a = Archer (7 HP)
+  S = Thick Sludge (18 HP)
 ```
 
 When you're ready, use `cargo run` to attempt this challenge.
