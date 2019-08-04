@@ -7,9 +7,9 @@ use std::process;
 
 use crate::{profile::Profile, ui};
 
-fn generate_readme(level: usize) -> &'static str {
+fn generate_readme(level: usize, player: &str) -> String {
     match level {
-        1 => {
+        1 => format!(
             "# Level 1
 
 You see before yourself a long hallway with stairs at the end.
@@ -23,7 +23,7 @@ Tip: Call `warrior.walk()` in the `Player::play_turn` method.
  --------
 
   > = Stairs
-  @ = Warrior (20 HP)
+  @ = {player} (20 HP)
 ```
 
 Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
@@ -31,9 +31,9 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 ----------
 
 When you're ready, use `cargo run` to attempt this challenge.
-"
-        }
-        2 => {
+",
+        player = player),
+        2 => format!(
             "# Level 2
 
 It is too dark to see anything, but you smell sludge nearby.
@@ -47,7 +47,7 @@ and `warrior.attack()` to fight it.
  --------
 
   > = Stairs
-  @ = Warrior (20 HP)
+  @ = {player} (20 HP)
   s = Sludge (12 HP)
 ```
 
@@ -56,9 +56,9 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 ----------
 
 When you're ready, use `cargo run` to attempt this challenge.
-"
-        }
-        3 => {
+",
+        player = player),
+        3 => format!(
             "# Level 3
 
 The air feels thicker than before. There must be a horde of sludge.
@@ -72,7 +72,7 @@ and `warrior.rest()` to earn 10% of max health back.
  ---------
 
   > = Stairs
-  @ = Warrior (20 HP)
+  @ = {player} (20 HP)
   s = Sludge (12 HP)
 ```
 
@@ -81,9 +81,9 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 ----------
 
 When you're ready, use `cargo run` to attempt this challenge.
-"
-        }
-        4 => {
+",
+        player = player),
+        4 => format!(
             "# Level 4
 
 You can hear bow strings being stretched.
@@ -98,7 +98,7 @@ each turn to see if you're taking damage.
  -------
 
   > = Stairs
-  @ = Warrior (20 HP)
+  @ = {player} (20 HP)
   S = Thick Sludge (18 HP)
   a = Archer (7 HP)
 ```
@@ -108,9 +108,9 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 ----------
 
 When you're ready, use `cargo run` to attempt this challenge.
-"
-        }
-        5 => {
+",
+        player = player),
+        5 => format!(
             "# Level 5
 
 You hear cries for help. Captives must need rescuing.
@@ -124,7 +124,7 @@ Tip: Use `warrior.captive_found()` to see if there is a captive and
  --------
 
   > = Stairs
-  @ = Warrior (20 HP)
+  @ = {player} (20 HP)
   C = Captive (1 HP)
   a = Archer (7 HP)
   S = Thick Sludge (18 HP)
@@ -135,8 +135,8 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 ----------
 
 When you're ready, use `cargo run` to attempt this challenge.
-"
-        }
+",
+        player = player),
         _ => unimplemented!(),
     }
 }
@@ -229,7 +229,7 @@ pub fn write_readme(profile: &Profile, directory: Option<&Path>) {
     } else {
         Path::new("README.md").to_path_buf()
     };
-    let contents = generate_readme(profile.level);
+    let contents = generate_readme(profile.level, &profile.name);
     fs::write(readme, contents)
         .unwrap_or_else(|_| panic!("failed to generate level {} README.md", profile.level));
 }
