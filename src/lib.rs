@@ -1,4 +1,4 @@
-//! # rust-warrior
+//! # Rust Warrior
 //!
 //! A textual turn-based AI game for learning Rust, based on
 //! [Ruby Warrior](https://github.com/ryanb/ruby-warrior).

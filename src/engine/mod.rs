@@ -49,7 +49,7 @@ pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Resul
     dispatcher.setup(&mut world);
 
     for unit in &floor.units {
-        UnitComponent::create(&mut world, *unit);
+        UnitComponent::create(&mut world, unit.clone());
     }
 
     floor.draw();
@@ -58,24 +58,22 @@ pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Resul
     loop {
         step += 1;
 
-        if step > 100 {
-            return Err("You seem to have gotten lost...".to_owned());
-        }
-
         {
             let units = world.read_storage::<UnitComponent>();
             for entity in world.entities().join() {
-                match units.get(entity) {
-                    Some(warrior_comp) if warrior_comp.unit.unit_type == UnitType::Warrior => {
+                if let Some(warrior_comp) = units.get(entity) {
+                    if let UnitType::Warrior(name) = &warrior_comp.unit.unit_type {
                         let (current, _) = warrior_comp.unit.hp;
                         if current == 0 {
-                            return Err("You died!".to_owned());
+                            return Err(format!("{} died!", name));
+                        }
+                        if step > 100 {
+                            return Err(format!("{} seems to have gotten lost...", name));
                         }
                         if warrior_comp.unit.position == floor.stairs {
                             return Ok(());
                         }
                     }
-                    _ => {}
                 }
             }
         }

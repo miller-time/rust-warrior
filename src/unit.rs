@@ -1,9 +1,11 @@
 //! contains types that represent units that appear in the game
 
+use std::fmt;
+
 /// The Warrior (our protagonist), enemy Sludges and Archers, and Captives.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub enum UnitType {
-    Warrior,
+    Warrior(String),
     Sludge,
     ThickSludge,
     Archer,
@@ -14,7 +16,7 @@ impl UnitType {
     /// A character (`&str` for convenience) representation of the unit type
     pub fn draw(self) -> &'static str {
         match self {
-            UnitType::Warrior => "@",
+            UnitType::Warrior(_) => "@",
             UnitType::Sludge => "s",
             UnitType::ThickSludge => "S",
             UnitType::Archer => "a",
@@ -23,8 +25,20 @@ impl UnitType {
     }
 }
 
+impl fmt::Debug for UnitType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            UnitType::Warrior(name) => write!(f, "{}", name),
+            UnitType::Sludge => write!(f, "Sludge"),
+            UnitType::ThickSludge => write!(f, "ThickSludge"),
+            UnitType::Archer => write!(f, "Archer"),
+            UnitType::Captive => write!(f, "Captive"),
+        }
+    }
+}
+
 /// The state of a unit: its `position`, current/max `hp`, and `atk` power.
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct Unit {
     pub unit_type: UnitType,
     pub position: (i32, i32),
@@ -36,7 +50,7 @@ impl Unit {
     /// Create a unit of type `unit_type` at `position`.
     pub fn new(unit_type: UnitType, position: (i32, i32)) -> Unit {
         match unit_type {
-            UnitType::Warrior => Unit::warrior(position),
+            UnitType::Warrior(name) => Unit::warrior(position, name),
             UnitType::Sludge => Unit::sludge(position),
             UnitType::ThickSludge => Unit::thick_sludge(position),
             UnitType::Archer => Unit::archer(position),
@@ -45,9 +59,9 @@ impl Unit {
     }
 
     /// Create a unit of type Warrior (20 HP, 5 ATK) at `position`.
-    pub fn warrior(position: (i32, i32)) -> Unit {
+    pub fn warrior(position: (i32, i32), name: String) -> Unit {
         Unit {
-            unit_type: UnitType::Warrior,
+            unit_type: UnitType::Warrior(name),
             position,
             hp: (20, 20),
             atk: 5,

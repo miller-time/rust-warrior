@@ -28,12 +28,18 @@ impl<'a> System<'a> for PlayerSystem {
     fn run(&mut self, (entities, mut units): Self::SystemData) {
         let mut all_units = (&entities, &mut units).join();
         let warrior_unit = all_units
-            .find(|(_, comp)| comp.unit.unit_type == UnitType::Warrior)
+            .find(|(_, comp)| match comp.unit.unit_type {
+                UnitType::Warrior(_) => true,
+                _ => false,
+            })
             .unwrap();
         let (_, mut warrior_comp) = warrior_unit;
         let mut other_units: Vec<(Entity, &mut UnitComponent)> = all_units
             .by_ref()
-            .filter(|(_, comp)| comp.unit.unit_type != UnitType::Warrior)
+            .filter(|(_, comp)| match comp.unit.unit_type {
+                UnitType::Warrior(_) => false,
+                _ => true,
+            })
             .collect();
         let unit_in_range = {
             let (wx, _) = warrior_comp.unit.position;
@@ -54,25 +60,35 @@ impl<'a> System<'a> for PlayerSystem {
             match action {
                 Action::Walk => {
                     if path_clear {
-                        println!("Warrior walks forward");
+                        println!("{:?} walks forward", warrior_comp.unit.unit_type);
                         let (x, y) = warrior_comp.unit.position;
                         warrior_comp.unit.position = (x + 1, y);
                     } else {
                         let (_, enemy_comp) = unit_in_range.unwrap();
-                        println!("Warrior bumps into {:?}", enemy_comp.unit.unit_type);
+                        println!(
+                            "{warrior:?} bumps into {enemy:?}",
+                            warrior = warrior_comp.unit.unit_type,
+                            enemy = enemy_comp.unit.unit_type
+                        );
                     }
                 }
                 Action::Attack => {
                     if path_clear {
-                        println!("Warrior attacks and hits nothing");
+                        println!("{:?} attacks and hits nothing", warrior_comp.unit.unit_type);
                     } else {
                         let (enemy_entity, enemy_comp) = unit_in_range.unwrap();
-                        println!("Warrior attacks {:?}", enemy_comp.unit.unit_type);
+                        println!(
+                            "{warrior:?} attacks {enemy:?}",
+                            warrior = warrior_comp.unit.unit_type,
+                            enemy = enemy_comp.unit.unit_type
+                        );
                         let (current, max) = enemy_comp.unit.hp;
                         let remaining = cmp::max(current - warrior_comp.unit.atk, 0);
                         println!(
-                            "{:?} takes {} damage, {} HP left",
-                            enemy_comp.unit.unit_type, warrior_comp.unit.atk, remaining
+                            "{enemy:?} takes {atk} damage, {remaining} HP left",
+                            enemy = enemy_comp.unit.unit_type,
+                            atk = warrior_comp.unit.atk,
+                            remaining = remaining
                         );
                         enemy_comp.unit.hp = (remaining, max);
 
@@ -91,28 +107,40 @@ impl<'a> System<'a> for PlayerSystem {
                             2
                         };
                         println!(
-                            "Warrior regains {} HP from resting! Now {} left",
-                            restored,
-                            current + restored
+                            "{warrior:?} regains {restored} HP from resting! Now {remaining} left",
+                            warrior = warrior_comp.unit.unit_type,
+                            restored = restored,
+                            remaining = current + restored
                         );
                         warrior_comp.unit.hp = (current + restored, max);
                     } else {
-                        println!("Warrior rests but is already at max HP");
+                        println!(
+                            "{:?} rests but is already at max HP",
+                            warrior_comp.unit.unit_type
+                        );
                     };
                 }
                 Action::Rescue => {
                     if path_clear {
-                        println!("Warrior tries to rescue someone, but nobody is here");
+                        println!(
+                            "{:?} tries to rescue someone, but nobody is here",
+                            warrior_comp.unit.unit_type
+                        );
                     } else if captive_found {
-                        let (captive_entity, _) = unit_in_range.unwrap();
-                        println!("Warrior frees Captive from their bindings");
-                        println!("Captive escapes!");
+                        let (captive_entity, captive_comp) = unit_in_range.unwrap();
+                        println!(
+                            "{warrior:?} frees {captive:?} from their bindings",
+                            warrior = warrior_comp.unit.unit_type,
+                            captive = captive_comp.unit.unit_type
+                        );
+                        println!("{:?} escapes!", captive_comp.unit.unit_type);
                         entities.delete(*captive_entity).unwrap();
                     } else {
                         let (_, enemy_comp) = unit_in_range.unwrap();
                         println!(
-                            "Warrior tries to rescue {:?}, but it is not a captive!",
-                            enemy_comp.unit.unit_type
+                            "{warrior:?} tries to rescue {enemy:?}, but it is not a captive!",
+                            warrior = warrior_comp.unit.unit_type,
+                            enemy = enemy_comp.unit.unit_type
                         );
                     }
                 }

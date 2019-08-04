@@ -16,7 +16,10 @@ impl<'a> System<'a> for SludgeSystem {
     fn run(&mut self, mut units: Self::SystemData) {
         let mut units = (&mut units).join();
         let warrior_comp = units
-            .find(|comp| comp.unit.unit_type == UnitType::Warrior)
+            .find(|comp| match comp.unit.unit_type {
+                UnitType::Warrior(_) => true,
+                _ => false,
+            })
             .unwrap();
         for sludge_comp in units.filter(|comp| {
             comp.unit.unit_type == UnitType::Sludge || comp.unit.unit_type == UnitType::ThickSludge
@@ -27,12 +30,18 @@ impl<'a> System<'a> for SludgeSystem {
             // if the Sludge is killed and the entity is deleted, but `world.maintain()` hasn't
             // been called yet, then we need to see if the Sludge is at 0 hp (dead) here.
             if hp > 0 && (wx - sx).abs() <= 1 {
-                println!("{:?} attacks Warrior", sludge_comp.unit.unit_type);
+                println!(
+                    "{sludge:?} attacks {warrior:?}",
+                    sludge = sludge_comp.unit.unit_type,
+                    warrior = warrior_comp.unit.unit_type
+                );
                 let (current, max) = warrior_comp.unit.hp;
                 let remaining = cmp::max(current - sludge_comp.unit.atk, 0);
                 println!(
-                    "Warrior takes {} damage, {} HP left",
-                    sludge_comp.unit.atk, remaining
+                    "{warrior:?} takes {atk} damage, {remaining} HP left",
+                    warrior = warrior_comp.unit.unit_type,
+                    atk = sludge_comp.unit.atk,
+                    remaining = remaining
                 );
                 warrior_comp.unit.hp = (remaining, max);
             }

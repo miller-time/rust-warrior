@@ -32,7 +32,8 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 
 When you're ready, use `cargo run` to attempt this challenge.
 ",
-        player = player),
+            player = player
+        ),
         2 => format!(
             "# Level 2
 
@@ -57,7 +58,8 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 
 When you're ready, use `cargo run` to attempt this challenge.
 ",
-        player = player),
+            player = player
+        ),
         3 => format!(
             "# Level 3
 
@@ -82,7 +84,8 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 
 When you're ready, use `cargo run` to attempt this challenge.
 ",
-        player = player),
+            player = player
+        ),
         4 => format!(
             "# Level 4
 
@@ -109,7 +112,8 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 
 When you're ready, use `cargo run` to attempt this challenge.
 ",
-        player = player),
+            player = player
+        ),
         5 => format!(
             "# Level 5
 
@@ -136,7 +140,8 @@ Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/stru
 
 When you're ready, use `cargo run` to attempt this challenge.
 ",
-        player = player),
+            player = player
+        ),
         _ => unimplemented!(),
     }
 }

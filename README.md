@@ -1,4 +1,4 @@
-# rust-warrior
+# Rust Warrior
 
 [![Crates.io][crates-badge]][crates] [![Docs.rs][docs-badge]][docs]
 
@@ -10,13 +10,13 @@
 This game is inspired by [Ruby Warrior][ruby-warrior], which I played many
 years ago. This project started as a direct port, but because Ruby is an
 interpreted language and allows (encourages?) meta programming... I've
-designed `rust-warrior` partly from scratch.
+designed Rust Warrior partly from scratch.
 
 [ruby-warrior]: https://github.com/ryanb/ruby-warrior
 
 # Set Up
 
-`rust-warrior` ships with two major components: a binary that generates a
+Rust Warrior ships with two major components: a binary that generates a
 new game directory, and a library which contains the main game engine.
 
 To get started, install `rust-warrior`.

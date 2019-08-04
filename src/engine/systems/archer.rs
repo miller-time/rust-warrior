@@ -19,11 +19,17 @@ impl<'a> System<'a> for ArcherSystem {
         let mut units = (&mut units).join();
         let warrior_comp = units
             .by_ref()
-            .find(|comp| comp.unit.unit_type == UnitType::Warrior)
+            .find(|comp| match comp.unit.unit_type {
+                UnitType::Warrior(_) => true,
+                _ => false,
+            })
             .unwrap();
         let enemy_comps: Vec<&mut UnitComponent> = units
             .by_ref()
-            .filter(|comp| comp.unit.unit_type != UnitType::Warrior)
+            .filter(|comp| match comp.unit.unit_type {
+                UnitType::Warrior(_) => false,
+                _ => true,
+            })
             .collect();
         for archer_comp in enemy_comps
             .iter()
@@ -44,12 +50,18 @@ impl<'a> System<'a> for ArcherSystem {
             // if the Archer is killed and the entity is deleted, but `world.maintain()` hasn't
             // been called yet, then we need to see if the Archer is at 0 hp (dead) here.
             if hp > 0 && obstructions.is_empty() {
-                println!("Archer attacks Warrior");
+                println!(
+                    "{archer:?} attacks {warrior:?}",
+                    archer = archer_comp.unit.unit_type,
+                    warrior = warrior_comp.unit.unit_type
+                );
                 let (current, max) = warrior_comp.unit.hp;
                 let remaining = cmp::max(current - archer_comp.unit.atk, 0);
                 println!(
-                    "Warrior takes {} damage, {} HP left",
-                    archer_comp.unit.atk, remaining
+                    "{warrior:?} takes {atk} damage, {remaining} HP left",
+                    warrior = warrior_comp.unit.unit_type,
+                    atk = archer_comp.unit.atk,
+                    remaining = remaining
                 );
                 warrior_comp.unit.hp = (remaining, max);
             }
