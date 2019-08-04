@@ -7,7 +7,7 @@
 //! ### Entities
 //!
 //! There are one or more entities created, depending on the level. There
-//! is always a warrior. There can be one or more sludge enemies.
+//! is always a warrior. There can be one or more sludge or archer enemies.
 //!
 //! ### Components
 //!
@@ -46,10 +46,8 @@ pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Resul
 
     dispatcher.setup(&mut world);
 
-    UnitComponent::create(&mut world, *floor.warrior());
-
-    for sludge in floor.sludges() {
-        UnitComponent::create(&mut world, *sludge);
+    for unit in &floor.units {
+        UnitComponent::create(&mut world, *unit);
     }
 
     floor.draw();

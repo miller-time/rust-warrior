@@ -27,12 +27,19 @@ impl<'a> System<'a> for UiSystem {
         let mut unit_comps = (&units).join();
         let mut units = Vec::new();
         let warrior_comp = unit_comps
+            .by_ref()
             .find(|comp| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
         units.push(Unit::warrior(warrior_comp.unit.position));
 
-        for sludge_comp in unit_comps.filter(|comp| comp.unit.unit_type == UnitType::Sludge) {
-            units.push(Unit::sludge(sludge_comp.unit.position));
+        for enemy_comp in unit_comps
+            .by_ref()
+            .filter(|comp| comp.unit.unit_type != UnitType::Warrior)
+        {
+            units.push(Unit::new(
+                enemy_comp.unit.unit_type,
+                enemy_comp.unit.position,
+            ));
         }
 
         self.floor.units = units;

@@ -1,5 +1,7 @@
 //! contains types that represent the topology of a level
 
+use std::collections::HashMap;
+
 use crate::unit::{Unit, UnitType};
 
 /// The `Floor::tile` method constructs a conceptual representation of the
@@ -7,9 +9,8 @@ use crate::unit::{Unit, UnitType};
 #[derive(Clone, Copy, Debug)]
 pub enum Tile {
     Empty,
-    Sludge,
     Stairs,
-    Warrior,
+    Unit(UnitType),
 }
 
 impl Tile {
@@ -17,9 +18,8 @@ impl Tile {
     pub fn draw(self) -> &'static str {
         match self {
             Tile::Empty => " ",
-            Tile::Sludge => "s",
             Tile::Stairs => ">",
-            Tile::Warrior => "@",
+            Tile::Unit(unit_type) => unit_type.draw(),
         }
     }
 }
@@ -62,15 +62,6 @@ impl Floor {
             .unwrap()
     }
 
-    /// Returns all of the sludges (if there are any) in `units`.
-    /// The `UnitType::Sludge` unit type is introduced in level 2.
-    pub fn sludges(&self) -> Vec<&Unit> {
-        self.units
-            .iter()
-            .filter(|u| u.unit_type == UnitType::Sludge)
-            .collect()
-    }
-
     /// Returns a `Tile` representing the current state of a tile
     /// of the floor at `position`.
     pub fn tile(&self, position: (i32, i32)) -> Tile {
@@ -78,21 +69,17 @@ impl Floor {
             return Tile::Stairs;
         }
 
-        if self.warrior().position == position {
-            return Tile::Warrior;
-        }
-
-        let sludge_positions: Vec<(i32, i32)> = self
+        let unit_positions: HashMap<(i32, i32), UnitType> = self
             .units
             .iter()
-            .filter(|u| u.unit_type == UnitType::Sludge)
-            .map(|s| s.position)
+            .map(|u| (u.position, u.unit_type))
             .collect();
-        if sludge_positions.contains(&position) {
-            Tile::Sludge
-        } else {
-            Tile::Empty
+
+        if let Some(unit_type) = unit_positions.get(&position) {
+            return Tile::Unit(*unit_type);
         }
+
+        Tile::Empty
     }
 
     /// Prints a textual representation of the floor and all

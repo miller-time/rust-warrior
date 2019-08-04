@@ -31,18 +31,18 @@ impl<'a> System<'a> for PlayerSystem {
             .find(|(_, comp)| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
         let (_, mut warrior_comp) = warrior_unit;
-        let mut sludges: Vec<(Entity, &mut UnitComponent)> = all_units
+        let mut enemies: Vec<(Entity, &mut UnitComponent)> = all_units
             .by_ref()
-            .filter(|(_, comp)| comp.unit.unit_type == UnitType::Sludge)
+            .filter(|(_, comp)| comp.unit.unit_type != UnitType::Warrior)
             .collect();
-        let path_clear = {
+        let combatant = {
             let (wx, _) = warrior_comp.unit.position;
-            // the path is clear if all sludges are more than a space away
-            sludges.iter().all(|(_, comp)| {
+            enemies.iter().find(|(_, comp)| {
                 let (sx, _) = comp.unit.position;
-                (wx - sx).abs() > 1
+                (wx - sx).abs() == 1
             })
         };
+        let path_clear = combatant.is_none();
         let (health, _) = warrior_comp.unit.hp;
         let mut warrior = Warrior::new(path_clear, health);
         self.player.play_turn(&mut warrior);
@@ -55,7 +55,8 @@ impl<'a> System<'a> for PlayerSystem {
                         let (x, y) = warrior_comp.unit.position;
                         warrior_comp.unit.position = (x + 1, y);
                     } else {
-                        println!("Warrior bumps into Sludge");
+                        let (_, enemy_comp) = combatant.unwrap();
+                        println!("Warrior bumps into {:?}", enemy_comp.unit.unit_type);
                     }
                 }
                 Action::Attack => {
@@ -63,26 +64,26 @@ impl<'a> System<'a> for PlayerSystem {
                         println!("Warrior attacks and hits nothing");
                     } else {
                         let (wx, _) = warrior_comp.unit.position;
-                        // since the path is not clear, we can definitely find a sludge one space away
-                        let (sludge_entity, sludge_comp) = sludges
+                        // since the path is not clear, we can definitely find a enemy one space away
+                        let (enemy_entity, enemy_comp) = enemies
                             .iter_mut()
                             .find(|(_, comp)| {
                                 let (sx, _) = comp.unit.position;
                                 (wx - sx).abs() == 1
                             })
                             .unwrap();
-                        println!("Warrior attacks Sludge");
-                        let (current, max) = sludge_comp.unit.hp;
+                        println!("Warrior attacks {:?}", enemy_comp.unit.unit_type);
+                        let (current, max) = enemy_comp.unit.hp;
                         let remaining = cmp::max(current - warrior_comp.unit.atk, 0);
                         println!(
-                            "Sludge takes {} damage, {} HP left",
-                            warrior_comp.unit.atk, remaining
+                            "{:?} takes {} damage, {} HP left",
+                            enemy_comp.unit.unit_type, warrior_comp.unit.atk, remaining
                         );
-                        sludge_comp.unit.hp = (remaining, max);
+                        enemy_comp.unit.hp = (remaining, max);
 
                         if remaining == 0 {
-                            println!("Sludge is dead!");
-                            entities.delete(*sludge_entity).unwrap();
+                            println!("{:?} is dead!", enemy_comp.unit.unit_type);
+                            entities.delete(*enemy_entity).unwrap();
                         }
                     }
                 }
