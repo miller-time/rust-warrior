@@ -7,14 +7,16 @@ use crate::actions::Action;
 /// `play_turn` method.
 pub struct Warrior {
     path_clear: bool,
+    captive_found: bool,
     health: i32,
     pub action: Option<Action>,
 }
 
 impl Warrior {
-    pub fn new(path_clear: bool, health: i32) -> Warrior {
+    pub fn new(path_clear: bool, captive_found: bool, health: i32) -> Warrior {
         Warrior {
             path_clear,
+            captive_found,
             health,
             action: None,
         }
@@ -30,6 +32,11 @@ impl Warrior {
         self.path_clear
     }
 
+    /// Check if the tile in fron of the Warrior is a Captive.
+    pub fn captive_found(&self) -> bool {
+        self.captive_found
+    }
+
     /// Attempt to attack an enemy in the tile in front of the Warrior.
     pub fn attack(&mut self) {
         self.perform(Action::Attack);
@@ -43,6 +50,11 @@ impl Warrior {
     /// Rest and regain 10% of the Warrior's HP.
     pub fn rest(&mut self) {
         self.perform(Action::Rest);
+    }
+
+    /// Attempt to rescue a Captive in front of the Warrior.
+    pub fn rescue(&mut self) {
+        self.perform(Action::Rescue);
     }
 
     fn perform(&mut self, action: Action) {

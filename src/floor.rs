@@ -54,14 +54,6 @@ impl Floor {
         Floor::get(level).is_some()
     }
 
-    /// Extracts the warrior from the `units`
-    pub fn warrior(&self) -> &Unit {
-        self.units
-            .iter()
-            .find(|u| u.unit_type == UnitType::Warrior)
-            .unwrap()
-    }
-
     /// Returns a `Tile` representing the current state of a tile
     /// of the floor at `position`.
     pub fn tile(&self, position: (i32, i32)) -> Tile {

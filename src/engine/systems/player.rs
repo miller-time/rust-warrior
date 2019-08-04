@@ -31,20 +31,23 @@ impl<'a> System<'a> for PlayerSystem {
             .find(|(_, comp)| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
         let (_, mut warrior_comp) = warrior_unit;
-        let mut enemies: Vec<(Entity, &mut UnitComponent)> = all_units
+        let mut other_units: Vec<(Entity, &mut UnitComponent)> = all_units
             .by_ref()
             .filter(|(_, comp)| comp.unit.unit_type != UnitType::Warrior)
             .collect();
-        let combatant = {
+        let unit_in_range = {
             let (wx, _) = warrior_comp.unit.position;
-            enemies.iter().find(|(_, comp)| {
+            other_units.iter_mut().find(|(_, comp)| {
                 let (sx, _) = comp.unit.position;
                 (wx - sx).abs() == 1
             })
         };
-        let path_clear = combatant.is_none();
+        let (path_clear, captive_found) = match unit_in_range {
+            Some((_, comp)) => (false, comp.unit.unit_type == UnitType::Captive),
+            None => (true, false),
+        };
         let (health, _) = warrior_comp.unit.hp;
-        let mut warrior = Warrior::new(path_clear, health);
+        let mut warrior = Warrior::new(path_clear, captive_found, health);
         self.player.play_turn(&mut warrior);
 
         if let Some(action) = warrior.action {
@@ -55,7 +58,7 @@ impl<'a> System<'a> for PlayerSystem {
                         let (x, y) = warrior_comp.unit.position;
                         warrior_comp.unit.position = (x + 1, y);
                     } else {
-                        let (_, enemy_comp) = combatant.unwrap();
+                        let (_, enemy_comp) = unit_in_range.unwrap();
                         println!("Warrior bumps into {:?}", enemy_comp.unit.unit_type);
                     }
                 }
@@ -63,15 +66,7 @@ impl<'a> System<'a> for PlayerSystem {
                     if path_clear {
                         println!("Warrior attacks and hits nothing");
                     } else {
-                        let (wx, _) = warrior_comp.unit.position;
-                        // since the path is not clear, we can definitely find a enemy one space away
-                        let (enemy_entity, enemy_comp) = enemies
-                            .iter_mut()
-                            .find(|(_, comp)| {
-                                let (sx, _) = comp.unit.position;
-                                (wx - sx).abs() == 1
-                            })
-                            .unwrap();
+                        let (enemy_entity, enemy_comp) = unit_in_range.unwrap();
                         println!("Warrior attacks {:?}", enemy_comp.unit.unit_type);
                         let (current, max) = enemy_comp.unit.hp;
                         let remaining = cmp::max(current - warrior_comp.unit.atk, 0);
@@ -104,6 +99,22 @@ impl<'a> System<'a> for PlayerSystem {
                     } else {
                         println!("Warrior rests but is already at max HP");
                     };
+                }
+                Action::Rescue => {
+                    if path_clear {
+                        println!("Warrior tries to rescue someone, but nobody is here");
+                    } else if captive_found {
+                        let (captive_entity, _) = unit_in_range.unwrap();
+                        println!("Warrior frees Captive from their bindings");
+                        println!("Captive escapes!");
+                        entities.delete(*captive_entity).unwrap();
+                    } else {
+                        let (_, enemy_comp) = unit_in_range.unwrap();
+                        println!(
+                            "Warrior tries to rescue {:?}, but it is not a captive!",
+                            enemy_comp.unit.unit_type
+                        );
+                    }
                 }
             }
         }

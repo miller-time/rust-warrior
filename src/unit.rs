@@ -1,12 +1,13 @@
 //! contains types that represent units that appear in the game
 
-/// The Warrior (our protagonist) and enemy Sludges and Archers.
+/// The Warrior (our protagonist), enemy Sludges and Archers, and Captives.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum UnitType {
     Warrior,
     Sludge,
     ThickSludge,
     Archer,
+    Captive,
 }
 
 impl UnitType {
@@ -17,6 +18,7 @@ impl UnitType {
             UnitType::Sludge => "s",
             UnitType::ThickSludge => "S",
             UnitType::Archer => "a",
+            UnitType::Captive => "C",
         }
     }
 }
@@ -38,6 +40,7 @@ impl Unit {
             UnitType::Sludge => Unit::sludge(position),
             UnitType::ThickSludge => Unit::thick_sludge(position),
             UnitType::Archer => Unit::archer(position),
+            UnitType::Captive => Unit::captive(position),
         }
     }
 
@@ -78,6 +81,16 @@ impl Unit {
             position,
             hp: (7, 7),
             atk: 3,
+        }
+    }
+
+    /// Create a unit of type Captive (1 HP, 0 ATK) at `position`.
+    pub fn captive(position: (i32, i32)) -> Unit {
+        Unit {
+            unit_type: UnitType::Captive,
+            position,
+            hp: (1, 1),
+            atk: 0,
         }
     }
 }

@@ -11,4 +11,6 @@ pub enum Action {
     Attack,
     /// rest to regain 10% HP
     Rest,
+    /// rescue a captive one tile away
+    Rescue,
 }

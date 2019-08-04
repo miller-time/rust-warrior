@@ -7,7 +7,8 @@
 //! ### Entities
 //!
 //! There are one or more entities created, depending on the level. There
-//! is always a warrior. There can be one or more sludge or archer enemies.
+//! is always a warrior, there can be one or more sludge or archer enemies,
+//! and there can be one or more captives.
 //!
 //! ### Components
 //!
