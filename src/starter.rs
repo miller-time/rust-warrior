@@ -76,6 +76,29 @@ and `warrior.rest()` to earn 10% of max health back.
 When you're ready, use `cargo run` to attempt this challenge.
 "
         }
+        4 => {
+            "# Level 4
+
+You can hear bow strings being stretched.
+
+Tip: No new abilities this time, but you must be careful not to rest while
+taking damage. Add a `health` field to your `Player` struct and compare it on
+each turn to see if you're taking damage.
+
+```
+ -------
+|@ Sa S>|
+ -------
+
+  > = Stairs
+  @ = Russell (20 HP)
+  S = Thick Sludge (24 HP)
+  a = Archer (7 HP)
+```
+
+When you're ready, use `cargo run` to attempt this challenge.
+"
+        }
         _ => unimplemented!(),
     }
 }
