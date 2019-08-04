@@ -7,7 +7,6 @@ use std::process;
 
 use crate::{profile::Profile, ui};
 
-// TODO: add link to Warrior cargo doc
 fn generate_readme(level: usize) -> &'static str {
     match level {
         1 => {
@@ -26,6 +25,8 @@ Tip: Call `warrior.walk()` in the `Player::play_turn` method.
   > = Stairs
   @ = Warrior (20 HP)
 ```
+
+Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
 
 ----------
 
@@ -50,6 +51,8 @@ and `warrior.attack()` to fight it.
   s = Sludge (12 HP)
 ```
 
+Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
+
 ----------
 
 When you're ready, use `cargo run` to attempt this challenge.
@@ -72,6 +75,10 @@ and `warrior.rest()` to earn 10% of max health back.
   @ = Warrior (20 HP)
   s = Sludge (12 HP)
 ```
+
+Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
+
+----------
 
 When you're ready, use `cargo run` to attempt this challenge.
 "
@@ -96,6 +103,10 @@ each turn to see if you're taking damage.
   a = Archer (7 HP)
 ```
 
+Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
+
+----------
+
 When you're ready, use `cargo run` to attempt this challenge.
 "
         }
@@ -118,6 +129,10 @@ Tip: Use `warrior.captive_found()` to see if there is a captive and
   a = Archer (7 HP)
   S = Thick Sludge (18 HP)
 ```
+
+Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
+
+----------
 
 When you're ready, use `cargo run` to attempt this challenge.
 "
