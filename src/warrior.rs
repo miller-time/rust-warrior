@@ -1,22 +1,25 @@
 //! contains the interface exposed to the player for controlling the Warrior
 
-use crate::actions::Action;
+use crate::{
+    actions::{Action, Direction},
+    floor::Tile,
+};
 
 /// An interface the player can interact with to control the Warrior in the
 /// game. An instance is passed to [`Player`](crate::player::Player) via the
 /// `play_turn` method.
 pub struct Warrior {
-    path_clear: bool,
-    captive_found: bool,
+    ahead: Tile,
+    behind: Tile,
     health: i32,
     pub action: Option<Action>,
 }
 
 impl Warrior {
-    pub fn new(path_clear: bool, captive_found: bool, health: i32) -> Warrior {
+    pub fn new(ahead: Tile, behind: Tile, health: i32) -> Warrior {
         Warrior {
-            path_clear,
-            captive_found,
+            ahead,
+            behind,
             health,
             action: None,
         }
@@ -24,22 +27,37 @@ impl Warrior {
 
     /// Walk forward one tile.
     pub fn walk(&mut self) {
-        self.perform(Action::Walk);
+        self.walk_toward(Direction::Forward);
     }
 
-    /// Check if the tile in front of the Warrior is clear.
-    pub fn path_clear(&self) -> bool {
-        self.path_clear
+    /// Walk one tile toward specified `direction`.
+    pub fn walk_toward(&mut self, direction: Direction) {
+        self.perform(Action::Walk(direction));
     }
 
-    /// Check if the tile in fron of the Warrior is a Captive.
-    pub fn captive_found(&self) -> bool {
-        self.captive_found
+    /// Check the tile in front of the Warrior.
+    /// Returns a [`Tile`](crate::Tile).
+    pub fn check(&self) -> Tile {
+        self.check_toward(Direction::Forward)
+    }
+
+    /// Check the tile toward specified `direction`.
+    /// Returns a [`Tile`](crate::Tile).
+    pub fn check_toward(&self, direction: Direction) -> Tile {
+        match direction {
+            Direction::Forward => self.ahead,
+            Direction::Backward => self.behind,
+        }
     }
 
     /// Attempt to attack an enemy in the tile in front of the Warrior.
     pub fn attack(&mut self) {
-        self.perform(Action::Attack);
+        self.attack_toward(Direction::Forward);
+    }
+
+    /// Attempt to attack an enemy one tile away in specified `direction`.
+    pub fn attack_toward(&mut self, direction: Direction) {
+        self.perform(Action::Attack(direction));
     }
 
     /// Check the current health of the Warrior.
@@ -54,7 +72,12 @@ impl Warrior {
 
     /// Attempt to rescue a Captive in front of the Warrior.
     pub fn rescue(&mut self) {
-        self.perform(Action::Rescue);
+        self.rescue_toward(Direction::Forward);
+    }
+
+    /// Attempt to rescue a Captive one tile away in specified `direction`.
+    pub fn rescue_toward(&mut self, direction: Direction) {
+        self.perform(Action::Rescue(direction));
     }
 
     fn perform(&mut self, action: Action) {

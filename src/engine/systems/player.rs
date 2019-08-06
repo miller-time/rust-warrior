@@ -4,7 +4,13 @@ use std::cmp;
 
 use specs::{prelude::*, System};
 
-use crate::{actions::Action, engine::components::UnitComponent, unit::UnitType, Player, Warrior};
+use crate::{
+    actions::{Action, Direction},
+    engine::components::UnitComponent,
+    floor::Tile,
+    unit::UnitType,
+    Player, Warrior,
+};
 
 /// This system defines all of the interactions that are possible for the
 /// player-controlled [`Warrior`](crate::warrior::Warrior). The `play_turn`
@@ -37,28 +43,53 @@ impl<'a> System<'a> for PlayerSystem {
             .by_ref()
             .filter(|(_, comp)| comp.unit.unit_type != UnitType::Warrior)
             .collect();
+        let (wx, _) = warrior_comp.unit.position;
         let unit_in_range = {
-            let (wx, _) = warrior_comp.unit.position;
             other_units.iter_mut().find(|(_, comp)| {
                 let (sx, _) = comp.unit.position;
+                // NOTE: the implied assumption is that there can never be a
+                //       unit one space away in both directions,
+                //       which so far is always true!
                 (wx - sx).abs() == 1
             })
         };
-        let (path_clear, captive_found) = match unit_in_range {
-            Some((_, comp)) => (false, comp.unit.unit_type == UnitType::Captive),
-            None => (true, false),
+        let (ahead, behind) = match unit_in_range {
+            Some((_, comp)) => {
+                let (x, _) = comp.unit.position;
+                if wx < x {
+                    let behind = if wx == 0 { Tile::Wall } else { Tile::Empty };
+                    // there is a unit ahead, possibly a wall behind
+                    (Tile::Unit(comp.unit.unit_type), behind)
+                } else {
+                    // there is a unit behind, assume clear ahead
+                    (Tile::Empty, Tile::Unit(comp.unit.unit_type))
+                }
+            }
+            None => {
+                let behind = if wx == 0 { Tile::Wall } else { Tile::Empty };
+                // clear ahead, possibly a wall behind
+                (Tile::Empty, behind)
+            }
         };
         let (health, _) = warrior_comp.unit.hp;
-        let mut warrior = Warrior::new(path_clear, captive_found, health);
+        let mut warrior = Warrior::new(ahead, behind, health);
         self.player.play_turn(&mut warrior);
 
         if let Some(action) = warrior.action {
             match action {
-                Action::Walk => {
+                Action::Walk(direction) => {
+                    let (x, y) = warrior_comp.unit.position;
+                    let (path_clear, new_x) = match direction {
+                        Direction::Forward => (ahead == Tile::Empty, x + 1),
+                        Direction::Backward => (behind == Tile::Empty, x - 1),
+                    };
                     if path_clear {
-                        println!("{} walks forward", &self.name);
-                        let (x, y) = warrior_comp.unit.position;
-                        warrior_comp.unit.position = (x + 1, y);
+                        println!(
+                            "{warrior} walks {direction:?}",
+                            warrior = &self.name,
+                            direction = direction
+                        );
+                        warrior_comp.unit.position = (new_x, y);
                     } else {
                         let (_, enemy_comp) = unit_in_range.unwrap();
                         println!(
@@ -68,9 +99,17 @@ impl<'a> System<'a> for PlayerSystem {
                         );
                     }
                 }
-                Action::Attack => {
+                Action::Attack(direction) => {
+                    let path_clear = match direction {
+                        Direction::Forward => ahead == Tile::Empty,
+                        Direction::Backward => behind == Tile::Empty,
+                    };
                     if path_clear {
-                        println!("{} attacks and hits nothing", &self.name);
+                        println!(
+                            "{warrior} attacks {direction:?} and hits nothing",
+                            warrior = &self.name,
+                            direction = direction
+                        );
                     } else {
                         let (enemy_entity, enemy_comp) = unit_in_range.unwrap();
                         println!(
@@ -113,9 +152,22 @@ impl<'a> System<'a> for PlayerSystem {
                         println!("{} rests but is already at max HP", &self.name);
                     };
                 }
-                Action::Rescue => {
+                Action::Rescue(direction) => {
+                    let (path_clear, captive_found) = match direction {
+                        Direction::Forward => {
+                            (ahead == Tile::Empty, ahead == Tile::Unit(UnitType::Captive))
+                        }
+                        Direction::Backward => (
+                            behind == Tile::Empty,
+                            behind == Tile::Unit(UnitType::Captive),
+                        ),
+                    };
                     if path_clear {
-                        println!("{} tries to rescue someone, but nobody is here", &self.name);
+                        println!(
+                            "{warrior} leans {direction:?} to rescue someone, but nobody is here",
+                            warrior = &self.name,
+                            direction = direction
+                        );
                     } else if captive_found {
                         let (captive_entity, captive_comp) = unit_in_range.unwrap();
                         println!(
@@ -128,8 +180,9 @@ impl<'a> System<'a> for PlayerSystem {
                     } else {
                         let (_, enemy_comp) = unit_in_range.unwrap();
                         println!(
-                            "{warrior} tries to rescue {enemy:?}, but it is not a captive!",
+                            "{warrior} leans {direction:?} to rescue {enemy:?}, but it is not a captive!",
                             warrior = &self.name,
+                            direction = direction,
                             enemy = enemy_comp.unit.unit_type
                         );
                     }

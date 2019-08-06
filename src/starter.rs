@@ -39,8 +39,9 @@ When you're ready, use `cargo run` to attempt this challenge.
 
 It is too dark to see anything, but you smell sludge nearby.
 
-Tip: Use `warrior.path_clear()` to see if there is anything in front of you,
-and `warrior.attack()` to fight it.
+Tip: Add a `rust_warrior::Tile` import and then call `warrior.check()`
+to see if there is anything in front of you or if it's `Empty`. Call
+`warrior.attack()` to fight the sludge.
 
 ```
  --------
@@ -119,7 +120,8 @@ When you're ready, use `cargo run` to attempt this challenge.
 
 You hear cries for help. Captives must need rescuing.
 
-Tip: Use `warrior.captive_found()` to see if there is a captive and
+Tip: Add a `rust_warrior::UnitType` import and call `warrior.check()` to see
+if there is a captive (`Tile::Unit(UnitType::Captive)`). Call
 `warrior.rescue()` to rescue them. Don't attack captives.
 
 ```

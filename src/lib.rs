@@ -41,8 +41,11 @@ pub mod ui;
 pub mod unit;
 pub mod warrior;
 
+pub use actions::Direction;
+pub use floor::Tile;
 pub use game::Game;
 pub use player::Player;
+pub use unit::UnitType;
 pub use warrior::Warrior;
 
 #[cfg(test)]

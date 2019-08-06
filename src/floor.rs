@@ -8,6 +8,7 @@ use crate::unit::{Unit, UnitType};
 /// floor using the `Tile` enum.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Tile {
+    Wall,
     Empty,
     Stairs,
     Unit(UnitType),
@@ -17,6 +18,7 @@ impl Tile {
     /// A character (`&str` for convenience) representation of the tile
     pub fn draw(self) -> &'static str {
         match self {
+            Tile::Wall => panic!("attempted to draw a wall"),
             Tile::Empty => " ",
             Tile::Stairs => ">",
             Tile::Unit(unit_type) => unit_type.draw(),
