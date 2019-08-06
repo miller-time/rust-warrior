@@ -144,6 +144,39 @@ When you're ready, use `cargo run` to attempt this challenge.
 ",
             player = player
         ),
+        6 => format!(
+            "# Level 6
+
+The wall behind you feels a bit further away in this room. And you hear more
+cries for help.
+
+Tip: Add a `rust_warrior::Direction` import and use directional actions.
+The directional action methods are `warrior.walk_toward(Direction)`,
+`warrior.check_toward(Direction)`, `warrior.attack_toward(Direction)`,
+and `warrior.rescue_toward(Direction)`. Archer attacks have a limited range.
+Walk backward if you are taking damage from afar and don't have enough health
+to engage. Consider backing up until you've reached a `Tile::Wall`.
+
+```
+ ---------
+|C @ S aa>|
+ ---------
+
+  > = Stairs
+  @ = {player} (20 HP)
+  C = Captive (1 HP)
+  S = Thick Sludge (18 HP)
+  a = Archer (7 HP)
+```
+
+Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
+
+----------
+
+When you're ready, use `cargo run` to attempt this challenge.
+",
+            player = player
+        ),
         _ => unimplemented!(),
     }
 }
