@@ -8,7 +8,15 @@ use crate::{engine::components::UnitComponent, unit::UnitType};
 
 /// This system acts as an enemy AI, attacking the player if a sludge
 /// exists and is in range of the [`Warrior`](crate::warrior::Warrior).
-pub struct SludgeSystem;
+pub struct SludgeSystem {
+    pub name: String,
+}
+
+impl SludgeSystem {
+    pub fn new(name: String) -> SludgeSystem {
+        SludgeSystem { name }
+    }
+}
 
 impl<'a> System<'a> for SludgeSystem {
     type SystemData = WriteStorage<'a, UnitComponent>;
@@ -16,10 +24,7 @@ impl<'a> System<'a> for SludgeSystem {
     fn run(&mut self, mut units: Self::SystemData) {
         let mut units = (&mut units).join();
         let warrior_comp = units
-            .find(|comp| match comp.unit.unit_type {
-                UnitType::Warrior(_) => true,
-                _ => false,
-            })
+            .find(|comp| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
         for sludge_comp in units.filter(|comp| {
             comp.unit.unit_type == UnitType::Sludge || comp.unit.unit_type == UnitType::ThickSludge
@@ -31,15 +36,15 @@ impl<'a> System<'a> for SludgeSystem {
             // been called yet, then we need to see if the Sludge is at 0 hp (dead) here.
             if hp > 0 && (wx - sx).abs() <= 1 {
                 println!(
-                    "{sludge:?} attacks {warrior:?}",
+                    "{sludge:?} attacks {warrior}",
                     sludge = sludge_comp.unit.unit_type,
-                    warrior = warrior_comp.unit.unit_type
+                    warrior = &self.name
                 );
                 let (current, max) = warrior_comp.unit.hp;
                 let remaining = cmp::max(current - sludge_comp.unit.atk, 0);
                 println!(
-                    "{warrior:?} takes {atk} damage, {remaining} HP left",
-                    warrior = warrior_comp.unit.unit_type,
+                    "{warrior} takes {atk} damage, {remaining} HP left",
+                    warrior = &self.name,
                     atk = sludge_comp.unit.atk,
                     remaining = remaining
                 );

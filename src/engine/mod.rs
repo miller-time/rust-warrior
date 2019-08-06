@@ -34,15 +34,21 @@ use components::UnitComponent;
 use systems::{ArcherSystem, PlayerSystem, SludgeSystem, UiSystem};
 
 /// The entry point for the engine, called by [`Game`](crate::game::Game)
-pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Result<(), String> {
+pub fn start(
+    name: String,
+    floor: Floor,
+    player: impl Player + Send + Sync + 'static,
+) -> Result<(), String> {
     let mut world = World::new();
 
-    let player_system = PlayerSystem::new(player);
+    let player_system = PlayerSystem::new(name.clone(), player);
+    let sludge_system = SludgeSystem::new(name.clone());
+    let archer_system = ArcherSystem::new(name.clone());
     let ui_system = UiSystem::new(floor.clone());
     let mut dispatcher = DispatcherBuilder::new()
         .with(player_system, "player", &[])
-        .with(SludgeSystem, "sludge", &["player"])
-        .with(ArcherSystem, "archer", &["player", "sludge"])
+        .with(sludge_system, "sludge", &["player"])
+        .with(archer_system, "archer", &["player", "sludge"])
         .with(ui_system, "ui", &["player", "sludge", "archer"])
         .build();
 
@@ -61,19 +67,20 @@ pub fn start(floor: Floor, player: impl Player + Send + Sync + 'static) -> Resul
         {
             let units = world.read_storage::<UnitComponent>();
             for entity in world.entities().join() {
-                if let Some(warrior_comp) = units.get(entity) {
-                    if let UnitType::Warrior(name) = &warrior_comp.unit.unit_type {
+                match units.get(entity) {
+                    Some(warrior_comp) if warrior_comp.unit.unit_type == UnitType::Warrior => {
                         let (current, _) = warrior_comp.unit.hp;
                         if current == 0 {
-                            return Err(format!("{} died!", name));
+                            return Err(format!("{} died!", &name));
                         }
                         if step > 100 {
-                            return Err(format!("{} seems to have gotten lost...", name));
+                            return Err(format!("{} seems to have gotten lost...", &name));
                         }
                         if warrior_comp.unit.position == floor.stairs {
                             return Ok(());
                         }
                     }
+                    _ => {}
                 }
             }
         }

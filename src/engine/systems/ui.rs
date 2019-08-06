@@ -22,7 +22,7 @@ impl<'a> System<'a> for UiSystem {
     fn run(&mut self, units: Self::SystemData) {
         self.floor.units = (&units)
             .join()
-            .map(|comp| Unit::new(comp.unit.unit_type.clone(), comp.unit.position))
+            .map(|comp| Unit::new(comp.unit.unit_type, comp.unit.position))
             .collect();
         self.floor.draw();
     }

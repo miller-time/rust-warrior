@@ -10,7 +10,15 @@ use crate::{engine::components::UnitComponent, unit::UnitType};
 /// exists and can attack the [`Warrior`](crate::warrior::Warrior).
 /// The difference from the sludge is that the archer's arrows can reach
 /// the warrior as long as there is no other enemy in the way.
-pub struct ArcherSystem;
+pub struct ArcherSystem {
+    pub name: String,
+}
+
+impl ArcherSystem {
+    pub fn new(name: String) -> ArcherSystem {
+        ArcherSystem { name }
+    }
+}
 
 impl<'a> System<'a> for ArcherSystem {
     type SystemData = WriteStorage<'a, UnitComponent>;
@@ -19,17 +27,11 @@ impl<'a> System<'a> for ArcherSystem {
         let mut units = (&mut units).join();
         let warrior_comp = units
             .by_ref()
-            .find(|comp| match comp.unit.unit_type {
-                UnitType::Warrior(_) => true,
-                _ => false,
-            })
+            .find(|comp| comp.unit.unit_type == UnitType::Warrior)
             .unwrap();
         let enemy_comps: Vec<&mut UnitComponent> = units
             .by_ref()
-            .filter(|comp| match comp.unit.unit_type {
-                UnitType::Warrior(_) => false,
-                _ => true,
-            })
+            .filter(|comp| comp.unit.unit_type != UnitType::Warrior)
             .collect();
         for archer_comp in enemy_comps
             .iter()
@@ -53,15 +55,15 @@ impl<'a> System<'a> for ArcherSystem {
             // been called yet, then we need to see if the Archer is at 0 hp (dead) here.
             if hp > 0 && in_range && obstructions.is_empty() {
                 println!(
-                    "{archer:?} attacks {warrior:?}",
+                    "{archer:?} attacks {warrior}",
                     archer = archer_comp.unit.unit_type,
-                    warrior = warrior_comp.unit.unit_type
+                    warrior = &self.name
                 );
                 let (current, max) = warrior_comp.unit.hp;
                 let remaining = cmp::max(current - archer_comp.unit.atk, 0);
                 println!(
-                    "{warrior:?} takes {atk} damage, {remaining} HP left",
-                    warrior = warrior_comp.unit.unit_type,
+                    "{warrior} takes {atk} damage, {remaining} HP left",
+                    warrior = &self.name,
                     atk = archer_comp.unit.atk,
                     remaining = remaining
                 );

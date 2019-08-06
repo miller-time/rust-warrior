@@ -33,8 +33,8 @@ impl Game {
 
     fn start(&mut self, player: impl Player + Send + Sync + 'static) {
         println!("Starting Level {}", self.profile.level);
-        let floor = Floor::load(self.profile.level, self.profile.name.clone());
-        match engine::start(floor, player) {
+        let floor = Floor::load(self.profile.level);
+        match engine::start(self.profile.name.clone(), floor, player) {
             Ok(_) => {
                 self.level_completed();
             }

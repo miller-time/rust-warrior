@@ -6,7 +6,7 @@ use crate::unit::{Unit, UnitType};
 
 /// The `Floor::tile` method constructs a conceptual representation of the
 /// floor using the `Tile` enum.
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Tile {
     Empty,
     Stairs,
@@ -42,8 +42,8 @@ pub struct Floor {
 
 impl Floor {
     /// Returns the predefined configuration for a given `level` number.
-    pub fn load(level: usize, name: String) -> Floor {
-        match Floor::get(level, name) {
+    pub fn load(level: usize) -> Floor {
+        match Floor::get(level) {
             Some(level) => level,
             None => unimplemented!(),
         }
@@ -51,8 +51,7 @@ impl Floor {
 
     /// Returns `true` if a configuration exists for a given `level` number.
     pub fn exists(level: usize) -> bool {
-        // `name` for this instance doesn't matter because it's thrown away
-        Floor::get(level, "check".to_string()).is_some()
+        Floor::get(level).is_some()
     }
 
     /// Returns a `Tile` representing the current state of a tile
@@ -65,11 +64,11 @@ impl Floor {
         let unit_positions: HashMap<(i32, i32), UnitType> = self
             .units
             .iter()
-            .map(|u| (u.position, u.unit_type.clone()))
+            .map(|u| (u.position, u.unit_type))
             .collect();
 
         if let Some(unit_type) = unit_positions.get(&position) {
-            return Tile::Unit(unit_type.clone());
+            return Tile::Unit(*unit_type);
         }
 
         Tile::Empty
@@ -88,14 +87,14 @@ impl Floor {
         println!(" {}", "-".repeat(self.width));
     }
 
-    fn get(level: usize, name: String) -> Option<Floor> {
+    fn get(level: usize) -> Option<Floor> {
         match level {
             1 => Some(Floor {
-                units: vec![Unit::warrior((0, 0), name)],
+                units: vec![Unit::warrior((0, 0))],
                 ..Floor::default()
             }),
             2 => Some(Floor {
-                units: vec![Unit::warrior((0, 0), name), Unit::sludge((4, 0))],
+                units: vec![Unit::warrior((0, 0)), Unit::sludge((4, 0))],
                 ..Floor::default()
             }),
             3 => Some(Floor {
@@ -103,7 +102,7 @@ impl Floor {
                 height: 1,
                 stairs: (8, 0),
                 units: vec![
-                    Unit::warrior((0, 0), name),
+                    Unit::warrior((0, 0)),
                     Unit::sludge((2, 0)),
                     Unit::sludge((4, 0)),
                     Unit::sludge((5, 0)),
@@ -115,7 +114,7 @@ impl Floor {
                 height: 1,
                 stairs: (6, 0),
                 units: vec![
-                    Unit::warrior((0, 0), name),
+                    Unit::warrior((0, 0)),
                     Unit::thick_sludge((2, 0)),
                     Unit::archer((3, 0)),
                     Unit::thick_sludge((5, 0)),
@@ -126,7 +125,7 @@ impl Floor {
                 height: 1,
                 stairs: (7, 0),
                 units: vec![
-                    Unit::warrior((0, 0), name),
+                    Unit::warrior((0, 0)),
                     Unit::captive((2, 0)),
                     Unit::archer((3, 0)),
                     Unit::archer((4, 0)),
