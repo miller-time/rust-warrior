@@ -24,19 +24,25 @@ impl<'a> System<'a> for ArcherSystem {
     type SystemData = WriteStorage<'a, UnitComponent>;
 
     fn run(&mut self, mut units: Self::SystemData) {
-        let mut units = (&mut units).join();
-        let warrior_comp = units
-            .by_ref()
-            .find(|comp| comp.unit.unit_type == UnitType::Warrior)
-            .unwrap();
-        let enemy_comps: Vec<&mut UnitComponent> = units
-            .by_ref()
-            .filter(|comp| comp.unit.unit_type != UnitType::Warrior)
-            .collect();
-        for archer_comp in enemy_comps
-            .iter()
-            .filter(|comp| comp.unit.unit_type == UnitType::Archer)
-        {
+        let mut warrior_comp = None;
+        let mut archer_comps = Vec::new();
+        let mut enemy_comps = Vec::new();
+        for unit_comp in (&mut units).join() {
+            match unit_comp.unit.unit_type {
+                UnitType::Warrior => {
+                    warrior_comp = Some(unit_comp);
+                }
+                UnitType::Archer => {
+                    archer_comps.push(unit_comp);
+                }
+                _ => {
+                    enemy_comps.push(unit_comp);
+                }
+            }
+        }
+        let warrior_comp = warrior_comp.unwrap();
+
+        for archer_comp in archer_comps {
             let (wx, _) = warrior_comp.unit.position;
             let (sx, _) = archer_comp.unit.position;
             let (hp, _) = archer_comp.unit.hp;

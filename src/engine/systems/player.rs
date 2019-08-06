@@ -34,15 +34,19 @@ impl<'a> System<'a> for PlayerSystem {
     type SystemData = (Entities<'a>, WriteStorage<'a, UnitComponent>);
 
     fn run(&mut self, (entities, mut units): Self::SystemData) {
-        let mut all_units = (&entities, &mut units).join();
-        let warrior_unit = all_units
-            .find(|(_, comp)| comp.unit.unit_type == UnitType::Warrior)
-            .unwrap();
-        let (_, mut warrior_comp) = warrior_unit;
-        let mut other_units: Vec<(Entity, &mut UnitComponent)> = all_units
-            .by_ref()
-            .filter(|(_, comp)| comp.unit.unit_type != UnitType::Warrior)
-            .collect();
+        let mut warrior_comp = None;
+        let mut other_units = Vec::new();
+        for (entity, comp) in (&entities, &mut units).join() {
+            match comp.unit.unit_type {
+                UnitType::Warrior => {
+                    warrior_comp = Some(comp);
+                }
+                _ => {
+                    other_units.push((entity, comp));
+                }
+            }
+        }
+        let warrior_comp = warrior_comp.unwrap();
         let (wx, _) = warrior_comp.unit.position;
         let unit_in_range = {
             other_units.iter_mut().find(|(_, comp)| {

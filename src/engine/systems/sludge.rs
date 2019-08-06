@@ -22,13 +22,22 @@ impl<'a> System<'a> for SludgeSystem {
     type SystemData = WriteStorage<'a, UnitComponent>;
 
     fn run(&mut self, mut units: Self::SystemData) {
-        let mut units = (&mut units).join();
-        let warrior_comp = units
-            .find(|comp| comp.unit.unit_type == UnitType::Warrior)
-            .unwrap();
-        for sludge_comp in units.filter(|comp| {
-            comp.unit.unit_type == UnitType::Sludge || comp.unit.unit_type == UnitType::ThickSludge
-        }) {
+        let mut warrior_comp = None;
+        let mut sludge_comps = Vec::new();
+        for unit_comp in (&mut units).join() {
+            match unit_comp.unit.unit_type {
+                UnitType::Warrior => {
+                    warrior_comp = Some(unit_comp);
+                }
+                UnitType::Sludge | UnitType::ThickSludge => {
+                    sludge_comps.push(unit_comp);
+                }
+                _ => {}
+            }
+        }
+        let warrior_comp = warrior_comp.unwrap();
+
+        for sludge_comp in sludge_comps {
             let (wx, _) = warrior_comp.unit.position;
             let (sx, _) = sludge_comp.unit.position;
             let (hp, _) = sludge_comp.unit.hp;
