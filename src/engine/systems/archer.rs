@@ -42,20 +42,25 @@ impl<'a> System<'a> for ArcherSystem {
         }
         let warrior_comp = warrior_comp.unwrap();
 
-        for archer_comp in archer_comps {
+        for archer_comp in &archer_comps {
             let (wx, _) = warrior_comp.unit.position;
             let (sx, _) = archer_comp.unit.position;
             let (hp, _) = archer_comp.unit.hp;
 
             let in_range = (sx - wx).abs() < 4;
 
-            let obstructions: Vec<&&mut UnitComponent> = enemy_comps
+            let mut obstructions: Vec<&&mut UnitComponent> = enemy_comps
                 .iter()
                 .filter(|comp| {
                     let (x, _) = comp.unit.position;
                     wx < x && x < sx
                 })
                 .collect();
+
+            obstructions.extend(archer_comps.iter().filter(|comp| {
+                let (x, _) = comp.unit.position;
+                wx < x && x < sx
+            }));
 
             // if the Archer is killed and the entity is deleted, but `world.maintain()` hasn't
             // been called yet, then we need to see if the Archer is at 0 hp (dead) here.
