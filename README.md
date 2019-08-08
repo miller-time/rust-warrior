@@ -14,7 +14,7 @@ designed Rust Warrior partly from scratch.
 
 [ruby-warrior]: https://github.com/ryanb/ruby-warrior
 
-# Set Up
+## Set Up
 
 Rust Warrior ships with two major components: a binary that generates a
 new game directory, and a library which contains the main game engine.
@@ -25,16 +25,20 @@ To get started, install `rust-warrior`.
 $ cargo install rust-warrior
 ```
 
-Then run `rust-warrior` and follow the prompts to set up all the
-necessary files in a new game directory.
+Then run `rust-warrior` and follow the prompts to pick a player name and
+set up all the necessary files in a new game directory.
 
 ```sh
 $ rust-warrior
 ```
 
-Then navigate to `rustwarrior/<name>` and run the program.
+Then navigate to `rustwarrior/<name>` (the name you provided). You'll find
+a `README.md` with instructions for level 1 and a `src/main.rs` with the
+scaffolding for a Rust Warrior player project (with some `rust_warrior`
+imports).
+
+After reviewing the instructions, start playing level 1 by running the project:
 
 ```sh
-$ cd rustwarrior/<name>
 $ cargo run
 ```
