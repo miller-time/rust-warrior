@@ -1,7 +1,9 @@
 # Rust Warrior
 
-[![Crates.io][crates-badge]][crates] [![Docs.rs][docs-badge]][docs] [![Deps.rs][deps-badge]][deps]
+[![Build Status][travis-badge]][travis] [![Crates.io][crates-badge]][crates] [![Docs.rs][docs-badge]][docs] [![Deps.rs][deps-badge]][deps]
 
+[travis-badge]: https://travis-ci.org/miller-time/rust-warrior.svg
+[travis]: https://travis-ci.org/miller-time/rust-warrior
 [crates-badge]: https://img.shields.io/crates/v/rust-warrior
 [crates]: https://crates.io/crates/rust-warrior
 [docs-badge]: https://docs.rs/rust-warrior/badge.svg
