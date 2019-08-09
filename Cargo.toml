@@ -16,7 +16,7 @@ status = "actively-developed"
 
 [dependencies]
 toml = "0.5.1"
-base64 = "0.2.0"
+base64 = "0.10.1"
 
 [dependencies.specs]
 version = "0.15.0"

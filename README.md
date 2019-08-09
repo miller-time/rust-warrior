@@ -1,11 +1,13 @@
 # Rust Warrior
 
-[![Crates.io][crates-badge]][crates] [![Docs.rs][docs-badge]][docs]
+[![Crates.io][crates-badge]][crates] [![Docs.rs][docs-badge]][docs] [![Deps.rs][deps-badge]][deps]
 
 [crates-badge]: https://img.shields.io/crates/v/rust-warrior
 [crates]: https://crates.io/crates/rust-warrior
 [docs-badge]: https://docs.rs/rust-warrior/badge.svg
 [docs]: https://docs.rs/rust-warrior/
+[deps-badge]: https://deps.rs/repo/github/miller-time/rust-warrior/status.svg
+[deps]: https://deps.rs/repo/github/miller-time/rust-warrior
 
 This game is inspired by [Ruby Warrior][ruby-warrior], which I played many
 years ago. This project started as a direct port, but because Ruby is an
