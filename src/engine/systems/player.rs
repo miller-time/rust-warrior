@@ -76,7 +76,8 @@ impl<'a> System<'a> for PlayerSystem {
             }
         };
         let (health, _) = warrior_comp.unit.hp;
-        let mut warrior = Warrior::new(ahead, behind, health);
+        let facing = warrior_comp.unit.facing.unwrap();
+        let mut warrior = Warrior::new(ahead, behind, health, facing);
         self.player.play_turn(&mut warrior);
 
         if let Some(action) = warrior.action {

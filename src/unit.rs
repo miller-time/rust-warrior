@@ -1,5 +1,7 @@
 //! contains types that represent units that appear in the game
 
+use crate::Direction;
+
 /// The Warrior (our protagonist), enemy Sludges and Archers, and Captives.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum UnitType {
@@ -30,6 +32,7 @@ pub struct Unit {
     pub position: (i32, i32),
     pub hp: (i32, i32),
     pub atk: i32,
+    pub facing: Option<Direction>,
 }
 
 impl Unit {
@@ -51,6 +54,7 @@ impl Unit {
             position,
             hp: (20, 20),
             atk: 5,
+            facing: Some(Direction::Forward),
         }
     }
 
@@ -61,6 +65,7 @@ impl Unit {
             position,
             hp: (12, 12),
             atk: 3,
+            facing: None,
         }
     }
 
@@ -71,6 +76,7 @@ impl Unit {
             position,
             hp: (18, 18),
             atk: 3,
+            facing: None,
         }
     }
 
@@ -81,6 +87,7 @@ impl Unit {
             position,
             hp: (7, 7),
             atk: 3,
+            facing: None,
         }
     }
 
@@ -91,6 +98,7 @@ impl Unit {
             position,
             hp: (1, 1),
             atk: 0,
+            facing: None,
         }
     }
 }

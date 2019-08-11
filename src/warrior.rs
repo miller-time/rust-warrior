@@ -12,15 +12,17 @@ pub struct Warrior {
     ahead: Tile,
     behind: Tile,
     health: i32,
+    facing: Direction,
     pub action: Option<Action>,
 }
 
 impl Warrior {
-    pub fn new(ahead: Tile, behind: Tile, health: i32) -> Warrior {
+    pub fn new(ahead: Tile, behind: Tile, health: i32, facing: Direction) -> Warrior {
         Warrior {
             ahead,
             behind,
             health,
+            facing,
             action: None,
         }
     }
