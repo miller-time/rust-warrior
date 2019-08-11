@@ -44,22 +44,22 @@ impl<'a> System<'a> for ArcherSystem {
 
         for archer_comp in &archer_comps {
             let (wx, _) = warrior_comp.unit.position;
-            let (sx, _) = archer_comp.unit.position;
+            let (ax, _) = archer_comp.unit.position;
             let (hp, _) = archer_comp.unit.hp;
 
-            let in_range = (sx - wx).abs() < 4;
+            let in_range = (ax - wx).abs() < 4;
 
             let mut obstructions: Vec<&&mut UnitComponent> = enemy_comps
                 .iter()
                 .filter(|comp| {
                     let (x, _) = comp.unit.position;
-                    wx < x && x < sx
+                    (wx < x && x < ax) || (wx > x && x > ax)
                 })
                 .collect();
 
             obstructions.extend(archer_comps.iter().filter(|comp| {
                 let (x, _) = comp.unit.position;
-                wx < x && x < sx
+                (wx < x && x < ax) || (wx > x && x > ax)
             }));
 
             // if the Archer is killed and the entity is deleted, but `world.maintain()` hasn't
