@@ -192,6 +192,14 @@ impl<'a> System<'a> for PlayerSystem {
                         );
                     }
                 }
+                Action::Pivot(direction) => {
+                    println!(
+                        "{warrior} pivots to face {direction:?}",
+                        warrior = &self.name,
+                        direction = direction
+                    );
+                    warrior_comp.unit.facing = Some(direction);
+                }
             }
         }
     }

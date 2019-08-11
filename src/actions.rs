@@ -27,4 +27,6 @@ pub enum Action {
     Rest,
     /// rescue a captive one tile away
     Rescue(Direction),
+    /// rotate 180 degrees
+    Pivot(Direction),
 }

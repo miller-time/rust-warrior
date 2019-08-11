@@ -82,6 +82,15 @@ impl Warrior {
         self.perform(Action::Rescue(direction));
     }
 
+    /// Rotate 180 degrees
+    pub fn pivot(&mut self) {
+        let direction = match self.facing {
+            Direction::Forward => Direction::Backward,
+            Direction::Backward => Direction::Forward,
+        };
+        self.perform(Action::Pivot(direction));
+    }
+
     fn perform(&mut self, action: Action) {
         if self.action.is_some() {
             println!("Warrior already performed action!");
