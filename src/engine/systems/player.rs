@@ -57,26 +57,30 @@ impl<'a> System<'a> for PlayerSystem {
                 (wx - sx).abs() == 1
             })
         };
-        let (ahead, behind) = match unit_in_range {
+        let (east, west) = match unit_in_range {
             Some((_, comp)) => {
                 let (x, _) = comp.unit.position;
                 if wx < x {
-                    let behind = if wx == 0 { Tile::Wall } else { Tile::Empty };
+                    let west = if wx == 0 { Tile::Wall } else { Tile::Empty };
                     // there is a unit ahead, possibly a wall behind
-                    (Tile::Unit(comp.unit.unit_type), behind)
+                    (Tile::Unit(comp.unit.unit_type), west)
                 } else {
                     // there is a unit behind, assume clear ahead
                     (Tile::Empty, Tile::Unit(comp.unit.unit_type))
                 }
             }
             None => {
-                let behind = if wx == 0 { Tile::Wall } else { Tile::Empty };
-                // clear ahead, possibly a wall behind
-                (Tile::Empty, behind)
+                let west = if wx == 0 { Tile::Wall } else { Tile::Empty };
+                // east clear, possibly a wall to the west
+                (Tile::Empty, west)
             }
         };
         let (health, _) = warrior_comp.unit.hp;
         let facing = warrior_comp.unit.facing.unwrap();
+        let (ahead, behind) = match facing {
+            Direction::Forward => (east, west),
+            Direction::Backward => (west, east),
+        };
         let mut warrior = Warrior::new(ahead, behind, health, facing);
         self.player.play_turn(&mut warrior);
 
@@ -84,9 +88,18 @@ impl<'a> System<'a> for PlayerSystem {
             match action {
                 Action::Walk(direction) => {
                     let (x, y) = warrior_comp.unit.position;
-                    let (path_clear, new_x) = match direction {
-                        Direction::Forward => (ahead == Tile::Empty, x + 1),
-                        Direction::Backward => (behind == Tile::Empty, x - 1),
+                    let path_clear = match direction {
+                        Direction::Forward => ahead == Tile::Empty,
+                        Direction::Backward => behind == Tile::Empty,
+                    };
+                    let new_x = if facing == direction {
+                        // either facing Forward and walking Forward
+                        // or facing Backward and walking Backward
+                        x + 1
+                    } else {
+                        // either facing Forward and walking Backward
+                        // or facing Backward and walking Forward
+                        x - 1
                     };
                     if path_clear {
                         println!(
