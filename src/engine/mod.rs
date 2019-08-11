@@ -41,7 +41,7 @@ pub fn start(
 ) -> Result<(), String> {
     let mut world = World::new();
 
-    let player_system = PlayerSystem::new(name.clone(), player);
+    let player_system = PlayerSystem::new(name.clone(), floor.clone(), player);
     let sludge_system = SludgeSystem::new(name.clone());
     let archer_system = ArcherSystem::new(name.clone());
     let ui_system = UiSystem::new(floor.clone());

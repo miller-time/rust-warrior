@@ -7,7 +7,7 @@ use specs::{prelude::*, System};
 use crate::{
     actions::{Action, Direction},
     engine::components::UnitComponent,
-    floor::Tile,
+    floor::{Floor, Tile},
     unit::UnitType,
     Player, Warrior,
 };
@@ -18,13 +18,19 @@ use crate::{
 /// warrior whose actions must be specified.
 pub struct PlayerSystem {
     pub name: String,
+    pub floor: Floor,
     pub player: Box<dyn Player + Send + Sync>,
 }
 
 impl PlayerSystem {
-    pub fn new(name: String, player: impl Player + Send + Sync + 'static) -> PlayerSystem {
+    pub fn new(
+        name: String,
+        floor: Floor,
+        player: impl Player + Send + Sync + 'static,
+    ) -> PlayerSystem {
         PlayerSystem {
             name,
+            floor,
             player: Box::new(player),
         }
     }
@@ -70,9 +76,13 @@ impl<'a> System<'a> for PlayerSystem {
                 }
             }
             None => {
+                let east = if (wx + 1) == self.floor.width as i32 {
+                    Tile::Wall
+                } else {
+                    Tile::Empty
+                };
                 let west = if wx == 0 { Tile::Wall } else { Tile::Empty };
-                // east clear, possibly a wall to the west
-                (Tile::Empty, west)
+                (east, west)
             }
         };
         let (health, _) = warrior_comp.unit.hp;
