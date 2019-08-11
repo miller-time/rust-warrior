@@ -118,16 +118,23 @@ impl<'a> System<'a> for PlayerSystem {
                     } else {
                         let (enemy_entity, enemy_comp) = unit_in_range.unwrap();
                         println!(
-                            "{warrior} attacks {enemy:?}",
+                            "{warrior} attacks {direction:?} and hits {enemy:?}",
                             warrior = &self.name,
+                            direction = direction,
                             enemy = enemy_comp.unit.unit_type
                         );
+                        let atk = match direction {
+                            Direction::Forward => warrior_comp.unit.atk,
+                            Direction::Backward => {
+                                (warrior_comp.unit.atk as f32 / 2.0).ceil() as i32
+                            }
+                        };
                         let (current, max) = enemy_comp.unit.hp;
-                        let remaining = cmp::max(current - warrior_comp.unit.atk, 0);
+                        let remaining = cmp::max(current - atk, 0);
                         println!(
                             "{enemy:?} takes {atk} damage, {remaining} HP left",
                             enemy = enemy_comp.unit.unit_type,
-                            atk = warrior_comp.unit.atk,
+                            atk = atk,
                             remaining = remaining
                         );
                         enemy_comp.unit.hp = (remaining, max);
@@ -147,7 +154,7 @@ impl<'a> System<'a> for PlayerSystem {
                             2
                         };
                         println!(
-                            "{warrior} regains {restored} HP from resting! Now {remaining} left",
+                            "{warrior} regains {restored} HP from resting! Now {remaining} HP left",
                             warrior = &self.name,
                             restored = restored,
                             remaining = current + restored
