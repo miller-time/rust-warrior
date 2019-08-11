@@ -177,6 +177,34 @@ When you're ready, use `cargo run` to attempt this challenge.
 ",
             player = player
         ),
+        7 => format!(
+            "# Level 7
+
+You feel a wall right in front of you and an opening behind you.
+
+Tip: You are not as effective at attacking backward. Use
+`warrior.check_toward(Drection)` to see if you are facing a `Tile::Wall` and
+`warrior.pivot()` to turn around.
+
+```
+ ------
+|>a S @|
+ ------
+
+  > = Stairs
+  @ = {player} (20 HP)
+  a = Archer (7 HP)
+  S = Thick Sludge (18 HP)
+```
+
+Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
+
+----------
+
+When you're ready, use `cargo run` to attempt this challenge.
+",
+            player = player
+        ),
         _ => unimplemented!(),
     }
 }

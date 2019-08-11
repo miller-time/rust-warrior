@@ -147,6 +147,16 @@ impl Floor {
                     Unit::archer((7, 0)),
                 ],
             }),
+            7 => Some(Floor {
+                width: 6,
+                height: 1,
+                stairs: (0, 0),
+                units: vec![
+                    Unit::archer((1, 0)),
+                    Unit::thick_sludge((3, 0)),
+                    Unit::warrior((5, 0)),
+                ],
+            }),
             _ => None,
         }
     }
