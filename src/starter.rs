@@ -97,9 +97,9 @@ taking damage. Add a `health` field to your `Player` struct and compare it on
 each turn to see if you're taking damage.
 
 ```
- -------
-|@ Sa S>|
- -------
+ --------
+|@  Sa S>|
+ --------
 
   > = Stairs
   @ = {player} (20 HP)
