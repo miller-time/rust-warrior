@@ -32,9 +32,7 @@ $ cargo install rust-warrior
 Then run `rust-warrior` and follow the prompts to pick a player name and
 set up all the necessary files in a new game directory.
 
-```sh
-$ rust-warrior
-```
+![getting started](getting-started.gif)
 
 Then navigate to `rustwarrior/<name>` (the name you provided). You'll find
 a `README.md` with instructions for level 1 and a `src/main.rs` with the
