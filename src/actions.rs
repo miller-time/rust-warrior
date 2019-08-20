@@ -29,4 +29,6 @@ pub enum Action {
     Rescue(Direction),
     /// rotate 180 degrees
     Pivot(Direction),
+    /// fire an arrow up to three tiles
+    Shoot(Direction),
 }

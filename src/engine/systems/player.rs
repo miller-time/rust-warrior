@@ -62,7 +62,7 @@ impl<'a> System<'a> for PlayerSystem {
         let x_min = cmp::max(wx - 3, 0);
         let x_max = cmp::min(wx + 3, self.floor.width as i32 - 1);
 
-        let west: Vec<Tile> = (x_min..wx)
+        let west: Vec<(i32, Tile)> = (x_min..wx)
             .rev()
             .map(|i| {
                 let unit = other_units
@@ -73,13 +73,13 @@ impl<'a> System<'a> for PlayerSystem {
                         x == i
                     });
                 match unit {
-                    Some(unit) => Tile::Unit(unit.unit_type),
-                    _ => Tile::Empty,
+                    Some(unit) => (i, Tile::Unit(unit.unit_type)),
+                    _ => (i, Tile::Empty),
                 }
             })
             .collect();
 
-        let east: Vec<Tile> = ((wx + 1)..=x_max)
+        let east: Vec<(i32, Tile)> = ((wx + 1)..=x_max)
             .map(|i| {
                 let unit = other_units
                     .iter_mut()
@@ -89,8 +89,8 @@ impl<'a> System<'a> for PlayerSystem {
                         x == i
                     });
                 match unit {
-                    Some(unit) => Tile::Unit(unit.unit_type),
-                    _ => Tile::Empty,
+                    Some(unit) => (i, Tile::Unit(unit.unit_type)),
+                    _ => (i, Tile::Empty),
                 }
             })
             .collect();
@@ -99,7 +99,14 @@ impl<'a> System<'a> for PlayerSystem {
             Direction::Forward => (east, west),
             Direction::Backward => (west, east),
         };
-        let mut warrior = Warrior::new(ahead, behind, health, facing);
+        let mut warrior = Warrior::new(
+            // `Vec<(i32, Tile)>` -> `Vec<Tile>`
+            ahead.clone().into_iter().map(|(_, t)| t).collect(),
+            // `Vec<(i32, Tile)>` -> `Vec<Tile>`
+            behind.clone().into_iter().map(|(_, t)| t).collect(),
+            health,
+            facing
+        );
         self.player.play_turn(&mut warrior);
 
         if let Some(action) = warrior.action {
@@ -257,6 +264,52 @@ impl<'a> System<'a> for PlayerSystem {
                         direction = direction
                     );
                     warrior_comp.unit.facing = Some(direction);
+                }
+                Action::Shoot(direction) => {
+                    // find the first unit in the direction the Warrior is shooting, if one exists
+                    let target = other_units.iter_mut().find(|(_, comp)| {
+                        let (x, _) = comp.unit.position;
+                        match direction {
+                            Direction::Forward => match ahead.iter().find(|(_, tile)| *tile != Tile::Empty) {
+                                Some((target_x, _)) if *target_x == x => true,
+                                _ => false,
+                            },
+                            Direction::Backward => match behind.iter().find(|(_, tile)| *tile != Tile::Empty) {
+                                Some((target_x, _)) if *target_x == x => true,
+                                _ => false,
+                            }
+                        }
+                    });
+
+                    if let Some((enemy_entity, enemy_comp)) = target {
+                        println!(
+                            "{warrior} lets loose an arrow {direction:?} and hits {enemy:?}",
+                            warrior = &self.name,
+                            direction = direction,
+                            enemy = enemy_comp.unit.unit_type
+                        );
+                        let atk = (warrior_comp.unit.atk as f32 / 2.0).ceil() as i32;
+                        let (current, max) = enemy_comp.unit.hp;
+                        let remaining = cmp::max(current - atk, 0);
+                        println!(
+                            "{enemy:?} takes {atk} damage, {remaining} HP left",
+                            enemy = enemy_comp.unit.unit_type,
+                            atk = atk,
+                            remaining = remaining
+                        );
+                        enemy_comp.unit.hp = (remaining, max);
+
+                        if remaining == 0 {
+                            println!("{:?} is dead!", enemy_comp.unit.unit_type);
+                            entities.delete(*enemy_entity).unwrap();
+                        }
+                    } else {
+                        println!(
+                            "{warrior} lets loose an arrow {direction:?} and hits nothing",
+                            warrior = &self.name,
+                            direction = direction
+                        );
+                    }
                 }
             }
         }

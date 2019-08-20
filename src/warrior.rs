@@ -112,6 +112,16 @@ impl Warrior {
         self.perform(Action::Pivot(direction));
     }
 
+    /// Fire an arrow up to three tiles in front of the Warrior.
+    pub fn shoot(&mut self) {
+        self.shoot_toward(Direction::Forward);
+    }
+
+    /// Fire an arrow up to three tiles toward specified `direction`.
+    pub fn shoot_toward(&mut self, direction: Direction) {
+        self.perform(Action::Shoot(direction));
+    }
+
     fn perform(&mut self, action: Action) {
         if self.action.is_some() {
             println!("Warrior already performed action!");
