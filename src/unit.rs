@@ -10,6 +10,7 @@ pub enum UnitType {
     Sludge,
     ThickSludge,
     Warrior,
+    Wizard,
 }
 
 impl UnitType {
@@ -21,6 +22,7 @@ impl UnitType {
             UnitType::Sludge => "s",
             UnitType::ThickSludge => "S",
             UnitType::Warrior => "@",
+            UnitType::Wizard => "w",
         }
     }
 }
@@ -44,6 +46,7 @@ impl Unit {
             UnitType::Sludge => Unit::sludge(position),
             UnitType::ThickSludge => Unit::thick_sludge(position),
             UnitType::Warrior => Unit::warrior(position),
+            UnitType::Wizard => Unit::wizard(position),
         }
     }
 
@@ -99,6 +102,17 @@ impl Unit {
             hp: (20, 20),
             atk: 5,
             facing: Some(Direction::Forward),
+        }
+    }
+
+    /// Create a unit of type Wizard (3 HP, 11 ATK) at `position`.
+    pub fn wizard(position: (i32, i32)) -> Unit {
+        Unit {
+            unit_type: UnitType::Wizard,
+            position,
+            hp: (3, 3),
+            atk: 11,
+            facing: None,
         }
     }
 }
