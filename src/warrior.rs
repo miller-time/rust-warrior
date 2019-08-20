@@ -9,15 +9,15 @@ use crate::{
 /// game. An instance is passed to [`Player`](crate::player::Player) via the
 /// `play_turn` method.
 pub struct Warrior {
-    ahead: Tile,
-    behind: Tile,
+    ahead: Vec<Tile>,
+    behind: Vec<Tile>,
     health: i32,
     facing: Direction,
     pub action: Option<Action>,
 }
 
 impl Warrior {
-    pub fn new(ahead: Tile, behind: Tile, health: i32, facing: Direction) -> Warrior {
+    pub fn new(ahead: Vec<Tile>, behind: Vec<Tile>, health: i32, facing: Direction) -> Warrior {
         Warrior {
             ahead,
             behind,
@@ -47,8 +47,14 @@ impl Warrior {
     /// Returns a [`Tile`](crate::Tile).
     pub fn check_toward(&self, direction: Direction) -> Tile {
         match direction {
-            Direction::Forward => self.ahead,
-            Direction::Backward => self.behind,
+            Direction::Forward => match self.ahead.first() {
+                Some(tile) => *tile,
+                None => Tile::Wall,
+            },
+            Direction::Backward => match self.behind.first() {
+                Some(tile) => *tile,
+                None => Tile::Wall,
+            },
         }
     }
 

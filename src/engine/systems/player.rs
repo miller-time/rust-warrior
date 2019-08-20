@@ -53,40 +53,48 @@ impl<'a> System<'a> for PlayerSystem {
             }
         }
         let warrior_comp = warrior_comp.unwrap();
-        let (wx, _) = warrior_comp.unit.position;
-        let unit_in_range = {
-            other_units.iter_mut().find(|(_, comp)| {
-                let (sx, _) = comp.unit.position;
-                // NOTE: the implied assumption is that there can never be a
-                //       unit one space away in both directions,
-                //       which so far is always true!
-                (wx - sx).abs() == 1
-            })
-        };
-        let (east, west) = match unit_in_range {
-            Some((_, comp)) => {
-                let (x, _) = comp.unit.position;
-                if wx < x {
-                    let west = if wx == 0 { Tile::Wall } else { Tile::Empty };
-                    // there is a unit ahead, possibly a wall behind
-                    (Tile::Unit(comp.unit.unit_type), west)
-                } else {
-                    // there is a unit behind, assume clear ahead
-                    (Tile::Empty, Tile::Unit(comp.unit.unit_type))
-                }
-            }
-            None => {
-                let east = if (wx + 1) == self.floor.width as i32 {
-                    Tile::Wall
-                } else {
-                    Tile::Empty
-                };
-                let west = if wx == 0 { Tile::Wall } else { Tile::Empty };
-                (east, west)
-            }
-        };
+        let (wx, wy) = warrior_comp.unit.position;
         let (health, _) = warrior_comp.unit.hp;
         let facing = warrior_comp.unit.facing.unwrap();
+
+        // NOTE: with the bow this range is 3 spaces
+        // TODO: conditionally determine warrior's range
+        let x_min = cmp::max(wx - 3, 0);
+        let x_max = cmp::min(wx + 3, self.floor.width as i32 - 1);
+
+        let west: Vec<Tile> = (x_min..wx)
+            .rev()
+            .map(|i| {
+                let unit = other_units
+                    .iter_mut()
+                    .map(|(_, comp)| &comp.unit)
+                    .find(|unit| {
+                        let (x, _) = unit.position;
+                        x == i
+                    });
+                match unit {
+                    Some(unit) => Tile::Unit(unit.unit_type),
+                    _ => Tile::Empty,
+                }
+            })
+            .collect();
+
+        let east: Vec<Tile> = ((wx + 1)..=x_max)
+            .map(|i| {
+                let unit = other_units
+                    .iter_mut()
+                    .map(|(_, comp)| &comp.unit)
+                    .find(|unit| {
+                        let (x, _) = unit.position;
+                        x == i
+                    });
+                match unit {
+                    Some(unit) => Tile::Unit(unit.unit_type),
+                    _ => Tile::Empty,
+                }
+            })
+            .collect();
+
         let (ahead, behind) = match facing {
             Direction::Forward => (east, west),
             Direction::Backward => (west, east),
@@ -97,49 +105,53 @@ impl<'a> System<'a> for PlayerSystem {
         if let Some(action) = warrior.action {
             match action {
                 Action::Walk(direction) => {
-                    let (x, y) = warrior_comp.unit.position;
-                    let path_clear = match direction {
-                        Direction::Forward => ahead == Tile::Empty,
-                        Direction::Backward => behind == Tile::Empty,
-                    };
-                    let new_x = if facing == direction {
+                    let target_x = if facing == direction {
                         // either facing Forward and walking Forward
                         // or facing Backward and walking Backward
-                        x + 1
+                        wx + 1
                     } else {
                         // either facing Forward and walking Backward
                         // or facing Backward and walking Forward
-                        x - 1
+                        wx - 1
                     };
-                    if path_clear {
-                        println!(
-                            "{warrior} walks {direction:?}",
-                            warrior = &self.name,
-                            direction = direction
-                        );
-                        warrior_comp.unit.position = (new_x, y);
-                    } else {
-                        let (_, enemy_comp) = unit_in_range.unwrap();
+
+                    let other_unit = other_units.iter().find(|(_, comp)| {
+                        let (x, _) = comp.unit.position;
+                        x == target_x
+                    });
+
+                    if let Some((_, enemy_comp)) = other_unit {
                         println!(
                             "{warrior} bumps into {enemy:?}",
                             warrior = &self.name,
                             enemy = enemy_comp.unit.unit_type
                         );
-                    }
-                }
-                Action::Attack(direction) => {
-                    let path_clear = match direction {
-                        Direction::Forward => ahead == Tile::Empty,
-                        Direction::Backward => behind == Tile::Empty,
-                    };
-                    if path_clear {
+                    } else {
                         println!(
-                            "{warrior} attacks {direction:?} and hits nothing",
+                            "{warrior} walks {direction:?}",
                             warrior = &self.name,
                             direction = direction
                         );
+                        warrior_comp.unit.position = (target_x, wy);
+                    }
+                }
+                Action::Attack(direction) => {
+                    let target_x = if facing == direction {
+                        // either facing Forward and attacking Forward
+                        // or facing Backward and attacking Backward
+                        wx + 1
                     } else {
-                        let (enemy_entity, enemy_comp) = unit_in_range.unwrap();
+                        // either facing Forward and attacking Backward
+                        // or facing Backward and attacking Forward
+                        wx - 1
+                    };
+
+                    let other_unit = other_units.iter_mut().find(|(_, comp)| {
+                        let (x, _) = comp.unit.position;
+                        x == target_x
+                    });
+
+                    if let Some((enemy_entity, enemy_comp)) = other_unit {
                         println!(
                             "{warrior} attacks {direction:?} and hits {enemy:?}",
                             warrior = &self.name,
@@ -166,6 +178,12 @@ impl<'a> System<'a> for PlayerSystem {
                             println!("{:?} is dead!", enemy_comp.unit.unit_type);
                             entities.delete(*enemy_entity).unwrap();
                         }
+                    } else {
+                        println!(
+                            "{warrior} attacks {direction:?} and hits nothing",
+                            warrior = &self.name,
+                            direction = direction
+                        );
                     }
                 }
                 Action::Rest => {
@@ -188,38 +206,48 @@ impl<'a> System<'a> for PlayerSystem {
                     };
                 }
                 Action::Rescue(direction) => {
-                    let (path_clear, captive_found) = match direction {
-                        Direction::Forward => {
-                            (ahead == Tile::Empty, ahead == Tile::Unit(UnitType::Captive))
-                        }
-                        Direction::Backward => (
-                            behind == Tile::Empty,
-                            behind == Tile::Unit(UnitType::Captive),
-                        ),
-                    };
-                    if path_clear {
-                        println!(
-                            "{warrior} leans {direction:?} to rescue someone, but nobody is here",
-                            warrior = &self.name,
-                            direction = direction
-                        );
-                    } else if captive_found {
-                        let (captive_entity, captive_comp) = unit_in_range.unwrap();
-                        println!(
-                            "{warrior} frees {captive:?} from their bindings",
-                            warrior = &self.name,
-                            captive = captive_comp.unit.unit_type
-                        );
-                        println!("{:?} escapes!", captive_comp.unit.unit_type);
-                        entities.delete(*captive_entity).unwrap();
+                    let target_x = if facing == direction {
+                        // either facing Forward and rescuing Forward
+                        // or facing Backward and rescuing Backward
+                        wx + 1
                     } else {
-                        let (_, enemy_comp) = unit_in_range.unwrap();
-                        println!(
-                            "{warrior} leans {direction:?} to rescue {enemy:?}, but it is not a captive!",
-                            warrior = &self.name,
-                            direction = direction,
-                            enemy = enemy_comp.unit.unit_type
-                        );
+                        // either facing Forward and rescuing Backward
+                        // or facing Backward and rescuing Forward
+                        wx - 1
+                    };
+
+                    let other_unit = other_units.iter().find(|(_, comp)| {
+                        let (x, _) = comp.unit.position;
+                        x == target_x
+                    });
+
+                    match other_unit {
+                        Some((captive_entity, captive_comp))
+                            if captive_comp.unit.unit_type == UnitType::Captive =>
+                        {
+                            println!(
+                                "{warrior} frees {captive:?} from their bindings",
+                                warrior = &self.name,
+                                captive = captive_comp.unit.unit_type
+                            );
+                            println!("{:?} escapes!", captive_comp.unit.unit_type);
+                            entities.delete(*captive_entity).unwrap();
+                        }
+                        Some((_, enemy_comp)) => {
+                            println!(
+                                "{warrior} leans {direction:?} to rescue {enemy:?}, but it is not a captive!",
+                                warrior = &self.name,
+                                direction = direction,
+                                enemy = enemy_comp.unit.unit_type
+                            );
+                        }
+                        None => {
+                            println!(
+                                "{warrior} leans {direction:?} to rescue someone, but nobody is here",
+                                warrior = &self.name,
+                                direction = direction
+                            );
+                        }
                     }
                 }
                 Action::Pivot(direction) => {
