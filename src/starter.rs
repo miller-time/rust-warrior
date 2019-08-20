@@ -205,19 +205,35 @@ When you're ready, use `cargo run` to attempt this challenge.
 ",
             player = player
         ),
+        8 => format!(
+            "# Level 8
 
-        // You hear the mumbling of wizards. Beware of their deadly wands! Good thing you found a bow.
+You hear the mumbling of wizards. Beware of their deadly wands! Good thing you
+found a bow and some arrows.
 
-        // Tip: Use warrior.look to determine your surroundings, and warrior.shoot! to fire an arrow.
+Tip: Use `warrior.look` to determine your surroundings, and `warrior.shoot` to
+fire an arrow. Wizards are deadly but low in health. Kill them before they
+have time to attack.
 
-        //  ------
-        // |@ Cww>|
-        //  ------
+```
+ ------
+|@ Cww>|
+ ------
 
-        //   > = Stairs
-        //   @ = {player} (20 HP)
-        //   C = Captive (1 HP)
-        //   w = Wizard (3 HP)
+  > = Stairs
+  @ = {player} (20 HP)
+  C = Captive (1 HP)
+  w = Wizard (3 HP)
+```
+
+Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
+
+----------
+
+When you're ready, use `cargo run` to attempt this challenge.
+",
+            player = player
+        ),
         _ => unimplemented!(),
     }
 }
