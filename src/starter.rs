@@ -205,6 +205,19 @@ When you're ready, use `cargo run` to attempt this challenge.
 ",
             player = player
         ),
+
+        // You hear the mumbling of wizards. Beware of their deadly wands! Good thing you found a bow.
+
+        // Tip: Use warrior.look to determine your surroundings, and warrior.shoot! to fire an arrow.
+
+        //  ------
+        // |@ Cww>|
+        //  ------
+
+        //   > = Stairs
+        //   @ = {player} (20 HP)
+        //   C = Captive (1 HP)
+        //   w = Wizard (3 HP)
         _ => unimplemented!(),
     }
 }

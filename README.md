@@ -44,3 +44,17 @@ After reviewing the instructions, start playing level 1 by running the project:
 ```sh
 $ cargo run
 ```
+
+## To Do
+
+* [ ] gate the warrior abilities by current level
+    * possibly also include an inventory system
+      (would help with controlling `shoot`)
+* [ ] beginner levels
+    * [ ] level 8
+    * [ ] level 9
+* [ ] intermediate levels
+* [ ] keep score
+* [ ] option to replay earlier levels
+    * possibly allow warrior to *learn* abilities while progressing
+      (can the warrior use higher level abilities on lower levels?)
