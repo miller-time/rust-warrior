@@ -51,7 +51,7 @@ $ cargo run
     * possibly also include an inventory system
       (would help with controlling `shoot`)
 * [ ] beginner levels
-    * [ ] level 8
+    * [x] level 8
     * [ ] level 9
 * [ ] intermediate levels
 * [ ] keep score
