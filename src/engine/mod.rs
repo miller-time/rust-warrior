@@ -7,8 +7,8 @@
 //! ### Entities
 //!
 //! There are one or more entities created, depending on the level. There
-//! is always a warrior, there can be one or more sludge or archer enemies,
-//! and there can be one or more captives.
+//! is always a warrior, there can be one or more sludge, archer, and wizard
+//! enemies, and there can be one or more captives.
 //!
 //! ### Components
 //!
@@ -31,7 +31,7 @@ pub mod components;
 pub mod systems;
 
 use components::UnitComponent;
-use systems::{ArcherSystem, PlayerSystem, SludgeSystem, UiSystem};
+use systems::{PlayerSystem, ShooterSystem, SludgeSystem, UiSystem};
 
 /// The entry point for the engine, called by [`Game`](crate::game::Game)
 pub fn start(
@@ -43,13 +43,13 @@ pub fn start(
 
     let player_system = PlayerSystem::new(name.clone(), floor.clone(), player);
     let sludge_system = SludgeSystem::new(name.clone());
-    let archer_system = ArcherSystem::new(name.clone());
+    let shooter_system = ShooterSystem::new(name.clone());
     let ui_system = UiSystem::new(floor.clone());
     let mut dispatcher = DispatcherBuilder::new()
         .with(player_system, "player", &[])
         .with(sludge_system, "sludge", &["player"])
-        .with(archer_system, "archer", &["player", "sludge"])
-        .with(ui_system, "ui", &["player", "sludge", "archer"])
+        .with(shooter_system, "shooter", &["player", "sludge"])
+        .with(ui_system, "ui", &["player", "sludge", "shooter"])
         .build();
 
     dispatcher.setup(&mut world);
