@@ -58,6 +58,21 @@ impl Warrior {
         }
     }
 
+    /// Check three tiles in front of the Warrior.
+    /// Returns a vector of up to three [`Tile`](crate::Tile)s.
+    pub fn look(&self) -> &Vec<Tile> {
+        self.look_toward(Direction::Forward)
+    }
+
+    /// Check three tiles toward specified `direction`.
+    /// Returns a vector of up to three [`Tile`](crate::Tile)s.
+    pub fn look_toward(&self, direction: Direction) -> &Vec<Tile> {
+        match direction {
+            Direction::Forward => &self.ahead,
+            Direction::Backward => &self.behind,
+        }
+    }
+
     /// Attempt to attack an enemy in the tile in front of the Warrior.
     pub fn attack(&mut self) {
         self.attack_toward(Direction::Forward);
