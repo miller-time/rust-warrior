@@ -105,7 +105,7 @@ impl<'a> System<'a> for PlayerSystem {
             // `Vec<(i32, Tile)>` -> `Vec<Tile>`
             behind.clone().into_iter().map(|(_, t)| t).collect(),
             health,
-            facing
+            facing,
         );
         self.player.play_turn(&mut warrior);
 
@@ -270,13 +270,17 @@ impl<'a> System<'a> for PlayerSystem {
                     let target = other_units.iter_mut().find(|(_, comp)| {
                         let (x, _) = comp.unit.position;
                         match direction {
-                            Direction::Forward => match ahead.iter().find(|(_, tile)| *tile != Tile::Empty) {
-                                Some((target_x, _)) if *target_x == x => true,
-                                _ => false,
-                            },
-                            Direction::Backward => match behind.iter().find(|(_, tile)| *tile != Tile::Empty) {
-                                Some((target_x, _)) if *target_x == x => true,
-                                _ => false,
+                            Direction::Forward => {
+                                match ahead.iter().find(|(_, tile)| *tile != Tile::Empty) {
+                                    Some((target_x, _)) if *target_x == x => true,
+                                    _ => false,
+                                }
+                            }
+                            Direction::Backward => {
+                                match behind.iter().find(|(_, tile)| *tile != Tile::Empty) {
+                                    Some((target_x, _)) if *target_x == x => true,
+                                    _ => false,
+                                }
                             }
                         }
                     });
