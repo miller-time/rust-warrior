@@ -8,6 +8,7 @@ use crate::{
 /// An interface the player can interact with to control the Warrior in the
 /// game. An instance is passed to [`Player`](crate::player::Player) via the
 /// `play_turn` method.
+#[derive(Default)]
 pub struct Warrior {
     ahead: Vec<Tile>,
     behind: Vec<Tile>,
