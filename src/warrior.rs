@@ -8,6 +8,8 @@ use crate::{
 /// An interface the player can interact with to control the Warrior in the
 /// game. An instance is passed to [`Player`](crate::player::Player) via the
 /// `play_turn` method.
+/// The player must pick one [`Action`](crate::actions::Action) to perform
+/// each turn. Not all abilities are an `Action`.
 #[derive(Default)]
 pub struct Warrior {
     ahead: Vec<Tile>,
@@ -29,11 +31,13 @@ impl Warrior {
     }
 
     /// Walk forward one tile.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn walk(&mut self) {
         self.walk_toward(Direction::Forward);
     }
 
     /// Walk one tile toward specified `direction`.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn walk_toward(&mut self, direction: Direction) {
         self.perform(Action::Walk(direction));
     }
@@ -75,11 +79,13 @@ impl Warrior {
     }
 
     /// Attempt to attack an enemy in the tile in front of the Warrior.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn attack(&mut self) {
         self.attack_toward(Direction::Forward);
     }
 
     /// Attempt to attack an enemy one tile away in specified `direction`.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn attack_toward(&mut self, direction: Direction) {
         self.perform(Action::Attack(direction));
     }
@@ -90,21 +96,25 @@ impl Warrior {
     }
 
     /// Rest and regain 10% of the Warrior's HP.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn rest(&mut self) {
         self.perform(Action::Rest);
     }
 
     /// Attempt to rescue a Captive in front of the Warrior.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn rescue(&mut self) {
         self.rescue_toward(Direction::Forward);
     }
 
     /// Attempt to rescue a Captive one tile away in specified `direction`.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn rescue_toward(&mut self, direction: Direction) {
         self.perform(Action::Rescue(direction));
     }
 
-    /// Rotate 180 degrees
+    /// Rotate 180 degrees.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn pivot(&mut self) {
         let direction = match self.facing {
             Direction::Forward => Direction::Backward,
@@ -114,15 +124,19 @@ impl Warrior {
     }
 
     /// Fire an arrow up to three tiles in front of the Warrior.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn shoot(&mut self) {
         self.shoot_toward(Direction::Forward);
     }
 
     /// Fire an arrow up to three tiles toward specified `direction`.
+    /// This is an [`Action`](crate::actions::Action).
     pub fn shoot_toward(&mut self, direction: Direction) {
         self.perform(Action::Shoot(direction));
     }
 
+    /// Some [`Action`](crate::actions::Action) the Warrior has performed;
+    /// None if no action has been performed.
     pub fn action(&self) -> Option<Action> {
         self.action
     }
