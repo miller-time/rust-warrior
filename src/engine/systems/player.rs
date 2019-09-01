@@ -109,7 +109,7 @@ impl<'a> System<'a> for PlayerSystem {
         );
         self.player.play_turn(&mut warrior);
 
-        if let Some(action) = warrior.action {
+        if let Some(action) = warrior.action() {
             match action {
                 Action::Walk(direction) => {
                     let target_x = if facing == direction {

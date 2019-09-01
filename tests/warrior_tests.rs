@@ -6,42 +6,42 @@ use rust_warrior::{actions::Action, Direction, Tile, UnitType, Warrior};
 fn test_walk() {
     let mut warrior = Warrior::default();
     warrior.walk();
-    assert_eq!(warrior.action, Some(Action::Walk(Direction::Forward)));
+    assert_eq!(warrior.action(), Some(Action::Walk(Direction::Forward)));
 }
 
 #[test]
 fn test_attack() {
     let mut warrior = Warrior::default();
     warrior.attack();
-    assert_eq!(warrior.action, Some(Action::Attack(Direction::Forward)));
+    assert_eq!(warrior.action(), Some(Action::Attack(Direction::Forward)));
 }
 
 #[test]
 fn test_rest() {
     let mut warrior = Warrior::default();
     warrior.rest();
-    assert_eq!(warrior.action, Some(Action::Rest));
+    assert_eq!(warrior.action(), Some(Action::Rest));
 }
 
 #[test]
 fn test_rescue() {
     let mut warrior = Warrior::default();
     warrior.rescue();
-    assert_eq!(warrior.action, Some(Action::Rescue(Direction::Forward)));
+    assert_eq!(warrior.action(), Some(Action::Rescue(Direction::Forward)));
 }
 
 #[test]
 fn test_pivot() {
     let mut warrior = Warrior::default();
     warrior.pivot();
-    assert_eq!(warrior.action, Some(Action::Pivot(Direction::Backward)));
+    assert_eq!(warrior.action(), Some(Action::Pivot(Direction::Backward)));
 }
 
 #[test]
 fn test_shoot() {
     let mut warrior = Warrior::default();
     warrior.shoot();
-    assert_eq!(warrior.action, Some(Action::Shoot(Direction::Forward)));
+    assert_eq!(warrior.action(), Some(Action::Shoot(Direction::Forward)));
 }
 
 // Backward Actions
@@ -50,35 +50,35 @@ fn test_shoot() {
 fn test_walk_backward() {
     let mut warrior = Warrior::default();
     warrior.walk_toward(Direction::Backward);
-    assert_eq!(warrior.action, Some(Action::Walk(Direction::Backward)));
+    assert_eq!(warrior.action(), Some(Action::Walk(Direction::Backward)));
 }
 
 #[test]
 fn test_attack_backward() {
     let mut warrior = Warrior::default();
     warrior.attack_toward(Direction::Backward);
-    assert_eq!(warrior.action, Some(Action::Attack(Direction::Backward)));
+    assert_eq!(warrior.action(), Some(Action::Attack(Direction::Backward)));
 }
 
 #[test]
 fn test_rescue_backward() {
     let mut warrior = Warrior::default();
     warrior.rescue_toward(Direction::Backward);
-    assert_eq!(warrior.action, Some(Action::Rescue(Direction::Backward)));
+    assert_eq!(warrior.action(), Some(Action::Rescue(Direction::Backward)));
 }
 
 #[test]
 fn test_pivot_backward() {
     let mut warrior = warrior_facing_backward();
     warrior.pivot();
-    assert_eq!(warrior.action, Some(Action::Pivot(Direction::Forward)));
+    assert_eq!(warrior.action(), Some(Action::Pivot(Direction::Forward)));
 }
 
 #[test]
 fn test_shoot_backward() {
     let mut warrior = Warrior::default();
     warrior.shoot_toward(Direction::Backward);
-    assert_eq!(warrior.action, Some(Action::Shoot(Direction::Backward)));
+    assert_eq!(warrior.action(), Some(Action::Shoot(Direction::Backward)));
 }
 
 // Non-Action Methods

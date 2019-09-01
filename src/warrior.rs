@@ -14,7 +14,7 @@ pub struct Warrior {
     behind: Vec<Tile>,
     health: i32,
     facing: Direction,
-    pub action: Option<Action>,
+    action: Option<Action>,
 }
 
 impl Warrior {
@@ -121,6 +121,10 @@ impl Warrior {
     /// Fire an arrow up to three tiles toward specified `direction`.
     pub fn shoot_toward(&mut self, direction: Direction) {
         self.perform(Action::Shoot(direction));
+    }
+
+    pub fn action(&self) -> Option<Action> {
+        self.action
     }
 
     fn perform(&mut self, action: Action) {
