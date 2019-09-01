@@ -100,6 +100,7 @@ impl<'a> System<'a> for PlayerSystem {
             Direction::Backward => (west, east),
         };
         let mut warrior = Warrior::new(
+            self.floor.level,
             // `Vec<(i32, Tile)>` -> `Vec<Tile>`
             ahead.clone().into_iter().map(|(_, t)| t).collect(),
             // `Vec<(i32, Tile)>` -> `Vec<Tile>`

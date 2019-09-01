@@ -134,17 +134,17 @@ fn test_look_backward() {
 // Test Helpers
 
 fn warrior_with_ahead(ahead: Vec<Tile>) -> Warrior {
-    Warrior::new(ahead, Vec::new(), 0, Direction::Forward)
+    Warrior::new(1, ahead, Vec::new(), 0, Direction::Forward)
 }
 
 fn warrior_with_behind(behind: Vec<Tile>) -> Warrior {
-    Warrior::new(Vec::new(), behind, 0, Direction::Forward)
+    Warrior::new(1, Vec::new(), behind, 0, Direction::Forward)
 }
 
 fn warrior_with_health(health: i32) -> Warrior {
-    Warrior::new(Vec::new(), Vec::new(), health, Direction::Forward)
+    Warrior::new(1, Vec::new(), Vec::new(), health, Direction::Forward)
 }
 
 fn warrior_facing_backward() -> Warrior {
-    Warrior::new(Vec::new(), Vec::new(), 0, Direction::Backward)
+    Warrior::new(1, Vec::new(), Vec::new(), 0, Direction::Backward)
 }

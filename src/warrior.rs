@@ -12,6 +12,7 @@ use crate::{
 /// each turn. Not all abilities are an `Action`.
 #[derive(Default)]
 pub struct Warrior {
+    level: usize,
     ahead: Vec<Tile>,
     behind: Vec<Tile>,
     health: i32,
@@ -20,8 +21,15 @@ pub struct Warrior {
 }
 
 impl Warrior {
-    pub fn new(ahead: Vec<Tile>, behind: Vec<Tile>, health: i32, facing: Direction) -> Warrior {
+    pub fn new(
+        level: usize,
+        ahead: Vec<Tile>,
+        behind: Vec<Tile>,
+        health: i32,
+        facing: Direction,
+    ) -> Warrior {
         Warrior {
+            level,
             ahead,
             behind,
             health,
