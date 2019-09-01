@@ -10,7 +10,7 @@ use crate::{
 /// `play_turn` method.
 /// The player must pick one [`Action`](crate::actions::Action) to perform
 /// each turn. Not all abilities are an `Action`.
-#[derive(Default)]
+/// Warrior abilities are unlocked as the player progresses through the levels.
 pub struct Warrior {
     level: usize,
     ahead: Vec<Tile>,
@@ -40,25 +40,48 @@ impl Warrior {
 
     /// Walk forward one tile.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is available at **Level 1**.
     pub fn walk(&mut self) {
-        self.walk_toward(Direction::Forward);
+        self.perform_walk(Direction::Forward);
     }
 
     /// Walk one tile toward specified `direction`.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is unlocked at **Level 6**.
     pub fn walk_toward(&mut self, direction: Direction) {
+        if self.level < 6 {
+            panic!("You have not yet learned `walk_toward`! Perhaps you meant `walk`?")
+        }
+        self.perform_walk(direction);
+    }
+
+    // private helper for `walk` and `walk_toward`
+    fn perform_walk(&mut self, direction: Direction) {
         self.perform(Action::Walk(direction));
     }
 
     /// Check the tile in front of the Warrior.
     /// Returns a [`Tile`](crate::Tile).
+    /// This ability is unlocked at **Level 2**.
     pub fn check(&self) -> Tile {
-        self.check_toward(Direction::Forward)
+        if self.level < 2 {
+            panic!("You have not yet learned `check`!");
+        }
+        self.perform_check(Direction::Forward)
     }
 
     /// Check the tile toward specified `direction`.
     /// Returns a [`Tile`](crate::Tile).
+    /// This ability is unlocked at **Level 6**.
     pub fn check_toward(&self, direction: Direction) -> Tile {
+        if self.level < 6 {
+            panic!("You have not yet learned `check_toward`! Perhaps you meant `check`?")
+        }
+        self.perform_check(direction)
+    }
+
+    // private helper for `check` and `check_toward`
+    fn perform_check(&self, direction: Direction) -> Tile {
         match direction {
             Direction::Forward => match self.ahead.first() {
                 Some(tile) => *tile,
@@ -73,13 +96,21 @@ impl Warrior {
 
     /// Check three tiles in front of the Warrior.
     /// Returns a vector of up to three [`Tile`](crate::Tile)s.
+    /// This ability is unlocked at **Level 8**.
     pub fn look(&self) -> &Vec<Tile> {
+        if self.level < 8 {
+            panic!("You have not yet learned `look`!")
+        }
         self.look_toward(Direction::Forward)
     }
 
     /// Check three tiles toward specified `direction`.
     /// Returns a vector of up to three [`Tile`](crate::Tile)s.
+    /// This ability is unlocked at **Level 8**.
     pub fn look_toward(&self, direction: Direction) -> &Vec<Tile> {
+        if self.level < 8 {
+            panic!("You have not yet learned `look_toward`!")
+        }
         match direction {
             Direction::Forward => &self.ahead,
             Direction::Backward => &self.behind,
@@ -88,42 +119,80 @@ impl Warrior {
 
     /// Attempt to attack an enemy in the tile in front of the Warrior.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is unlocked at **Level 2**.
     pub fn attack(&mut self) {
-        self.attack_toward(Direction::Forward);
+        if self.level < 2 {
+            panic!("You have not yet learned `attack`!");
+        }
+        self.perform_attack(Direction::Forward);
     }
 
     /// Attempt to attack an enemy one tile away in specified `direction`.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is unlocked at **Level 6**.
     pub fn attack_toward(&mut self, direction: Direction) {
+        if self.level < 6 {
+            panic!("You have not yet learned `attack_toward`! Perhaps you meant `attack`?")
+        }
+        self.perform_attack(direction);
+    }
+
+    // private helper for `attack` and `attack_toward`
+    fn perform_attack(&mut self, direction: Direction) {
         self.perform(Action::Attack(direction));
     }
 
     /// Check the current health of the Warrior.
+    /// This ability is unlocked at **Level 3**.
     pub fn health(&self) -> i32 {
+        if self.level < 3 {
+            panic!("You have not yet learned `health`!");
+        }
         self.health
     }
 
     /// Rest and regain 10% of the Warrior's HP.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is unlocked at **Level 3**.
     pub fn rest(&mut self) {
+        if self.level < 3 {
+            panic!("You have not yet learned `rest`!");
+        }
         self.perform(Action::Rest);
     }
 
     /// Attempt to rescue a Captive in front of the Warrior.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is unlocked at **Level 5**.
     pub fn rescue(&mut self) {
-        self.rescue_toward(Direction::Forward);
+        if self.level < 5 {
+            panic!("You have not yet learned `rescue`!");
+        }
+        self.perform_rescue(Direction::Forward);
     }
 
     /// Attempt to rescue a Captive one tile away in specified `direction`.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is unlocked at **Level 6**.
     pub fn rescue_toward(&mut self, direction: Direction) {
+        if self.level < 6 {
+            panic!("You have not yet learned `rescue_toward`! Perhaps you meant `rescue`?")
+        }
+        self.perform_rescue(direction);
+    }
+
+    // private helper for `rescue` and `rescue_toward`
+    fn perform_rescue(&mut self, direction: Direction) {
         self.perform(Action::Rescue(direction));
     }
 
     /// Rotate 180 degrees.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is unlocked at **Level 7**.
     pub fn pivot(&mut self) {
+        if self.level < 7 {
+            panic!("You have not yet learned `pivot`!")
+        }
         let direction = match self.facing {
             Direction::Forward => Direction::Backward,
             Direction::Backward => Direction::Forward,
@@ -133,13 +202,21 @@ impl Warrior {
 
     /// Fire an arrow up to three tiles in front of the Warrior.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is unlocked at **Level 8**.
     pub fn shoot(&mut self) {
+        if self.level < 8 {
+            panic!("You have not yet learned `shoot`!")
+        }
         self.shoot_toward(Direction::Forward);
     }
 
     /// Fire an arrow up to three tiles toward specified `direction`.
     /// This is an [`Action`](crate::actions::Action).
+    /// This ability is unlocked at **Level 8**.
     pub fn shoot_toward(&mut self, direction: Direction) {
+        if self.level < 8 {
+            panic!("You have not yet learned `shoot_toward`!")
+        }
         self.perform(Action::Shoot(direction));
     }
 
