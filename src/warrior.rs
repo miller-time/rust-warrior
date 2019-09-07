@@ -4,6 +4,7 @@ use crate::{
     actions::{Action, Direction},
     floor::Tile,
 };
+use std::cell::RefCell;
 
 /// An interface the player can interact with to control the Warrior in the
 /// game. An instance is passed to [`Player`](crate::player::Player) via the
@@ -17,7 +18,7 @@ pub struct Warrior {
     behind: Vec<Tile>,
     health: i32,
     facing: Direction,
-    action: Option<Action>,
+    action: RefCell<Option<Action>>,
 }
 
 impl Warrior {
@@ -34,21 +35,21 @@ impl Warrior {
             behind,
             health,
             facing,
-            action: None,
+            action: RefCell::new(None),
         }
     }
 
     /// Walk forward one tile.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is available at **Level 1**.
-    pub fn walk(&mut self) {
+    pub fn walk(&self) {
         self.perform_walk(Direction::Forward);
     }
 
     /// Walk one tile toward specified `direction`.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 6**.
-    pub fn walk_toward(&mut self, direction: Direction) {
+    pub fn walk_toward(&self, direction: Direction) {
         if self.level < 6 {
             panic!("You have not yet learned `walk_toward`! Perhaps you meant `walk`?")
         }
@@ -56,7 +57,7 @@ impl Warrior {
     }
 
     // private helper for `walk` and `walk_toward`
-    fn perform_walk(&mut self, direction: Direction) {
+    fn perform_walk(&self, direction: Direction) {
         self.perform(Action::Walk(direction));
     }
 
@@ -120,7 +121,7 @@ impl Warrior {
     /// Attempt to attack an enemy in the tile in front of the Warrior.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 2**.
-    pub fn attack(&mut self) {
+    pub fn attack(&self) {
         if self.level < 2 {
             panic!("You have not yet learned `attack`!");
         }
@@ -130,7 +131,7 @@ impl Warrior {
     /// Attempt to attack an enemy one tile away in specified `direction`.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 6**.
-    pub fn attack_toward(&mut self, direction: Direction) {
+    pub fn attack_toward(&self, direction: Direction) {
         if self.level < 6 {
             panic!("You have not yet learned `attack_toward`! Perhaps you meant `attack`?")
         }
@@ -138,7 +139,7 @@ impl Warrior {
     }
 
     // private helper for `attack` and `attack_toward`
-    fn perform_attack(&mut self, direction: Direction) {
+    fn perform_attack(&self, direction: Direction) {
         self.perform(Action::Attack(direction));
     }
 
@@ -154,7 +155,7 @@ impl Warrior {
     /// Rest and regain 10% of the Warrior's HP.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 3**.
-    pub fn rest(&mut self) {
+    pub fn rest(&self) {
         if self.level < 3 {
             panic!("You have not yet learned `rest`!");
         }
@@ -164,7 +165,7 @@ impl Warrior {
     /// Attempt to rescue a Captive in front of the Warrior.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 5**.
-    pub fn rescue(&mut self) {
+    pub fn rescue(&self) {
         if self.level < 5 {
             panic!("You have not yet learned `rescue`!");
         }
@@ -174,7 +175,7 @@ impl Warrior {
     /// Attempt to rescue a Captive one tile away in specified `direction`.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 6**.
-    pub fn rescue_toward(&mut self, direction: Direction) {
+    pub fn rescue_toward(&self, direction: Direction) {
         if self.level < 6 {
             panic!("You have not yet learned `rescue_toward`! Perhaps you meant `rescue`?")
         }
@@ -182,14 +183,14 @@ impl Warrior {
     }
 
     // private helper for `rescue` and `rescue_toward`
-    fn perform_rescue(&mut self, direction: Direction) {
+    fn perform_rescue(&self, direction: Direction) {
         self.perform(Action::Rescue(direction));
     }
 
     /// Rotate 180 degrees.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 7**.
-    pub fn pivot(&mut self) {
+    pub fn pivot(&self) {
         if self.level < 7 {
             panic!("You have not yet learned `pivot`!")
         }
@@ -203,7 +204,7 @@ impl Warrior {
     /// Fire an arrow up to three tiles in front of the Warrior.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 8**.
-    pub fn shoot(&mut self) {
+    pub fn shoot(&self) {
         if self.level < 8 {
             panic!("You have not yet learned `shoot`!")
         }
@@ -213,7 +214,7 @@ impl Warrior {
     /// Fire an arrow up to three tiles toward specified `direction`.
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 8**.
-    pub fn shoot_toward(&mut self, direction: Direction) {
+    pub fn shoot_toward(&self, direction: Direction) {
         if self.level < 8 {
             panic!("You have not yet learned `shoot_toward`!")
         }
@@ -223,15 +224,15 @@ impl Warrior {
     /// Some [`Action`](crate::actions::Action) the Warrior has performed;
     /// None if no action has been performed.
     pub fn action(&self) -> Option<Action> {
-        self.action
+        *self.action.borrow()
     }
 
-    fn perform(&mut self, action: Action) {
-        if self.action.is_some() {
+    fn perform(&self, action: Action) {
+        if self.action.borrow().is_some() {
             println!("Warrior already performed action!");
             return;
         }
 
-        self.action = Some(action);
+        *self.action.borrow_mut() = Some(action);
     }
 }
