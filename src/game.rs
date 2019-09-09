@@ -13,12 +13,18 @@ pub struct Game {
     pub profile: Profile,
 }
 
-impl Game {
-    pub fn default() -> Game {
+impl Default for Game {
+    fn default() -> Game {
         // TODO: epic mode?
         let profile = load_profile();
 
         Game { profile }
+    }
+}
+
+impl Game {
+    pub fn new() -> Game {
+        Game::default()
     }
 
     /// The main entry point when playing the game.
@@ -27,7 +33,7 @@ impl Game {
     /// level, the game consists of repeatedly calling `play_turn`
     /// on the player's `Player` instance.
     pub fn play(player: impl Player + Send + Sync + 'static) {
-        let mut game = Game::default();
+        let mut game = Game::new();
         game.start(player);
     }
 

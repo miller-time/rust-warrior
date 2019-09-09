@@ -242,15 +242,14 @@ fn generate_main_rs(player: &str) -> String {
     format!(
         "use rust_warrior::{{Game, Player, Warrior}};
 
-#[derive(Default)]
-pub struct {player};
+struct {player};
 
 impl Player for {player} {{
     fn play_turn(&mut self, warrior: &mut Warrior) {{}}
 }}
 
 fn main() {{
-    let player = {player}::default();
+    let player = {player} {};
     Game::play(player);
 }}
 ",
