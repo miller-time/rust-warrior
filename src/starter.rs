@@ -291,7 +291,7 @@ pub fn generate() -> io::Result<()> {
 
     println!(
         "Game files have been generated. See rustwarrior/{}/README.md for instructions.",
-        &profile.directory
+        &profile.directory()
     );
 
     Ok(())
@@ -342,14 +342,15 @@ pub fn write_profile(profile: &Profile, directory: Option<&Path>) {
 }
 
 fn create_game_files(profile: &mut Profile) -> io::Result<()> {
-    let player_dir = Path::new("rustwarrior").join(&profile.directory);
+    let profile_dir = &profile.directory();
+    let player_dir = Path::new("rustwarrior").join(&profile_dir);
     fs::create_dir(&player_dir)?;
     let src_dir = player_dir.join("src");
     fs::create_dir(&src_dir)?;
     let main_rs = src_dir.join("main.rs");
     fs::write(main_rs, generate_main_rs(&profile.name))?;
     let cargo_toml = player_dir.join("Cargo.toml");
-    fs::write(cargo_toml, generate_cargo_toml(&profile.directory))?;
+    fs::write(cargo_toml, generate_cargo_toml(&profile_dir))?;
 
     write_profile(profile, Some(&player_dir));
     write_readme(&profile, Some(&player_dir));
