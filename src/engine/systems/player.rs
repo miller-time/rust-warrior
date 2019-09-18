@@ -99,7 +99,7 @@ impl<'a> System<'a> for PlayerSystem {
             Direction::Forward => (east, west),
             Direction::Backward => (west, east),
         };
-        let mut warrior = Warrior::new(
+        let warrior = Warrior::new(
             self.floor.level,
             // `Vec<(i32, Tile)>` -> `Vec<Tile>`
             ahead.clone().into_iter().map(|(_, t)| t).collect(),
@@ -108,7 +108,7 @@ impl<'a> System<'a> for PlayerSystem {
             health,
             facing,
         );
-        self.player.play_turn(&mut warrior);
+        self.player.play_turn(&warrior);
 
         if let Some(action) = warrior.action() {
             match action {

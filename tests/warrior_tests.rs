@@ -4,14 +4,14 @@ use rust_warrior::{actions::Action, Direction, Tile, UnitType, Warrior};
 
 #[test]
 fn test_walk() {
-    let mut warrior = warrior_at_level(1);
+    let warrior = warrior_at_level(1);
     warrior.walk();
     assert_eq!(warrior.action(), Some(Action::Walk(Direction::Forward)));
 }
 
 #[test]
 fn test_attack() {
-    let mut warrior = warrior_at_level(2);
+    let warrior = warrior_at_level(2);
     warrior.attack();
     assert_eq!(warrior.action(), Some(Action::Attack(Direction::Forward)));
 }
@@ -19,13 +19,13 @@ fn test_attack() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_attack_not_unlocked() {
-    let mut warrior = warrior_at_level(1);
+    let warrior = warrior_at_level(1);
     warrior.attack();
 }
 
 #[test]
 fn test_rest() {
-    let mut warrior = warrior_at_level(3);
+    let warrior = warrior_at_level(3);
     warrior.rest();
     assert_eq!(warrior.action(), Some(Action::Rest));
 }
@@ -33,13 +33,13 @@ fn test_rest() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_rest_not_unlocked() {
-    let mut warrior = warrior_at_level(2);
+    let warrior = warrior_at_level(2);
     warrior.rest();
 }
 
 #[test]
 fn test_rescue() {
-    let mut warrior = warrior_at_level(5);
+    let warrior = warrior_at_level(5);
     warrior.rescue();
     assert_eq!(warrior.action(), Some(Action::Rescue(Direction::Forward)));
 }
@@ -47,13 +47,13 @@ fn test_rescue() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_rescue_not_unlocked() {
-    let mut warrior = warrior_at_level(4);
+    let warrior = warrior_at_level(4);
     warrior.rescue();
 }
 
 #[test]
 fn test_pivot() {
-    let mut warrior = warrior_at_level(7);
+    let warrior = warrior_at_level(7);
     warrior.pivot();
     assert_eq!(warrior.action(), Some(Action::Pivot(Direction::Backward)));
 }
@@ -61,13 +61,13 @@ fn test_pivot() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_pivot_not_unlocked() {
-    let mut warrior = warrior_at_level(6);
+    let warrior = warrior_at_level(6);
     warrior.pivot();
 }
 
 #[test]
 fn test_shoot() {
-    let mut warrior = warrior_at_level(8);
+    let warrior = warrior_at_level(8);
     warrior.shoot();
     assert_eq!(warrior.action(), Some(Action::Shoot(Direction::Forward)));
 }
@@ -75,7 +75,7 @@ fn test_shoot() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_shoot_not_unlocked() {
-    let mut warrior = warrior_at_level(7);
+    let warrior = warrior_at_level(7);
     warrior.shoot();
 }
 
@@ -83,7 +83,7 @@ fn test_shoot_not_unlocked() {
 
 #[test]
 fn test_walk_backward() {
-    let mut warrior = warrior_at_level(6);
+    let warrior = warrior_at_level(6);
     warrior.walk_toward(Direction::Backward);
     assert_eq!(warrior.action(), Some(Action::Walk(Direction::Backward)));
 }
@@ -91,13 +91,13 @@ fn test_walk_backward() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_walk_backward_not_unlocked() {
-    let mut warrior = warrior_at_level(5);
+    let warrior = warrior_at_level(5);
     warrior.walk_toward(Direction::Backward);
 }
 
 #[test]
 fn test_attack_backward() {
-    let mut warrior = warrior_at_level(6);
+    let warrior = warrior_at_level(6);
     warrior.attack_toward(Direction::Backward);
     assert_eq!(warrior.action(), Some(Action::Attack(Direction::Backward)));
 }
@@ -105,13 +105,13 @@ fn test_attack_backward() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_attack_backward_not_unlocked() {
-    let mut warrior = warrior_at_level(5);
+    let warrior = warrior_at_level(5);
     warrior.attack_toward(Direction::Backward);
 }
 
 #[test]
 fn test_rescue_backward() {
-    let mut warrior = warrior_at_level(6);
+    let warrior = warrior_at_level(6);
     warrior.rescue_toward(Direction::Backward);
     assert_eq!(warrior.action(), Some(Action::Rescue(Direction::Backward)));
 }
@@ -119,13 +119,13 @@ fn test_rescue_backward() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_rescue_backward_not_unlocked() {
-    let mut warrior = warrior_at_level(5);
+    let warrior = warrior_at_level(5);
     warrior.rescue_toward(Direction::Backward);
 }
 
 #[test]
 fn test_pivot_backward() {
-    let mut warrior = warrior_facing_backward(7);
+    let warrior = warrior_facing_backward(7);
     warrior.pivot();
     assert_eq!(warrior.action(), Some(Action::Pivot(Direction::Forward)));
 }
@@ -133,13 +133,13 @@ fn test_pivot_backward() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_pivot_backward_not_unlocked() {
-    let mut warrior = warrior_at_level(6);
+    let warrior = warrior_at_level(6);
     warrior.pivot();
 }
 
 #[test]
 fn test_shoot_backward() {
-    let mut warrior = warrior_at_level(8);
+    let warrior = warrior_at_level(8);
     warrior.shoot_toward(Direction::Backward);
     assert_eq!(warrior.action(), Some(Action::Shoot(Direction::Backward)));
 }
@@ -147,7 +147,7 @@ fn test_shoot_backward() {
 #[test]
 #[should_panic(expected = "You have not yet learned")]
 fn test_shoot_backward_not_unlocked() {
-    let mut warrior = warrior_at_level(7);
+    let warrior = warrior_at_level(7);
     warrior.shoot_toward(Direction::Backward);
 }
 
