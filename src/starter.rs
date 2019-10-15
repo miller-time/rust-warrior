@@ -245,7 +245,7 @@ fn generate_main_rs(player: &str) -> String {
 struct {player};
 
 impl Player for {player} {{
-    fn play_turn(&mut self, warrior: &mut Warrior) {{}}
+    fn play_turn(&mut self, warrior: &Warrior) {{}}
 }}
 
 fn main() {{
