@@ -234,6 +234,34 @@ When you're ready, use `cargo run` to attempt this challenge.
 ",
             player = player
         ),
+        9 => format!(
+            "# Level 9
+
+Time to hone your skills and apply all of the abilities that you have learned.
+
+Tip: Watch your back.
+
+```
+ -----------
+|>Ca  @ S wC|
+ -----------
+
+  > = Stairs
+  @ = {player} (20 HP)
+  C = Captive (1 HP)
+  a = Archer (7 HP)
+  S = Thick Sludge (18 HP)
+  w = Wizard (3 HP)
+```
+
+Warrior abilities: https://docs.rs/rust-warrior/latest/rust_warrior/warrior/struct.Warrior.html
+
+----------
+
+When you're ready, use `cargo run` to attempt this challenge.
+",
+            player = player
+        ),
         _ => unimplemented!(),
     }
 }

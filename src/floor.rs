@@ -182,6 +182,20 @@ impl Floor {
                     Unit::wizard((4, 0)),
                 ],
             }),
+            9 => Some(Floor {
+                level,
+                width: 11,
+                height: 1,
+                stairs: (0, 0),
+                units: vec![
+                    Unit::captive((1, 0)),
+                    Unit::archer((2, 0)),
+                    Unit::warrior((5, 0)),
+                    Unit::thick_sludge((7, 0)),
+                    Unit::wizard((9, 0)),
+                    Unit::captive((10, 0)),
+                ],
+            }),
             _ => None,
         }
     }
