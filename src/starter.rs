@@ -249,7 +249,7 @@ impl Player for {player} {{
 }}
 
 fn main() {{
-    let player = {player} {};
+    let player = {player} {{}};
     Game::play(player);
 }}
 ",
