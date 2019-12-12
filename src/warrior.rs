@@ -12,6 +12,64 @@ use std::cell::RefCell;
 /// The player must pick one [`Action`](crate::actions::Action) to perform
 /// each turn. Not all abilities are an `Action`.
 /// Warrior abilities are unlocked as the player progresses through the levels.
+///
+/// ### Level Guide
+///
+/// **Level 1**
+///
+/// Available abilities:
+///
+/// * `walk`
+///
+/// **Level 2**
+///
+/// New abilities unlocked at this level:
+///
+/// * `check`
+/// * `attack`
+///
+/// **Level 3**
+///
+/// New abilities unlocked at this level:
+///
+/// * `health`
+/// * `rest`
+///
+/// **Level 4**
+///
+/// *No new abilities unlocked at this level!*
+///
+/// **Level 5**
+///
+/// New abilities unlocked at this level:
+///
+/// * `rescue`
+///
+/// **Level 6**
+///
+/// The following abilities now have a *directional* counterpart:
+///
+/// * `walk` -> `walk_toward`
+/// * `check` -> `check_toward`
+/// * `attack` -> `attack_toward`
+/// * `rescue` -> `rescue_toward`
+///
+/// **Level 7**
+///
+/// New abilities unlocked at this level:
+///
+/// * `pivot`
+///
+/// **Level 8**
+///
+/// New abilities (and *directional* counterparts) unlocked at this level:
+///
+/// * `look` -> `look_toward`
+/// * `shoot` -> `shoot_toward`
+///
+/// **Level 9**
+///
+/// *No new abilities unlocked at this level!*
 pub struct Warrior {
     level: usize,
     ahead: Vec<Tile>,
