@@ -348,10 +348,9 @@ fn create_profile() -> Profile {
 
 /// Write the README.md for the current level into the player's game directory
 pub fn write_readme(profile: &Profile, directory: Option<&Path>) {
-    let readme = if let Some(player_dir) = directory {
-        player_dir.join("README.md")
-    } else {
-        Path::new("README.md").to_path_buf()
+    let readme = match directory {
+        Some(player_dir) => player_dir.join("README.md"),
+        _ => Path::new("README.md").to_path_buf(),
     };
     let contents = generate_readme(profile.level, &profile.name);
     fs::write(readme, contents)
@@ -361,10 +360,9 @@ pub fn write_readme(profile: &Profile, directory: Option<&Path>) {
 /// Save the player's [`Profile`](crate::profile::Profile) to .profile in their
 /// game directory
 pub fn write_profile(profile: &Profile, directory: Option<&Path>) {
-    let profile_toml = if let Some(player_dir) = directory {
-        player_dir.join(".profile")
-    } else {
-        Path::new(".profile").to_path_buf()
+    let profile_toml = match directory {
+        Some(player_dir) => player_dir.join(".profile"),
+        _ => Path::new(".profile").to_path_buf(),
     };
     fs::write(profile_toml, &profile.to_toml()).expect("failed to write .profile");
 }

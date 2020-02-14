@@ -128,19 +128,22 @@ impl<'a> System<'a> for PlayerSystem {
                         x == target_x
                     });
 
-                    if let Some((_, enemy_comp)) = other_unit {
-                        println!(
-                            "{warrior} bumps into {enemy:?}",
-                            warrior = &self.name,
-                            enemy = enemy_comp.unit.unit_type
-                        );
-                    } else {
-                        println!(
-                            "{warrior} walks {direction:?}",
-                            warrior = &self.name,
-                            direction = direction
-                        );
-                        warrior_comp.unit.position = (target_x, wy);
+                    match other_unit {
+                        Some((_, enemy_comp)) => {
+                            println!(
+                                "{warrior} bumps into {enemy:?}",
+                                warrior = &self.name,
+                                enemy = enemy_comp.unit.unit_type
+                            );
+                        }
+                        _ => {
+                            println!(
+                                "{warrior} walks {direction:?}",
+                                warrior = &self.name,
+                                direction = direction
+                            );
+                            warrior_comp.unit.position = (target_x, wy);
+                        }
                     }
                 }
                 Action::Attack(direction) => {
@@ -159,39 +162,42 @@ impl<'a> System<'a> for PlayerSystem {
                         x == target_x
                     });
 
-                    if let Some((enemy_entity, enemy_comp)) = other_unit {
-                        println!(
-                            "{warrior} attacks {direction:?} and hits {enemy:?}",
-                            warrior = &self.name,
-                            direction = direction,
-                            enemy = enemy_comp.unit.unit_type
-                        );
-                        let atk = match direction {
-                            Direction::Forward => warrior_comp.unit.atk,
-                            Direction::Backward => {
-                                (warrior_comp.unit.atk as f32 / 2.0).ceil() as i32
-                            }
-                        };
-                        let (current, max) = enemy_comp.unit.hp;
-                        let remaining = cmp::max(current - atk, 0);
-                        println!(
-                            "{enemy:?} takes {atk} damage, {remaining} HP left",
-                            enemy = enemy_comp.unit.unit_type,
-                            atk = atk,
-                            remaining = remaining
-                        );
-                        enemy_comp.unit.hp = (remaining, max);
+                    match other_unit {
+                        Some((enemy_entity, enemy_comp)) => {
+                            println!(
+                                "{warrior} attacks {direction:?} and hits {enemy:?}",
+                                warrior = &self.name,
+                                direction = direction,
+                                enemy = enemy_comp.unit.unit_type
+                            );
+                            let atk = match direction {
+                                Direction::Forward => warrior_comp.unit.atk,
+                                Direction::Backward => {
+                                    (warrior_comp.unit.atk as f32 / 2.0).ceil() as i32
+                                }
+                            };
+                            let (current, max) = enemy_comp.unit.hp;
+                            let remaining = cmp::max(current - atk, 0);
+                            println!(
+                                "{enemy:?} takes {atk} damage, {remaining} HP left",
+                                enemy = enemy_comp.unit.unit_type,
+                                atk = atk,
+                                remaining = remaining
+                            );
+                            enemy_comp.unit.hp = (remaining, max);
 
-                        if remaining == 0 {
-                            println!("{:?} is dead!", enemy_comp.unit.unit_type);
-                            entities.delete(*enemy_entity).unwrap();
+                            if remaining == 0 {
+                                println!("{:?} is dead!", enemy_comp.unit.unit_type);
+                                entities.delete(*enemy_entity).unwrap();
+                            }
                         }
-                    } else {
-                        println!(
-                            "{warrior} attacks {direction:?} and hits nothing",
-                            warrior = &self.name,
-                            direction = direction
-                        );
+                        _ => {
+                            println!(
+                                "{warrior} attacks {direction:?} and hits nothing",
+                                warrior = &self.name,
+                                direction = direction
+                            );
+                        }
                     }
                 }
                 Action::Rest => {
@@ -286,34 +292,37 @@ impl<'a> System<'a> for PlayerSystem {
                         }
                     });
 
-                    if let Some((enemy_entity, enemy_comp)) = target {
-                        println!(
-                            "{warrior} lets loose an arrow {direction:?} and hits {enemy:?}",
-                            warrior = &self.name,
-                            direction = direction,
-                            enemy = enemy_comp.unit.unit_type
-                        );
-                        let atk = (warrior_comp.unit.atk as f32 / 2.0).ceil() as i32;
-                        let (current, max) = enemy_comp.unit.hp;
-                        let remaining = cmp::max(current - atk, 0);
-                        println!(
-                            "{enemy:?} takes {atk} damage, {remaining} HP left",
-                            enemy = enemy_comp.unit.unit_type,
-                            atk = atk,
-                            remaining = remaining
-                        );
-                        enemy_comp.unit.hp = (remaining, max);
+                    match target {
+                        Some((enemy_entity, enemy_comp)) => {
+                            println!(
+                                "{warrior} lets loose an arrow {direction:?} and hits {enemy:?}",
+                                warrior = &self.name,
+                                direction = direction,
+                                enemy = enemy_comp.unit.unit_type
+                            );
+                            let atk = (warrior_comp.unit.atk as f32 / 2.0).ceil() as i32;
+                            let (current, max) = enemy_comp.unit.hp;
+                            let remaining = cmp::max(current - atk, 0);
+                            println!(
+                                "{enemy:?} takes {atk} damage, {remaining} HP left",
+                                enemy = enemy_comp.unit.unit_type,
+                                atk = atk,
+                                remaining = remaining
+                            );
+                            enemy_comp.unit.hp = (remaining, max);
 
-                        if remaining == 0 {
-                            println!("{:?} is dead!", enemy_comp.unit.unit_type);
-                            entities.delete(*enemy_entity).unwrap();
+                            if remaining == 0 {
+                                println!("{:?} is dead!", enemy_comp.unit.unit_type);
+                                entities.delete(*enemy_entity).unwrap();
+                            }
                         }
-                    } else {
-                        println!(
-                            "{warrior} lets loose an arrow {direction:?} and hits nothing",
-                            warrior = &self.name,
-                            direction = direction
-                        );
+                        _ => {
+                            println!(
+                                "{warrior} lets loose an arrow {direction:?} and hits nothing",
+                                warrior = &self.name,
+                                direction = direction
+                            );
+                        }
                     }
                 }
             }

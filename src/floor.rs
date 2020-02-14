@@ -71,11 +71,10 @@ impl Floor {
             .map(|u| (u.position, u.unit_type))
             .collect();
 
-        if let Some(unit_type) = unit_positions.get(&position) {
-            return Tile::Unit(*unit_type);
+        match unit_positions.get(&position) {
+            Some(unit_type) => Tile::Unit(*unit_type),
+            _ => Tile::Empty,
         }
-
-        Tile::Empty
     }
 
     /// Prints a textual representation of the floor and all
