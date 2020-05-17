@@ -19,21 +19,21 @@ use std::cell::RefCell;
 ///
 /// Available abilities:
 ///
-/// * `walk`
+/// * [`walk`](crate::warrior::Warrior::walk)
 ///
 /// **Level 2**
 ///
 /// New abilities unlocked at this level:
 ///
-/// * `check`
-/// * `attack`
+/// * [`check`](crate::warrior::Warrior::check)
+/// * [`attack`](crate::warrior::Warrior::attack)
 ///
 /// **Level 3**
 ///
 /// New abilities unlocked at this level:
 ///
-/// * `health`
-/// * `rest`
+/// * [`health`](crate::warrior::Warrior::health)
+/// * [`rest`](crate::warrior::Warrior::rest)
 ///
 /// **Level 4**
 ///
@@ -43,29 +43,29 @@ use std::cell::RefCell;
 ///
 /// New abilities unlocked at this level:
 ///
-/// * `rescue`
+/// * [`rescue`](crate::warrior::Warrior::rescue)
 ///
 /// **Level 6**
 ///
 /// The following abilities now have a *directional* counterpart:
 ///
-/// * `walk` -> `walk_toward`
-/// * `check` -> `check_toward`
-/// * `attack` -> `attack_toward`
-/// * `rescue` -> `rescue_toward`
+/// * `walk` -> [`walk_toward`](crate::warrior::Warrior::walk_toward)
+/// * `check` -> [`check_toward`](crate::warrior::Warrior::check_toward)
+/// * `attack` -> [`attack_toward`](crate::warrior::Warrior::attack_toward)
+/// * `rescue` -> [`rescue_toward`](crate::warrior::Warrior::rescue_toward)
 ///
 /// **Level 7**
 ///
 /// New abilities unlocked at this level:
 ///
-/// * `pivot`
+/// * [`pivot`](crate::warrior::Warrior::pivot)
 ///
 /// **Level 8**
 ///
 /// New abilities (and *directional* counterparts) unlocked at this level:
 ///
-/// * `look` -> `look_toward`
-/// * `shoot` -> `shoot_toward`
+/// * [`look`](crate::warrior::Warrior::look) -> [`look_toward`](crate::warrior::Warrior::look_toward)
+/// * [`shoot`](crate::warrior::Warrior::shoot) -> [`shoot_toward`](crate::warrior::Warrior::shoot_toward)
 ///
 /// **Level 9**
 ///
