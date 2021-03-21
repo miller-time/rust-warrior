@@ -1,5 +1,6 @@
 //! where it all starts
 
+use std::env;
 use std::fs;
 
 use crate::{engine, floor::Floor, profile::Profile, starter, ui, Player};
@@ -54,6 +55,9 @@ impl Game {
         // TODO: tally points
         if Floor::exists(self.profile.level + 1) {
             println!("Success! You have found the stairs.");
+            if let Ok(_) = env::var("NO_PROMPT") {
+                return;
+            }
             if ui::ask("Would you like to continue on to the next level?") {
                 self.profile.increment_level();
                 starter::write_readme(&self.profile, None);
