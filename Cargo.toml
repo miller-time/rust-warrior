@@ -15,7 +15,7 @@ edition = "2018"
 status = "actively-developed"
 
 [dependencies]
-base64 = "0.12"
+base64 = "0.13"
 serde = "1.0"
 serde_derive = "1.0"
 toml = "0.5"
