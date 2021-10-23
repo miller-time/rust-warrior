@@ -9,7 +9,7 @@ keywords = ["game", "learning", "rust", "specs"]
 categories = ["games"]
 license = "MIT"
 authors = ["Russell Cousineau <miller.time.baby@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [badges.maintenance]
 status = "actively-developed"
