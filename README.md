@@ -4,8 +4,8 @@
 [![Crates.io][crates-badge]][crates]
 [![Docs.rs][docs-badge]][docs]
 
-[travis-badge]: https://travis-ci.org/miller-time/rust-warrior.svg
-[travis]: https://travis-ci.org/miller-time/rust-warrior
+[travis-badge]: https://app.travis-ci.com/miller-time/rust-warrior.svg?branch=master
+[travis]: https://app.travis-ci.com/miller-time/rust-warrior
 [crates-badge]: https://img.shields.io/crates/v/rust-warrior
 [crates]: https://crates.io/crates/rust-warrior
 [docs-badge]: https://docs.rs/rust-warrior/badge.svg
