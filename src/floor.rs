@@ -32,8 +32,6 @@ impl Tile {
 /// for every level.
 #[derive(Clone, Debug)]
 pub struct Floor {
-    /// which level
-    pub level: usize,
     /// the east/west count of tiles
     pub width: usize,
     /// the north/south count of tiles
@@ -93,21 +91,18 @@ impl Floor {
     fn get(level: usize) -> Option<Floor> {
         match level {
             1 => Some(Floor {
-                level,
                 width: 8,
                 height: 1,
                 stairs: (7, 0),
                 units: vec![Unit::warrior((0, 0))],
             }),
             2 => Some(Floor {
-                level,
                 width: 8,
                 height: 1,
                 stairs: (7, 0),
                 units: vec![Unit::warrior((0, 0)), Unit::sludge((4, 0))],
             }),
             3 => Some(Floor {
-                level,
                 width: 9,
                 height: 1,
                 stairs: (8, 0),
@@ -120,7 +115,6 @@ impl Floor {
                 ],
             }),
             4 => Some(Floor {
-                level,
                 width: 8,
                 height: 1,
                 stairs: (7, 0),
@@ -132,7 +126,6 @@ impl Floor {
                 ],
             }),
             5 => Some(Floor {
-                level,
                 width: 8,
                 height: 1,
                 stairs: (7, 0),
@@ -146,7 +139,6 @@ impl Floor {
                 ],
             }),
             6 => Some(Floor {
-                level,
                 width: 9,
                 height: 1,
                 stairs: (8, 0),
@@ -159,7 +151,6 @@ impl Floor {
                 ],
             }),
             7 => Some(Floor {
-                level,
                 width: 6,
                 height: 1,
                 stairs: (0, 0),
@@ -170,7 +161,6 @@ impl Floor {
                 ],
             }),
             8 => Some(Floor {
-                level,
                 width: 6,
                 height: 1,
                 stairs: (5, 0),
@@ -182,7 +172,6 @@ impl Floor {
                 ],
             }),
             9 => Some(Floor {
-                level,
                 width: 11,
                 height: 1,
                 stairs: (0, 0),
