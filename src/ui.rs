@@ -3,6 +3,18 @@
 use std::io;
 use std::io::prelude::*;
 
+pub fn select_level() -> usize {
+    loop {
+        let response = request("Choose level to play [1-9] ");
+        if let Ok(n) = response.parse::<usize>() {
+            if (1..=9).contains(&n) {
+                break n;
+            }
+        }
+        println!("{} is not a valid level.", response);
+    }
+}
+
 /// Helper function for prompting the player with a yes/no question
 pub fn ask(message: &str) -> bool {
     let mut message = message.to_owned();

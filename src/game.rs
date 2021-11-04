@@ -39,8 +39,17 @@ impl Game {
     }
 
     fn start(&mut self, player: impl Player + Send + Sync + 'static) {
-        println!("Starting Level {}", self.profile.level);
-        let floor = Floor::load(self.profile.level);
+        let level;
+        if self.profile.maximus_oxidus {
+            println!("Now that you have earned the title Maximus Oxidus, you may choose to hone your skills on any level.");
+            level = ui::select_level();
+            starter::write_readme(&self.profile, level, None);
+            println!("See (updated) README.md for level {} instructions.", level);
+        } else {
+            level = self.profile.level;
+        }
+        println!("Starting Level {}", level);
+        let floor = Floor::load(level);
         match engine::start(self.profile.name.clone(), floor, player) {
             Ok(_) => {
                 self.level_completed();
@@ -53,14 +62,16 @@ impl Game {
 
     fn level_completed(&mut self) {
         // TODO: tally points
-        if Floor::exists(self.profile.level + 1) {
+        if self.profile.maximus_oxidus {
+            println!("Success! You have found the stairs.");
+        } else if Floor::exists(self.profile.level + 1) {
             println!("Success! You have found the stairs.");
             if env::var("NO_PROMPT").is_ok() {
                 return;
             }
             if ui::ask("Would you like to continue on to the next level?") {
                 self.profile.increment_level();
-                starter::write_readme(&self.profile, None);
+                starter::write_readme(&self.profile, self.profile.level, None);
                 starter::write_profile(&self.profile, None);
                 println!("See (updated) README.md for your next instructions.");
             } else {
