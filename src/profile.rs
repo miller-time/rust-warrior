@@ -4,20 +4,26 @@ use base64;
 use serde_derive::{Deserialize, Serialize};
 use std::str;
 
-/// The player profile is essentially just the player's chosen name and
-/// the level they are currently working on completing. This is saved in
-/// .profile at the root of the player's generated project.
+/// The player's profile tracks their game progress. It is saved in .profile at
+/// the root of the player's generated project.
 #[derive(Deserialize, Serialize)]
 pub struct Profile {
+    /// The name the player has chosen
     pub name: String,
+    /// The level of the player's warrior
     pub level: usize,
+    /// Whether the player has successfully completed the final floor
+    pub maximus_oxidus: bool,
 }
 
 impl Profile {
     /// create new Profile for player with given `name`
     pub fn new(name: String) -> Profile {
-        let level = 1;
-        Profile { name, level }
+        Profile {
+            name,
+            level: 1,
+            maximus_oxidus: false,
+        }
     }
 
     pub fn increment_level(&mut self) {
