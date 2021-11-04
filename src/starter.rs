@@ -183,7 +183,7 @@ When you're ready, use `cargo run` to attempt this challenge.
 You feel a wall right in front of you and an opening behind you.
 
 Tip: You are not as effective at attacking backward. Use
-`warrior.check_toward(Drection)` to see if you are facing a `Tile::Wall` and
+`warrior.check_toward(Direction)` to see if you are facing a `Tile::Wall` and
 `warrior.pivot()` to turn around.
 
 ```
