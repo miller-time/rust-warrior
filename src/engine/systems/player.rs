@@ -18,6 +18,7 @@ use crate::{
 /// warrior whose actions must be specified.
 pub struct PlayerSystem {
     pub name: String,
+    pub warrior_level: usize,
     pub floor: Floor,
     pub player: Box<dyn Player + Send + Sync>,
 }
@@ -25,11 +26,13 @@ pub struct PlayerSystem {
 impl PlayerSystem {
     pub fn new(
         name: String,
+        warrior_level: usize,
         floor: Floor,
         player: impl Player + Send + Sync + 'static,
     ) -> PlayerSystem {
         PlayerSystem {
             name,
+            warrior_level,
             floor,
             player: Box::new(player),
         }
@@ -100,7 +103,7 @@ impl<'a> System<'a> for PlayerSystem {
             Direction::Backward => (west, east),
         };
         let warrior = Warrior::new(
-            self.floor.level,
+            self.warrior_level,
             // `Vec<(i32, Tile)>` -> `Vec<Tile>`
             ahead.clone().into_iter().map(|(_, t)| t).collect(),
             // `Vec<(i32, Tile)>` -> `Vec<Tile>`

@@ -50,7 +50,7 @@ impl Game {
         }
         println!("Starting Level {}", level);
         let floor = Floor::load(level);
-        match engine::start(self.profile.name.clone(), floor, player) {
+        match engine::start(self.profile.name.clone(), self.profile.level, floor, player) {
             Ok(_) => {
                 self.level_completed();
             }
