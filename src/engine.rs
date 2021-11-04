@@ -36,12 +36,13 @@ use systems::{PlayerSystem, ShooterSystem, SludgeSystem, UiSystem};
 /// The entry point for the engine, called by [`Game`](crate::game::Game)
 pub fn start(
     name: String,
+    warrior_level: usize,
     floor: Floor,
     player: impl Player + Send + Sync + 'static,
 ) -> Result<(), String> {
     let mut world = World::new();
 
-    let player_system = PlayerSystem::new(name.clone(), floor.clone(), player);
+    let player_system = PlayerSystem::new(name.clone(), warrior_level, floor.clone(), player);
     let sludge_system = SludgeSystem::new(name.clone());
     let shooter_system = ShooterSystem::new(name.clone());
     let ui_system = UiSystem::new(floor.clone());
