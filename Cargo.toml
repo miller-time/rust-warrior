@@ -1,7 +1,7 @@
 [package]
 name = "rust-warrior"
 description = "Game for learning Rust, inspired by Ruby Warrior"
-version = "0.9.3"
+version = "0.10.0"
 repository = "https://github.com/miller-time/rust-warrior"
 documentation = "https://docs.rs/rust-warrior/"
 readme = "README.md"
