@@ -376,10 +376,10 @@ fn create_game_files(profile: &mut Profile) -> io::Result<()> {
     let main_rs = src_dir.join("main.rs");
     fs::write(main_rs, generate_main_rs(&profile.name))?;
     let cargo_toml = player_dir.join("Cargo.toml");
-    fs::write(cargo_toml, generate_cargo_toml(&profile_dir))?;
+    fs::write(cargo_toml, generate_cargo_toml(profile_dir))?;
 
     write_profile(profile, Some(&player_dir));
-    write_readme(&profile, Some(&player_dir));
+    write_readme(profile, Some(&player_dir));
 
     Ok(())
 }

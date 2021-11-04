@@ -55,7 +55,7 @@ impl Game {
         // TODO: tally points
         if Floor::exists(self.profile.level + 1) {
             println!("Success! You have found the stairs.");
-            if let Ok(_) = env::var("NO_PROMPT") {
+            if env::var("NO_PROMPT").is_ok() {
                 return;
             }
             if ui::ask("Would you like to continue on to the next level?") {

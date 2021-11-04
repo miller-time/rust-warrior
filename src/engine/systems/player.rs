@@ -278,16 +278,10 @@ impl<'a> System<'a> for PlayerSystem {
                         let (x, _) = comp.unit.position;
                         match direction {
                             Direction::Forward => {
-                                match ahead.iter().find(|(_, tile)| *tile != Tile::Empty) {
-                                    Some((target_x, _)) if *target_x == x => true,
-                                    _ => false,
-                                }
+                                matches!(ahead.iter().find(|(_, tile)| *tile != Tile::Empty), Some((target_x, _)) if *target_x == x)
                             }
                             Direction::Backward => {
-                                match behind.iter().find(|(_, tile)| *tile != Tile::Empty) {
-                                    Some((target_x, _)) if *target_x == x => true,
-                                    _ => false,
-                                }
+                                matches!(behind.iter().find(|(_, tile)| *tile != Tile::Empty), Some((target_x, _)) if *target_x == x)
                             }
                         }
                     });

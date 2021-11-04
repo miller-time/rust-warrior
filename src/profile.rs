@@ -29,7 +29,7 @@ impl Profile {
         let err = "failed to parse .profile";
         let bytes = base64::decode(contents).expect(err);
         let decoded = str::from_utf8(&bytes).expect(err);
-        toml::from_str(&decoded).expect(err)
+        toml::from_str(decoded).expect(err)
     }
 
     /// convert Profile to base64 encoded TOML String

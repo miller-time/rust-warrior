@@ -47,11 +47,3 @@ pub use game::Game;
 pub use player::Player;
 pub use unit::UnitType;
 pub use warrior::Warrior;
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
