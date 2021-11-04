@@ -290,7 +290,7 @@ fn generate_cargo_toml(name: &str) -> String {
         "[package]
 name = \"rustwarrior-{name}\"
 version = \"0.1.0\"
-edition = \"2018\"
+edition = \"2021\"
 
 [dependencies]
 rust-warrior = \"0.9.3\"
