@@ -69,6 +69,8 @@ impl Game {
             }
         } else {
             println!("CONGRATULATIONS! You have climbed to the top of the tower and have earned the title Maximus Oxidus.");
+            self.profile.maximus_oxidus = true;
+            starter::write_profile(&self.profile, None);
         }
     }
 }
