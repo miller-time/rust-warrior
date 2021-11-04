@@ -347,14 +347,14 @@ fn create_profile() -> Profile {
 }
 
 /// Write the README.md for the current level into the player's game directory
-pub fn write_readme(profile: &Profile, directory: Option<&Path>) {
+pub fn write_readme(profile: &Profile, level: usize, directory: Option<&Path>) {
     let readme = match directory {
         Some(player_dir) => player_dir.join("README.md"),
         _ => Path::new("README.md").to_path_buf(),
     };
-    let contents = generate_readme(profile.level, &profile.name);
+    let contents = generate_readme(level, &profile.name);
     fs::write(readme, contents)
-        .unwrap_or_else(|_| panic!("failed to generate level {} README.md", profile.level));
+        .unwrap_or_else(|_| panic!("failed to generate level {} README.md", level));
 }
 
 /// Save the player's [`Profile`](crate::profile::Profile) to .profile in their
@@ -379,7 +379,7 @@ fn create_game_files(profile: &mut Profile) -> io::Result<()> {
     fs::write(cargo_toml, generate_cargo_toml(profile_dir))?;
 
     write_profile(profile, Some(&player_dir));
-    write_readme(profile, Some(&player_dir));
+    write_readme(profile, 1, Some(&player_dir));
 
     Ok(())
 }
