@@ -184,6 +184,12 @@ impl Floor {
                     Unit::captive((10, 0)),
                 ],
             }),
+            99 => Some(Floor {
+                width: 1,
+                height: 1,
+                stairs: (0, 0),
+                units: vec![Unit::warrior((0, 0))],
+            }),
             _ => None,
         }
     }

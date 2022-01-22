@@ -262,6 +262,9 @@ When you're ready, use `cargo run` to attempt this challenge.
 ",
             player = player
         ),
+		99 => format!(
+			"Challenge mode activated!"
+		),
         _ => unimplemented!(),
     }
 }
@@ -270,6 +273,7 @@ fn generate_main_rs(player: &str) -> String {
     format!(
         "use rust_warrior::{{Game, Player, Warrior}};
 
+#[derive(Copy, Clone)]
 struct {player};
 
 impl Player for {player} {{

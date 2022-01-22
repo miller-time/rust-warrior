@@ -33,15 +33,27 @@ impl Game {
     /// After loading the player profile and initializing the current
     /// level, the game consists of repeatedly calling `play_turn`
     /// on the player's `Player` instance.
-    pub fn play(player: impl Player + Send + Sync + 'static) {
+    pub fn play(player: impl Player + Send + Sync + std::clone::Clone + 'static) {
         let mut game = Game::new();
         game.start(player);
     }
 
-    fn start(&mut self, player: impl Player + Send + Sync + 'static) {
+    fn start(&mut self, player: impl Player + Send + Sync + Clone + 'static) {
         let level;
-        if self.profile.maximus_oxidus {
+        if self.profile.challenge_mode {
+            level = self.profile.level - 98;
+            if level == 10 {
+                println!("CONGRATULATIONS! You have compeleted Challenge mode!");
+                self.profile.challenge_mode = false;
+                self.profile.level = 9;
+                // Set back to level 9
+                starter::write_profile(&self.profile, None);
+                println!("Restart if you would like to play again.");
+                return;
+            }
+        } else if self.profile.maximus_oxidus {
             println!("Now that you have earned the title Maximus Oxidus, you may choose to hone your skills on any level.");
+            println!("Or choose 99 for Challenge Mode to traverse all levels!");
             level = ui::select_level();
             starter::write_readme(&self.profile, level, None);
             println!("See (updated) README.md for level {} instructions.", level);
@@ -49,10 +61,24 @@ impl Game {
             level = self.profile.level;
         }
         println!("Starting Level {}", level);
+        if level == 99 {
+            self.profile.challenge_mode = true;
+            self.profile.level = 99;
+            starter::write_profile(&self.profile, None);
+        }
         let floor = Floor::load(level);
+        let player_one = player.clone();
         match engine::start(self.profile.name.clone(), self.profile.level, floor, player) {
             Ok(_) => {
-                self.level_completed();
+                if self.profile.challenge_mode {
+                    println!("Success! You have found the stairs.");
+                    self.profile.increment_level();
+                    starter::write_profile(&self.profile, None);
+                    let mut game = Game::new();
+                    game.start(player_one);
+                } else {
+                    self.level_completed();
+                }
             }
             Err(err) => {
                 println!("{}", err);
