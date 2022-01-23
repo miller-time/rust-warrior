@@ -33,12 +33,12 @@ impl Game {
     /// After loading the player profile and initializing the current
     /// level, the game consists of repeatedly calling `play_turn`
     /// on the player's `Player` instance.
-    pub fn play(player: impl Player + Send + Sync + 'static) {
+    pub fn play(player_generator: fn() -> Box<dyn Player + Send + Sync>) {
         let mut game = Game::new();
-        game.start(player);
+        game.start(player_generator);
     }
 
-    fn start(&mut self, player: impl Player + Send + Sync + 'static) {
+    fn start(&mut self, player_generator: fn() -> Box<dyn Player + Send + Sync>) {
         let level;
         if self.profile.maximus_oxidus {
             println!("Now that you have earned the title Maximus Oxidus, you may choose to hone your skills on any level.");
@@ -50,7 +50,12 @@ impl Game {
         }
         println!("Starting Level {}", level);
         let floor = Floor::load(level);
-        match engine::start(self.profile.name.clone(), self.profile.level, floor, player) {
+        match engine::start(
+            self.profile.name.clone(),
+            self.profile.level,
+            floor,
+            player_generator,
+        ) {
             Ok(_) => {
                 self.level_completed();
             }

@@ -28,13 +28,13 @@ impl PlayerSystem {
         name: String,
         warrior_level: usize,
         floor: Floor,
-        player: impl Player + Send + Sync + 'static,
+        player: Box<dyn Player + Send + Sync>,
     ) -> PlayerSystem {
         PlayerSystem {
             name,
             warrior_level,
             floor,
-            player: Box::new(player),
+            player,
         }
     }
 }
