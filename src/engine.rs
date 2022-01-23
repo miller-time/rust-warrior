@@ -38,8 +38,10 @@ pub fn start(
     name: String,
     warrior_level: usize,
     floor: Floor,
-    player: impl Player + Send + Sync + 'static,
+    player_generator: fn() -> Box<dyn Player + Send + Sync>,
 ) -> Result<(), String> {
+    let player = player_generator();
+
     let mut world = World::new();
 
     let player_system = PlayerSystem::new(name.clone(), warrior_level, floor.clone(), player);

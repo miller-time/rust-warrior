@@ -276,9 +276,19 @@ impl Player for {player} {{
     fn play_turn(&mut self, warrior: &Warrior) {{}}
 }}
 
+impl {player} {{
+    fn new() -> Self {{
+        {player} {{}}
+    }}
+
+    // don't change this method, this is what needs to be passed to `Game::play`
+    fn new_player() -> Box<dyn Player + Send + Sync> {{
+        Box::new({player}::new())
+    }}
+}}
+
 fn main() {{
-    let player = {player} {{}};
-    Game::play(player);
+    Game::play({player}::new_player);
 }}
 ",
         player = player
