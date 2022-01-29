@@ -18,8 +18,13 @@ in more detail, possibly giving some background about the issue
 being fixed, etc etc.
 ```
 
-Please limit the first line of commit messages to 80 or less characters.
-If you want to include more, please separate the **Header** from the
+Limit the first line of commit messages to 80 or less characters.
+If you want to include more, separate the **Header** from the
 **Body** with a blank line.
+
+Use verbs in the imperative in the commit message, as in:
+
+* "Fix bug that..."
+* "Add file/feature ..."
 
 [linus-commit]: https://github.com/torvalds/subsurface/blob/a48494d2fbed58c751e9b7e8fbff88582f9b2d02/README#L88
