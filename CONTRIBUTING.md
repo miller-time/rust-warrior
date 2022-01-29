@@ -6,7 +6,7 @@ fix it.
 
 ## Commit Messages
 
-Linus Torvalds describes a good commit message. See [linus-commit].
+Linus Torvalds describes a good commit message. See [here][linus-commit].
 
 A good commit message looks like this:
 
