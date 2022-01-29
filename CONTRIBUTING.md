@@ -1,8 +1,7 @@
 # Contributing
 
-If you notice any small bugs please feel free to create an issue on
-the Gitlab Issues Page, or create a pull request if you know how to
-fix it.
+If you notice any small bugs please feel free to [file an issue][issues],
+or create a pull request if you know how to fix it.
 
 ## Commit Messages
 
@@ -27,4 +26,5 @@ Use verbs in the imperative in the commit message, as in:
 * "Fix bug that..."
 * "Add file/feature ..."
 
+[issues]: https://github.com/miller-time/rust-warrior/issues
 [linus-commit]: https://github.com/torvalds/subsurface/blob/a48494d2fbed58c751e9b7e8fbff88582f9b2d02/README#L88
