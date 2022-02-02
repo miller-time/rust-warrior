@@ -1,10 +1,11 @@
 # Rust Warrior
 
-![Build Status][actions-badge]
+[![Build Status][actions-badge]][actions]
 [![Crates.io][crates-badge]][crates]
 [![Docs.rs][docs-badge]][docs]
 
 [actions-badge]: https://github.com/miller-time/rust-warrior/actions/workflows/rust.yml/badge.svg
+[actions]: https://github.com/miller-time/rust-warrior/actions
 [crates-badge]: https://img.shields.io/crates/v/rust-warrior
 [crates]: https://crates.io/crates/rust-warrior
 [docs-badge]: https://docs.rs/rust-warrior/badge.svg
