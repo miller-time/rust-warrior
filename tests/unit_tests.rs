@@ -1,4 +1,4 @@
-use rust_warrior::{UnitType};
+use rust_warrior::UnitType;
 
 #[test]
 fn test_unit_type_draw() {
