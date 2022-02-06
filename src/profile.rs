@@ -14,6 +14,8 @@ pub struct Profile {
     pub level: usize,
     /// Whether the player has successfully completed the final floor
     pub maximus_oxidus: bool,
+    /// If player has chosen to compete in challenge mode
+    pub challenge_mode: bool,
 }
 
 impl Profile {
@@ -23,6 +25,7 @@ impl Profile {
             name,
             level: 1,
             maximus_oxidus: false,
+            challenge_mode: false,
         }
     }
 

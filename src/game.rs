@@ -16,7 +16,6 @@ pub struct Game {
 
 impl Default for Game {
     fn default() -> Game {
-        // TODO: epic mode?
         let profile = load_profile();
 
         Game { profile }
@@ -39,17 +38,30 @@ impl Game {
     }
 
     fn start(&mut self, player_generator: fn() -> Box<dyn Player + Send + Sync>) {
-        let level;
-        if self.profile.maximus_oxidus {
-            println!("Now that you have earned the title Maximus Oxidus, you may choose to hone your skills on any level.");
-            level = ui::select_level();
-            starter::write_readme(&self.profile, level, None);
-            println!("See (updated) README.md for level {} instructions.", level);
+        if self.profile.challenge_mode {
+            if Floor::exists(self.profile.level + 1) == false {
+                self.profile.challenge_mode = false;
+                starter::write_profile(&self.profile, None);
+                println!("CONGRATULATIONS! You have compeleted Challenge mode!");
+                return;
+            } else {
+                self.profile.increment_level();
+                starter::write_profile(&self.profile, None);
+                println!("Challenge mode active: starting next level...");
+            }
+        } else if self.profile.maximus_oxidus {
+            println!("Now that you have earned the title Maximus Oxidus, you may choose to hone your skills on any level or play challenge mode.");
+            if ui::ask("Challenge mode? (play every level back to back)") {
+                self.profile.challenge_mode = true;
+            }
+            let level = ui::select_level();
+            self.profile.level = level;
+            starter::write_profile(&self.profile, None);
         } else {
-            level = self.profile.level;
+            self.level_completed();
         }
-        println!("Starting Level {}", level);
-        let floor = Floor::load(level);
+        println!("Starting Level {}", self.profile.level);
+        let floor = Floor::load(self.profile.level);
         match engine::start(
             self.profile.name.clone(),
             self.profile.level,
@@ -57,7 +69,14 @@ impl Game {
             player_generator,
         ) {
             Ok(_) => {
-                self.level_completed();
+                if self.profile.challenge_mode {
+                    println!("Success! You have found the stairs.");
+                    self.profile.increment_level();
+                    starter::write_profile(&self.profile, None);
+                    self.start(player_generator);
+                } else {
+                    self.level_completed();
+                }
             }
             Err(err) => {
                 println!("{}", err);
