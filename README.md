@@ -1,11 +1,11 @@
 # Rust Warrior
 
-[![Build Status][travis-badge]][travis]
+[![Build Status][actions-badge]][actions]
 [![Crates.io][crates-badge]][crates]
 [![Docs.rs][docs-badge]][docs]
 
-[travis-badge]: https://app.travis-ci.com/miller-time/rust-warrior.svg?branch=master
-[travis]: https://app.travis-ci.com/miller-time/rust-warrior
+[actions-badge]: https://github.com/miller-time/rust-warrior/actions/workflows/rust.yml/badge.svg
+[actions]: https://github.com/miller-time/rust-warrior/actions
 [crates-badge]: https://img.shields.io/crates/v/rust-warrior
 [crates]: https://crates.io/crates/rust-warrior
 [docs-badge]: https://docs.rs/rust-warrior/badge.svg

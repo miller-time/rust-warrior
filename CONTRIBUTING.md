@@ -1,14 +1,30 @@
 # Contributing
 
-At this point, I've just started this project. I'm referring to
-[Ruby Warrior][ruby-warrior] a LOT, but I'm doing things very
-differently in certain cases. There are a ton of features to add
-still, and as I am working on them I will probably adjust the design
-of the game overall to accomodate. So for now, I think it's a little
-too early to let others jump in with big contributions.
+If you notice any small bugs please feel free to [file an issue][issues],
+or create a pull request if you know how to fix it.
 
-If you notice any small bugs please feel free to create an issue on
-the Gitlab Issues Page, or create a pull request if you know how to
-fix it.
+## Commit Messages
 
-[ruby-warrior]: https://github.com/ryanb/ruby-warrior
+Linus Torvalds describes a good commit message. See [here][linus-commit].
+
+A good commit message looks like this:
+
+```
+Header line: explaining the commit in one line
+
+Body of commit message is a few lines of text, explaining things
+in more detail, possibly giving some background about the issue
+being fixed, etc etc.
+```
+
+Limit the first line of commit messages to 80 or less characters.
+If you want to include more, separate the **Header** from the
+**Body** with a blank line.
+
+Use verbs in the imperative in the commit message, as in:
+
+* "Fix bug that..."
+* "Add file/feature ..."
+
+[issues]: https://github.com/miller-time/rust-warrior/issues
+[linus-commit]: https://github.com/torvalds/subsurface/blob/a48494d2fbed58c751e9b7e8fbff88582f9b2d02/README#L88
