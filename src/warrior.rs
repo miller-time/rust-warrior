@@ -77,6 +77,7 @@ pub struct Warrior {
     health: i32,
     facing: Direction,
     action: RefCell<Option<Action>>,
+    challenge_mode: bool,
 }
 
 impl Warrior {
@@ -86,6 +87,7 @@ impl Warrior {
         behind: Vec<Tile>,
         health: i32,
         facing: Direction,
+        challenge_mode: bool
     ) -> Warrior {
         Warrior {
             level,
@@ -94,6 +96,7 @@ impl Warrior {
             health,
             facing,
             action: RefCell::new(None),
+            challenge_mode
         }
     }
 
@@ -108,7 +111,7 @@ impl Warrior {
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 6**.
     pub fn walk_toward(&self, direction: Direction) {
-        if self.level < 6 {
+        if self.level < 6 && self.challenge_mode == false {
             panic!("You have not yet learned `walk_toward`! Perhaps you meant `walk`?")
         }
         self.perform_walk(direction);
@@ -123,7 +126,7 @@ impl Warrior {
     /// Returns a [`Tile`](crate::Tile).
     /// This ability is unlocked at **Level 2**.
     pub fn check(&self) -> Tile {
-        if self.level < 2 {
+        if self.level < 2 && self.challenge_mode == false {
             panic!("You have not yet learned `check`!");
         }
         self.perform_check(Direction::Forward)
@@ -133,7 +136,7 @@ impl Warrior {
     /// Returns a [`Tile`](crate::Tile).
     /// This ability is unlocked at **Level 6**.
     pub fn check_toward(&self, direction: Direction) -> Tile {
-        if self.level < 6 {
+        if self.level < 6 && self.challenge_mode == false {
             panic!("You have not yet learned `check_toward`! Perhaps you meant `check`?")
         }
         self.perform_check(direction)
@@ -157,7 +160,7 @@ impl Warrior {
     /// Returns a vector of up to three [`Tile`](crate::Tile)s.
     /// This ability is unlocked at **Level 8**.
     pub fn look(&self) -> &Vec<Tile> {
-        if self.level < 8 {
+        if self.level < 8 && self.challenge_mode == false {
             panic!("You have not yet learned `look`!")
         }
         self.look_toward(Direction::Forward)
@@ -167,7 +170,7 @@ impl Warrior {
     /// Returns a vector of up to three [`Tile`](crate::Tile)s.
     /// This ability is unlocked at **Level 8**.
     pub fn look_toward(&self, direction: Direction) -> &Vec<Tile> {
-        if self.level < 8 {
+        if self.level < 8 && self.challenge_mode == false {
             panic!("You have not yet learned `look_toward`!")
         }
         match direction {
@@ -180,7 +183,7 @@ impl Warrior {
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 2**.
     pub fn attack(&self) {
-        if self.level < 2 {
+        if self.level < 2 && self.challenge_mode == false {
             panic!("You have not yet learned `attack`!");
         }
         self.perform_attack(Direction::Forward);
@@ -190,7 +193,7 @@ impl Warrior {
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 6**.
     pub fn attack_toward(&self, direction: Direction) {
-        if self.level < 6 {
+        if self.level < 6 && self.challenge_mode == false {
             panic!("You have not yet learned `attack_toward`! Perhaps you meant `attack`?")
         }
         self.perform_attack(direction);
@@ -204,7 +207,7 @@ impl Warrior {
     /// Check the current health of the Warrior.
     /// This ability is unlocked at **Level 3**.
     pub fn health(&self) -> i32 {
-        if self.level < 3 {
+        if self.level < 3 && self.challenge_mode == false {
             panic!("You have not yet learned `health`!");
         }
         self.health
@@ -214,7 +217,7 @@ impl Warrior {
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 3**.
     pub fn rest(&self) {
-        if self.level < 3 {
+        if self.level < 3 && self.challenge_mode == false {
             panic!("You have not yet learned `rest`!");
         }
         self.perform(Action::Rest);
@@ -224,7 +227,7 @@ impl Warrior {
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 5**.
     pub fn rescue(&self) {
-        if self.level < 5 {
+        if self.level < 5 && self.challenge_mode == false {
             panic!("You have not yet learned `rescue`!");
         }
         self.perform_rescue(Direction::Forward);
@@ -234,7 +237,7 @@ impl Warrior {
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 6**.
     pub fn rescue_toward(&self, direction: Direction) {
-        if self.level < 6 {
+        if self.level < 6 && self.challenge_mode == false {
             panic!("You have not yet learned `rescue_toward`! Perhaps you meant `rescue`?")
         }
         self.perform_rescue(direction);
@@ -249,7 +252,7 @@ impl Warrior {
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 7**.
     pub fn pivot(&self) {
-        if self.level < 7 {
+        if self.level < 7 && self.challenge_mode == false {
             panic!("You have not yet learned `pivot`!")
         }
         let direction = match self.facing {
@@ -263,7 +266,7 @@ impl Warrior {
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 8**.
     pub fn shoot(&self) {
-        if self.level < 8 {
+        if self.level < 8 && self.challenge_mode == false {
             panic!("You have not yet learned `shoot`!")
         }
         self.shoot_toward(Direction::Forward);
@@ -273,7 +276,7 @@ impl Warrior {
     /// This is an [`Action`](crate::actions::Action).
     /// This ability is unlocked at **Level 8**.
     pub fn shoot_toward(&self, direction: Direction) {
-        if self.level < 8 {
+        if self.level < 8 && self.challenge_mode == false {
             panic!("You have not yet learned `shoot_toward`!")
         }
         self.perform(Action::Shoot(direction));

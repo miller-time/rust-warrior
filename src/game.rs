@@ -38,28 +38,30 @@ impl Game {
     }
 
     fn start(&mut self, player_generator: fn() -> Box<dyn Player + Send + Sync>) {
-        let level;
         if self.profile.challenge_mode {
-            level = self.profile.level;
-            if level == 10 {
-                println!("CONGRATULATIONS! You have compeleted Challenge mode!");
+            if Floor::exists(self.profile.level + 1) == false {
                 self.profile.challenge_mode = false;
                 starter::write_profile(&self.profile, None);
-                println!("Restart if you would like to play again.");
+                println!("CONGRATULATIONS! You have compeleted Challenge mode!");
                 return;
+            } else {
+                self.profile.increment_level();
+                starter::write_profile(&self.profile, None);
+                println!("Challenge mode active: starting next level...");
             }
-        } else {
+        } else if self.profile.maximus_oxidus {
             println!("Now that you have earned the title Maximus Oxidus, you may choose to hone your skills on any level or play challenge mode.");
             if ui::ask("Challenge mode? (play every level back to back)") {
                 self.profile.challenge_mode = true;
-                starter::write_profile(&self.profile, None);
             }
-            level = ui::select_level();
-            starter::write_readme(&self.profile, level, None);
-            println!("See (updated) README.md for level {} instructions.", level);
+            let level = ui::select_level();
+            self.profile.level = level;
+            starter::write_profile(&self.profile, None);
+        } else {
+            self.level_completed();
         }
-        println!("Starting Level {}", level);
-        let floor = Floor::load(level);
+        println!("Starting Level {}", self.profile.level);
+        let floor = Floor::load(self.profile.level);
         match engine::start(
             self.profile.name.clone(),
             self.profile.level,

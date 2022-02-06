@@ -9,8 +9,6 @@ pub fn select_level() -> usize {
         if let Ok(n) = response.parse::<usize>() {
             if (1..=9).contains(&n) {
                 break n;
-            } else if n == 99 {
-                break n;
             }
         }
         println!("{} is not a valid level.", response);

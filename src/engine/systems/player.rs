@@ -1,6 +1,7 @@
 //! contains system for player-controlled interactions
 
 use std::cmp;
+use std::fs;
 
 use specs::{prelude::*, System};
 
@@ -10,6 +11,7 @@ use crate::{
     floor::{Floor, Tile},
     unit::UnitType,
     Player, Warrior,
+    profile::Profile,
 };
 
 /// This system defines all of the interactions that are possible for the
@@ -28,13 +30,13 @@ impl PlayerSystem {
         name: String,
         warrior_level: usize,
         floor: Floor,
-        player: impl Player + Send + Sync + 'static,
+        player: Box<dyn Player + Send + Sync>,
     ) -> PlayerSystem {
         PlayerSystem {
             name,
             warrior_level,
             floor,
-            player: Box::new(player),
+            player,
         }
     }
 }
@@ -102,6 +104,9 @@ impl<'a> System<'a> for PlayerSystem {
             Direction::Forward => (east, west),
             Direction::Backward => (west, east),
         };
+
+        let profile = load_profile();
+
         let warrior = Warrior::new(
             self.warrior_level,
             // `Vec<(i32, Tile)>` -> `Vec<Tile>`
@@ -110,6 +115,7 @@ impl<'a> System<'a> for PlayerSystem {
             behind.clone().into_iter().map(|(_, t)| t).collect(),
             health,
             facing,
+            profile.challenge_mode,
         );
         self.player.play_turn(&warrior);
 
@@ -325,4 +331,9 @@ impl<'a> System<'a> for PlayerSystem {
             }
         }
     }
+}
+
+fn load_profile() -> Profile {
+    let contents = fs::read_to_string(".profile").expect("error loading .profile");
+    Profile::from_toml(&contents)
 }

@@ -303,7 +303,7 @@ version = \"0.1.0\"
 edition = \"2021\"
 
 [dependencies]
-rust-warrior = \"0.10.0\"
+rust-warrior = \"0.11.0\"
 ",
         name = name
     )
