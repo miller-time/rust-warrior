@@ -262,9 +262,6 @@ When you're ready, use `cargo run` to attempt this challenge.
 ",
             player = player
         ),
-		99 => format!(
-			"Challenge mode activated!"
-		),
         _ => unimplemented!(),
     }
 }
@@ -273,16 +270,25 @@ fn generate_main_rs(player: &str) -> String {
     format!(
         "use rust_warrior::{{Game, Player, Warrior}};
 
-#[derive(Copy, Clone)]
 struct {player};
 
 impl Player for {player} {{
     fn play_turn(&mut self, warrior: &Warrior) {{}}
 }}
 
+impl {player} {{
+    fn new() -> Self {{
+        {player} {{}}
+    }}
+
+    // don't change this method, this is what needs to be passed to `Game::play`
+    fn new_player() -> Box<dyn Player + Send + Sync> {{
+        Box::new({player}::new())
+    }}
+}}
+
 fn main() {{
-    let player = {player} {{}};
-    Game::play(player);
+    Game::play({player}::new_player);
 }}
 ",
         player = player
