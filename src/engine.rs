@@ -1,95 +1,88 @@
-//! ECS-based game engine
+//! The game engine
 //!
-//! This module contains the [specs][specs] implementation, which defines the
-//! interactions that occur when levels are played. Unsurprisingly, this
-//! [ECS][ecs]-based engine has Entities, Components, and Systems.
+//! This module was formerly the home of a [specs][specs] implementation but is
+//! now home to a zero-dependency version of the engine that functions almost
+//! identically. It ended up being a little more straightforward when entities
+//! did not need to be queried.
 //!
-//! ### Entities
+//! When `start` is called, a mutable `World` instance is created. This keeps
+//! track of things like the warrior's health and position, plus all enemy
+//! units' health and position as well.
 //!
-//! There are one or more entities created, depending on the level. There
-//! is always a warrior, there can be one or more sludge, archer, and wizard
-//! enemies, and there can be one or more captives.
-//!
-//! ### Components
-//!
-//! See `components` module.
-//!
-//! ### Systems
-//!
-//! See `systems` module.
+//! Within the game's loop, mutable references to the `World` are handed to
+//! various systems that live in the `systems` module and define a portion
+//! of the game's logic.
 //!
 //! [specs]: https://github.com/slide-rs/specs
-//! [ecs]: https://en.wikipedia.org/wiki/Entity_component_system
 
 use std::{thread, time};
 
-use specs::{prelude::*, World};
-
 use crate::{floor::Floor, unit::UnitType, Player};
 
-pub mod components;
 pub mod systems;
+pub mod world;
 
-use components::UnitComponent;
-use systems::{PlayerSystem, ShooterSystem, SludgeSystem, UiSystem};
+use systems::{player_system, shooter_system, sludge_system, ui_system};
+use world::World;
 
 /// The entry point for the engine, called by [`Game`](crate::game::Game)
 pub fn start(
-    name: String,
+    player_name: String,
     warrior_level: usize,
     floor: Floor,
     player_generator: fn() -> Box<dyn Player + Send + Sync>,
 ) -> Result<(), String> {
     let player = player_generator();
 
-    let mut world = World::new();
-
-    let player_system = PlayerSystem::new(name.clone(), warrior_level, floor.clone(), player);
-    let sludge_system = SludgeSystem::new(name.clone());
-    let shooter_system = ShooterSystem::new(name.clone());
-    let ui_system = UiSystem::new(floor.clone());
-    let mut dispatcher = DispatcherBuilder::new()
-        .with(player_system, "player", &[])
-        .with(sludge_system, "sludge", &["player"])
-        .with(shooter_system, "shooter", &["player", "sludge"])
-        .with(ui_system, "ui", &["player", "sludge", "shooter"])
-        .build();
-
-    dispatcher.setup(&mut world);
-
-    for unit in &floor.units {
-        UnitComponent::create(&mut world, unit.clone());
-    }
-
     floor.draw();
 
     let mut step = 0;
+
+    let mut warrior = None;
+    let mut other_units = Vec::new();
+    for unit in &floor.units {
+        match unit.unit_type {
+            UnitType::Warrior => {
+                warrior = Some(unit.clone());
+            }
+            _ => {
+                other_units.push(unit.clone());
+            }
+        }
+    }
+    let warrior = warrior.unwrap();
+
+    let mut world = World::new(
+        player_name,
+        warrior_level,
+        floor,
+        player,
+        warrior,
+        other_units,
+    );
+
     loop {
         step += 1;
 
-        {
-            let units = world.read_storage::<UnitComponent>();
-            for entity in world.entities().join() {
-                match units.get(entity) {
-                    Some(warrior_comp) if warrior_comp.unit.unit_type == UnitType::Warrior => {
-                        let (current, _) = warrior_comp.unit.hp;
-                        if current == 0 {
-                            return Err(format!("{} died!", &name));
-                        }
-                        if step > 100 {
-                            return Err(format!("{} seems to have gotten lost...", &name));
-                        }
-                        if warrior_comp.unit.position == floor.stairs {
-                            return Ok(());
-                        }
-                    }
-                    _ => {}
-                }
-            }
+        if step > 100 {
+            return Err(format!(
+                "{} seems to have gotten lost...",
+                &world.player_name
+            ));
         }
 
-        dispatcher.dispatch(&world);
-        world.maintain();
+        let (current, _) = world.warrior.hp;
+        if current == 0 {
+            return Err(format!("{} died!", &world.player_name));
+        }
+        if world.warrior.position == world.floor.stairs {
+            return Ok(());
+        }
+
+        player_system(&mut world);
+        sludge_system(&mut world);
+        shooter_system(&mut world);
+        ui_system(&mut world);
 
         thread::sleep(time::Duration::from_millis(500));
     }
