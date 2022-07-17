@@ -28,7 +28,7 @@ dependencies = [
 
 [[package]]
 name = "rust-warrior"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "base64",
  "serde",
