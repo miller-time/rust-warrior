@@ -18,17 +18,6 @@
 //! includes `rust-warrior` as a dependency in its `Cargo.toml` file. The
 //! [`Game`](crate::game::Game) is then imported. To run it, you simply use
 //! `cargo run` like in any other Rust project.
-//!
-//! ### The Game Engine
-//!
-//! The game engine uses the [specs][specs] (**S**pecs **P**arallel **ECS**)
-//! crate, which is an [ECS][ecs] library. This might be a familiar tool for
-//! game developers. It will hopefully increase the quality of the game's
-//! implementation (and possibly allow for an easier transition to an
-//! [Amethyst](https://amethyst.rs/) version at some point).
-//!
-//! [specs]: https://github.com/slide-rs/specs
-//! [ecs]: https://en.wikipedia.org/wiki/Entity_component_system
 
 pub mod actions;
 pub mod engine;
