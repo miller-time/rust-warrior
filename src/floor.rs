@@ -120,9 +120,9 @@ impl Floor {
                 stairs: (7, 0),
                 units: vec![
                     Unit::warrior((0, 0)),
-                    Unit::thick_sludge((3, 0)),
-                    Unit::archer((4, 0)),
-                    Unit::thick_sludge((5, 0)),
+                    Unit::thick_sludge((2, 0)),
+                    Unit::archer((5, 0)),
+                    Unit::thick_sludge((6, 0)),
                 ],
             }),
             5 => Some(Floor {
@@ -161,18 +161,18 @@ impl Floor {
                 ],
             }),
             8 => Some(Floor {
-                width: 6,
+                width: 7,
                 height: 1,
-                stairs: (5, 0),
+                stairs: (6, 0),
                 units: vec![
                     Unit::warrior((0, 0)),
                     Unit::captive((2, 0)),
                     Unit::wizard((3, 0)),
-                    Unit::wizard((4, 0)),
+                    Unit::wizard((5, 0)),
                 ],
             }),
             9 => Some(Floor {
-                width: 11,
+                width: 12,
                 height: 1,
                 stairs: (0, 0),
                 units: vec![
@@ -180,8 +180,8 @@ impl Floor {
                     Unit::archer((2, 0)),
                     Unit::warrior((5, 0)),
                     Unit::thick_sludge((7, 0)),
-                    Unit::wizard((9, 0)),
-                    Unit::captive((10, 0)),
+                    Unit::wizard((10, 0)),
+                    Unit::captive((11, 0)),
                 ],
             }),
             _ => None,

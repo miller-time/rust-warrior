@@ -98,7 +98,7 @@ each turn to see if you're taking damage.
 
 ```
  --------
-|@  Sa S>|
+|@ S  aS>|
  --------
 
   > = Stairs
@@ -216,9 +216,9 @@ fire an arrow. Wizards are deadly but low in health. Kill them before they
 have time to attack.
 
 ```
- ------
-|@ Cww>|
- ------
+ -------
+|@ Cw w>|
+ -------
 
   > = Stairs
   @ = {player} (20 HP)
@@ -242,9 +242,9 @@ Time to hone your skills and apply all of the abilities that you have learned.
 Tip: Watch your back.
 
 ```
- -----------
-|>Ca  @ S wC|
- -----------
+ ------------
+|>Ca  @ S  wC|
+ ------------
 
   > = Stairs
   @ = {player} (20 HP)
