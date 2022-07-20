@@ -87,7 +87,9 @@ pub fn start(
         let mut sludge_events = sludge_system(&mut world);
         events.append(&mut sludge_events);
 
-        shooter_system(&mut world);
+        let mut shooter_events = shooter_system(&mut world);
+        events.append(&mut shooter_events);
+
         ui_system(&mut world);
 
         thread::sleep(time::Duration::from_millis(500));

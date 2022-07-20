@@ -9,7 +9,9 @@ use crate::{engine::world::World, unit::UnitType};
 /// The difference from the sludge is that the archer's arrows (and wizard's
 /// wand) can reach the warrior up to three spaces away, as long as there is no
 /// other enemy in the way.
-pub fn shooter_system(world: &mut World) {
+pub fn shooter_system(world: &mut World) -> Vec<String> {
+    let mut events = Vec::new();
+
     let (wx, _) = world.warrior.position;
 
     let mut shooters = Vec::new();
@@ -34,20 +36,22 @@ pub fn shooter_system(world: &mut World) {
         }
 
         if hp > 0 && in_range && obstructions.is_empty() {
-            println!(
+            events.push(format!(
                 "{shooter:?} attacks {warrior}",
                 shooter = shooter.unit_type,
                 warrior = &world.player_name
-            );
+            ));
             let (current, max) = world.warrior.hp;
             let remaining = cmp::max(current - shooter.atk, 0);
-            println!(
+            events.push(format!(
                 "{warrior} takes {atk} damage, {remaining} HP left",
                 warrior = &world.player_name,
                 atk = shooter.atk,
                 remaining = remaining
-            );
+            ));
             world.warrior.hp = (remaining, max);
         }
     }
+
+    events
 }
