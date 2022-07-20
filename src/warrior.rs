@@ -77,6 +77,7 @@ pub struct Warrior {
     health: i32,
     facing: Direction,
     action: RefCell<Option<Action>>,
+    warnings: RefCell<Vec<String>>,
 }
 
 impl Warrior {
@@ -94,6 +95,7 @@ impl Warrior {
             health,
             facing,
             action: RefCell::new(None),
+            warnings: RefCell::new(Vec::new()),
         }
     }
 
@@ -286,11 +288,21 @@ impl Warrior {
     }
 
     fn perform(&self, action: Action) {
-        if self.action.borrow().is_some() {
-            println!("Warrior already performed action!");
+        if let Some(prev) = *self.action.borrow() {
+            let warnings = &mut *self.warnings.borrow_mut();
+            warnings.push(format!("WARNING: Already performed action: {:?}", prev));
+            warnings.push(format!(
+                "WARNING: Unable to perform additional action: {:?}",
+                action
+            ));
             return;
         }
 
         *self.action.borrow_mut() = Some(action);
+    }
+
+    pub fn warnings(&self) -> Vec<String> {
+        let warnings = &*self.warnings.borrow();
+        warnings.clone()
     }
 }

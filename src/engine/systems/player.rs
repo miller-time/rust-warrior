@@ -283,5 +283,9 @@ pub fn player_system(world: &mut World) -> Vec<String> {
         }
     }
 
+    for warning in warrior.warnings() {
+        events.push(warning);
+    }
+
     events
 }
