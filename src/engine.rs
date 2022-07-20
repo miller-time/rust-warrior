@@ -19,6 +19,8 @@ use std::{thread, time};
 
 use crate::{floor::Floor, unit::UnitType, Player};
 
+#[cfg(feature = "ncurses")]
+pub mod curses;
 pub mod systems;
 pub mod world;
 
@@ -36,6 +38,10 @@ pub fn start(
 ) -> Result<(), String> {
     let player = player_generator();
 
+    #[cfg(feature = "ncurses")]
+    let c = curses::Curses::new();
+
+    #[cfg(not(feature = "ncurses"))]
     println!("{}", floor.draw());
 
     let mut step = 0;
@@ -94,7 +100,11 @@ pub fn start(
 
         let num_events = events.len() as u64;
 
-        ui_system(&mut world, events);
+        #[cfg(feature = "ncurses")]
+        ui_system(&world, events, &c);
+
+        #[cfg(not(feature = "ncurses"))]
+        ui_system(&world, events);
 
         let delay = DEFAULT_GAME_LOOP_DELAY + num_events * 200;
         thread::sleep(time::Duration::from_millis(delay));

@@ -1,10 +1,32 @@
 //! contains system which prints out the state of the world
 
-use crate::{engine::world::World, unit::Unit};
+#[cfg(feature = "ncurses")]
+use crate::engine::curses;
+
+use crate::{engine::world::World, floor::Floor, unit::Unit};
+
+#[cfg(feature = "ncurses")]
+pub fn ui_system(world: &World, events: Vec<String>, c: &curses::Curses) {
+    let floor = update_floor(world);
+    c.clear();
+    c.println(&floor.draw());
+    for e in events {
+        c.println(&e);
+    }
+}
 
 /// This system simply calls the `draw` method of
 /// [`Floor`](crate::floor::Floor) after each turn is executed.
-pub fn ui_system(world: &mut World, events: Vec<String>) {
+#[cfg(not(feature = "ncurses"))]
+pub fn ui_system(world: &World, events: Vec<String>) {
+    let floor = update_floor(world);
+    println!("{}", floor.draw());
+    for e in events {
+        println!("{}", e);
+    }
+}
+
+fn update_floor(world: &World) -> Floor {
     let mut floor = world.floor.clone();
 
     floor.units = Vec::new();
@@ -17,8 +39,5 @@ pub fn ui_system(world: &mut World, events: Vec<String>) {
         floor.units.push(updated);
     }
 
-    println!("{}", floor.draw());
-    for e in events {
-        println!("{}", e);
-    }
+    floor
 }
