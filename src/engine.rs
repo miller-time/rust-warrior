@@ -34,7 +34,7 @@ pub fn start(
 ) -> Result<(), String> {
     let player = player_generator();
 
-    floor.draw();
+    println!("{}", floor.draw());
 
     let mut step = 0;
 

@@ -17,5 +17,5 @@ pub fn ui_system(world: &mut World) {
         floor.units.push(updated);
     }
 
-    floor.draw();
+    println!("{}", floor.draw());
 }

@@ -77,15 +77,17 @@ impl Floor {
 
     /// Prints a textual representation of the floor and all
     /// of its units.
-    pub fn draw(&self) {
-        println!(" {}", "-".repeat(self.width));
+    pub fn draw(&self) -> String {
+        let mut lines = Vec::new();
+        lines.push(format!(" {}", "-".repeat(self.width)));
 
         let tiles: Vec<&str> = (0..self.width)
             .map(|x| self.tile((x as i32, 0)).draw())
             .collect();
-        println!("|{}|", tiles.join(""));
+        lines.push(format!("|{}|", tiles.join("")));
 
-        println!(" {}", "-".repeat(self.width));
+        lines.push(format!(" {}", "-".repeat(self.width)));
+        lines.join("\n")
     }
 
     fn get(level: usize) -> Option<Floor> {
