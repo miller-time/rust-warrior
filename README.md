@@ -56,3 +56,16 @@ After reviewing the instructions, start playing level 1 by running the project:
 ```sh
 $ cargo run
 ```
+
+## Enable Feature `ncurses`
+
+To switch from the default `println!()` renderer to ncurses, simply enable the
+"ncurses" feature in your `Cargo.toml` that was generated.
+
+```toml
+rust-warrior = { version = "0.12.2", features = ["ncurses"] }
+```
+
+This will produce a `combat.log` file each time you play a level. You can use
+this file to make tweaks in your Warrior code and improve the outcome of the
+level.
