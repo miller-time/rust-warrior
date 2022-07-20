@@ -6,7 +6,9 @@ use crate::{engine::world::World, unit::UnitType};
 
 /// This system acts as an enemy AI, attacking the player if a sludge
 /// exists and is in range of the [`Warrior`](crate::warrior::Warrior).
-pub fn sludge_system(world: &mut World) {
+pub fn sludge_system(world: &mut World) -> Vec<String> {
+    let mut events = Vec::new();
+
     let (wx, _) = world.warrior.position;
 
     let mut sludges = Vec::new();
@@ -23,20 +25,22 @@ pub fn sludge_system(world: &mut World) {
         let in_range = (wx - sx).abs() <= 1;
 
         if hp > 0 && in_range {
-            println!(
+            events.push(format!(
                 "{sludge:?} attacks {warrior}",
                 sludge = sludge.unit_type,
                 warrior = &world.player_name
-            );
+            ));
             let (current, max) = world.warrior.hp;
             let remaining = cmp::max(current - sludge.atk, 0);
-            println!(
+            events.push(format!(
                 "{warrior} takes {atk} damage, {remaining} HP left",
                 warrior = &world.player_name,
                 atk = sludge.atk,
                 remaining = remaining
-            );
+            ));
             world.warrior.hp = (remaining, max);
         }
     }
+
+    events
 }

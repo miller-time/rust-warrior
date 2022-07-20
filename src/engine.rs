@@ -84,7 +84,9 @@ pub fn start(
         let mut player_events = player_system(&mut world);
         events.append(&mut player_events);
 
-        sludge_system(&mut world);
+        let mut sludge_events = sludge_system(&mut world);
+        events.append(&mut sludge_events);
+
         shooter_system(&mut world);
         ui_system(&mut world);
 
