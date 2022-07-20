@@ -4,7 +4,7 @@ use crate::{engine::world::World, unit::Unit};
 
 /// This system simply calls the `draw` method of
 /// [`Floor`](crate::floor::Floor) after each turn is executed.
-pub fn ui_system(world: &mut World) {
+pub fn ui_system(world: &mut World, events: Vec<String>) {
     let mut floor = world.floor.clone();
 
     floor.units = Vec::new();
@@ -18,4 +18,7 @@ pub fn ui_system(world: &mut World) {
     }
 
     println!("{}", floor.draw());
+    for e in events {
+        println!("{}", e);
+    }
 }

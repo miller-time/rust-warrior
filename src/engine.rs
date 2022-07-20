@@ -90,7 +90,7 @@ pub fn start(
         let mut shooter_events = shooter_system(&mut world);
         events.append(&mut shooter_events);
 
-        ui_system(&mut world);
+        ui_system(&mut world, events);
 
         thread::sleep(time::Duration::from_millis(500));
     }
