@@ -14,7 +14,9 @@ use crate::{
 /// player-controlled [`Warrior`](crate::warrior::Warrior). The `play_turn`
 /// method is called on [`Player`](crate::player::Player), passing a `&mut`
 /// warrior whose actions must be specified.
-pub fn player_system(world: &mut World) {
+pub fn player_system(world: &mut World) -> Vec<String> {
+    let mut events = Vec::new();
+
     let (wx, wy) = world.warrior.position;
     let (health, _) = world.warrior.hp;
     let facing = world.warrior.facing.unwrap();
@@ -90,18 +92,18 @@ pub fn player_system(world: &mut World) {
 
                 match other_unit {
                     Some(unit) => {
-                        println!(
+                        events.push(format!(
                             "{warrior} bumps into {enemy:?}",
                             warrior = &world.player_name,
                             enemy = unit.unit_type
-                        );
+                        ));
                     }
                     _ => {
-                        println!(
+                        events.push(format!(
                             "{warrior} walks {direction:?}",
                             warrior = &world.player_name,
                             direction = direction
-                        );
+                        ));
                         world.warrior.position = (target_x, wy);
                     }
                 }
@@ -124,37 +126,37 @@ pub fn player_system(world: &mut World) {
 
                 match other_unit {
                     Some((i, enemy)) => {
-                        println!(
+                        events.push(format!(
                             "{warrior} attacks {direction:?} and hits {enemy:?}",
                             warrior = &world.player_name,
                             direction = direction,
                             enemy = enemy.unit_type
-                        );
+                        ));
                         let atk = match direction {
                             Direction::Forward => world.warrior.atk,
                             Direction::Backward => (world.warrior.atk as f32 / 2.0).ceil() as i32,
                         };
                         let (current, max) = enemy.hp;
                         let remaining = cmp::max(current - atk, 0);
-                        println!(
+                        events.push(format!(
                             "{enemy:?} takes {atk} damage, {remaining} HP left",
                             enemy = enemy.unit_type,
                             atk = atk,
                             remaining = remaining
-                        );
+                        ));
                         enemy.hp = (remaining, max);
 
                         if remaining == 0 {
-                            println!("{:?} is dead!", enemy.unit_type);
+                            events.push(format!("{:?} is dead!", enemy.unit_type));
                             world.remove_unit(i);
                         }
                     }
                     _ => {
-                        println!(
+                        events.push(format!(
                             "{warrior} attacks {direction:?} and hits nothing",
                             warrior = &world.player_name,
                             direction = direction
-                        );
+                        ));
                     }
                 }
             }
@@ -166,15 +168,18 @@ pub fn player_system(world: &mut World) {
                     } else {
                         2
                     };
-                    println!(
+                    events.push(format!(
                         "{warrior} regains {restored} HP from resting! Now {remaining} HP left",
                         warrior = &world.player_name,
                         restored = restored,
                         remaining = current + restored
-                    );
+                    ));
                     world.warrior.hp = (current + restored, max);
                 } else {
-                    println!("{} rests but is already at max HP", &world.player_name);
+                    events.push(format!(
+                        "{} rests but is already at max HP",
+                        &world.player_name
+                    ));
                 };
             }
             Action::Rescue(direction) => {
@@ -195,37 +200,37 @@ pub fn player_system(world: &mut World) {
 
                 match other_unit {
                     Some((i, captive)) if captive.unit_type == UnitType::Captive => {
-                        println!(
+                        events.push(format!(
                             "{warrior} frees {captive:?} from their bindings",
                             warrior = &world.player_name,
                             captive = captive.unit_type
-                        );
-                        println!("{:?} escapes!", captive.unit_type);
+                        ));
+                        events.push(format!("{:?} escapes!", captive.unit_type));
                         world.remove_unit(i);
                     }
                     Some((_, enemy)) => {
-                        println!(
+                        events.push(format!(
                                 "{warrior} leans {direction:?} to rescue {enemy:?}, but it is not a captive!",
                                 warrior = &world.player_name,
                                 direction = direction,
                                 enemy = enemy.unit_type
-                            );
+                            ));
                     }
                     None => {
-                        println!(
+                        events.push(format!(
                             "{warrior} leans {direction:?} to rescue someone, but nobody is here",
                             warrior = &world.player_name,
                             direction = direction
-                        );
+                        ));
                     }
                 }
             }
             Action::Pivot(direction) => {
-                println!(
+                events.push(format!(
                     "{warrior} pivots to face {direction:?}",
                     warrior = &world.player_name,
                     direction = direction
-                );
+                ));
                 world.warrior.facing = Some(direction);
             }
             Action::Shoot(direction) => {
@@ -244,37 +249,39 @@ pub fn player_system(world: &mut World) {
 
                 match target {
                     Some((i, enemy)) => {
-                        println!(
+                        events.push(format!(
                             "{warrior} lets loose an arrow {direction:?} and hits {enemy:?}",
                             warrior = &world.player_name,
                             direction = direction,
                             enemy = enemy.unit_type
-                        );
+                        ));
                         let atk = (world.warrior.atk as f32 / 2.0).ceil() as i32;
                         let (current, max) = enemy.hp;
                         let remaining = cmp::max(current - atk, 0);
-                        println!(
+                        events.push(format!(
                             "{enemy:?} takes {atk} damage, {remaining} HP left",
                             enemy = enemy.unit_type,
                             atk = atk,
                             remaining = remaining
-                        );
+                        ));
                         enemy.hp = (remaining, max);
 
                         if remaining == 0 {
-                            println!("{:?} is dead!", enemy.unit_type);
+                            events.push(format!("{:?} is dead!", enemy.unit_type));
                             world.remove_unit(i);
                         }
                     }
                     _ => {
-                        println!(
+                        events.push(format!(
                             "{warrior} lets loose an arrow {direction:?} and hits nothing",
                             warrior = &world.player_name,
                             direction = direction
-                        );
+                        ));
                     }
                 }
             }
         }
     }
+
+    events
 }

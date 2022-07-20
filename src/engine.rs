@@ -79,7 +79,11 @@ pub fn start(
             return Ok(());
         }
 
-        player_system(&mut world);
+        let mut events = Vec::new();
+
+        let mut player_events = player_system(&mut world);
+        events.append(&mut player_events);
+
         sludge_system(&mut world);
         shooter_system(&mut world);
         ui_system(&mut world);
