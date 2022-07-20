@@ -25,6 +25,8 @@ pub mod world;
 use systems::{player_system, shooter_system, sludge_system, ui_system};
 use world::World;
 
+const DEFAULT_GAME_LOOP_DELAY: u64 = 1000;
+
 /// The entry point for the engine, called by [`Game`](crate::game::Game)
 pub fn start(
     player_name: String,
@@ -90,8 +92,11 @@ pub fn start(
         let mut shooter_events = shooter_system(&mut world);
         events.append(&mut shooter_events);
 
+        let num_events = events.len() as u64;
+
         ui_system(&mut world, events);
 
-        thread::sleep(time::Duration::from_millis(500));
+        let delay = DEFAULT_GAME_LOOP_DELAY + num_events * 200;
+        thread::sleep(time::Duration::from_millis(delay));
     }
 }
