@@ -6,7 +6,7 @@ use crate::engine::curses;
 use crate::{engine::world::World, floor::Floor, unit::Unit};
 
 #[cfg(feature = "ncurses")]
-pub fn ui_system(world: &World, events: Vec<String>, c: &curses::Curses) {
+pub fn ui_system(world: &World, events: Vec<String>, c: &mut curses::Curses) {
     let floor = update_floor(world);
     c.clear();
     c.println(&floor.draw());

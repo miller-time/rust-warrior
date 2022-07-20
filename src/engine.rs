@@ -39,7 +39,7 @@ pub fn start(
     let player = player_generator();
 
     #[cfg(feature = "ncurses")]
-    let c = curses::Curses::new();
+    let mut c = curses::Curses::new();
 
     #[cfg(not(feature = "ncurses"))]
     println!("{}", floor.draw());
@@ -101,7 +101,7 @@ pub fn start(
         let num_events = events.len() as u64;
 
         #[cfg(feature = "ncurses")]
-        ui_system(&world, events, &c);
+        ui_system(&world, events, &mut c);
 
         #[cfg(not(feature = "ncurses"))]
         ui_system(&world, events);
