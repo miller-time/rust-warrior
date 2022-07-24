@@ -4,7 +4,7 @@ use std::path::Path;
 
 use ncurses::*;
 
-const COMBAT_LOG_PATH: &'static str = "combat.log";
+const COMBAT_LOG_PATH: &str = "combat.log";
 
 pub struct Curses {
     pub w: *mut i8,
