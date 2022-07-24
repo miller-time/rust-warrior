@@ -15,7 +15,7 @@
 //!
 //! [specs]: https://github.com/slide-rs/specs
 
-use std::{thread, time};
+use std::{env, thread, time};
 
 use crate::{floor::Floor, unit::UnitType, Player};
 
@@ -69,6 +69,10 @@ pub fn start(
         other_units,
     );
 
+    let override_delay = env::var("GAME_LOOP_DELAY")
+        .ok()
+        .and_then(|s| s.parse::<u64>().ok());
+
     loop {
         step += 1;
 
@@ -106,7 +110,10 @@ pub fn start(
         #[cfg(not(feature = "ncurses"))]
         ui_system(&world, events);
 
-        let delay = DEFAULT_GAME_LOOP_DELAY + num_events * 200;
+        let delay = match override_delay {
+            Some(delay) => delay,
+            None => DEFAULT_GAME_LOOP_DELAY + num_events * 200,
+        };
         thread::sleep(time::Duration::from_millis(delay));
     }
 }
