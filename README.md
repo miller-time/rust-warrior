@@ -63,7 +63,7 @@ To switch from the default `println!()` renderer to ncurses, simply enable the
 "ncurses" feature in your `Cargo.toml` that was generated.
 
 ```toml
-rust-warrior = { version = "0.13.0", features = ["ncurses"] }
+rust-warrior = { version = "0.14.0", features = ["ncurses"] }
 ```
 
 This will produce a `combat.log` file each time you play a level. You can use
