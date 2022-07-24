@@ -2,7 +2,7 @@ use std::fs::{remove_file, File, OpenOptions};
 use std::io::Write;
 use std::path::Path;
 
-use ncurses::*;
+use ncurses_lite::*;
 
 const COMBAT_LOG_PATH: &str = "combat.log";
 
