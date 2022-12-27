@@ -15,7 +15,7 @@ edition = "2021"
 status = "actively-developed"
 
 [dependencies]
-base64 = "0.13"
+base64 = "0.20"
 ncurses-lite = { version = "0.1", optional = true }
 serde = "1.0"
 serde_derive = "1.0"
