@@ -6,8 +6,8 @@ set -e
 
 branch="$(git rev-parse --abbrev-ref HEAD)"
 
-if [ "$branch" != "master" ]; then
-    echo "new releases should be committed to master only!"
+if [ "$branch" != "main" ]; then
+    echo "new releases should be committed to main only!"
     exit 1
 fi
 
@@ -63,7 +63,7 @@ echo "publishing"
 
 set -x
 cargo publish
-git push origin master
+git push origin main
 set +x
 
 echo "tagging"
