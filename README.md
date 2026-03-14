@@ -38,7 +38,7 @@ new game directory, and a library which contains the main game engine.
 To get started, install `rust-warrior`.
 
 ```sh
-$ cargo install rust-warrior
+cargo install rust-warrior
 ```
 
 Then run `rust-warrior` and follow the prompts to pick a player name and
@@ -54,7 +54,7 @@ imports).
 After reviewing the instructions, start playing level 1 by running the project:
 
 ```sh
-$ cargo run
+cargo run
 ```
 
 ## Enable Feature `ncurses`
@@ -63,7 +63,7 @@ To switch from the default `println!()` renderer to ncurses, simply enable the
 "ncurses" feature in your `Cargo.toml` that was generated.
 
 ```toml
-rust-warrior = { version = "0.14.0", features = ["ncurses"] }
+rust-warrior = { version = "0.14.1", features = ["ncurses"] }
 ```
 
 This will produce a `combat.log` file each time you play a level. You can use

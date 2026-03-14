@@ -20,9 +20,11 @@ read latest_release
 
 echo "checking for occurrences of '${latest_release}'"
 
+set +e
 set -x
 rg "${latest_release}"
 set +x
+set -e
 
 echo -n "new release: "
 read new_release
@@ -43,7 +45,7 @@ read
 echo "building"
 
 set -x
-cargo build --release
+wincargo build --release
 set +x
 
 echo "committing"
@@ -62,7 +64,7 @@ set +x
 echo "publishing"
 
 set -x
-cargo publish
+wincargo publish
 git push origin main
 set +x
 
