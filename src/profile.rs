@@ -1,6 +1,6 @@
 //! contains the struct for saving player name and current level
 
-use base64;
+use base64::prelude::*;
 use serde_derive::{Deserialize, Serialize};
 use std::str;
 
@@ -33,7 +33,7 @@ impl Profile {
     /// load Profile from base64 encoded TOML String
     pub fn from_toml(contents: &str) -> Profile {
         let err = "failed to parse .profile";
-        let bytes = base64::decode(contents).expect(err);
+        let bytes = BASE64_STANDARD.decode(contents).expect(err);
         let decoded = str::from_utf8(&bytes).expect(err);
         toml::from_str(decoded).expect(err)
     }
@@ -41,7 +41,7 @@ impl Profile {
     /// convert Profile to base64 encoded TOML String
     pub fn to_toml(&self) -> String {
         let profile_toml = toml::to_string(&self).unwrap();
-        base64::encode(profile_toml.as_bytes())
+        BASE64_STANDARD.encode(profile_toml.as_bytes())
     }
 
     pub fn directory(&self) -> String {
