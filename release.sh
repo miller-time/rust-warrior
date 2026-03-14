@@ -4,6 +4,12 @@ set -e
 
 # release assistant
 
+# on windows:
+# CARGO_COMMAND="rustup run stable cargo" ./release.sh
+if [ -z "$CARGO_COMMAND" ]; then
+    CARGO_COMMAND="cargo"
+fi
+
 branch="$(git rev-parse --abbrev-ref HEAD)"
 
 if [ "$branch" != "main" ]; then
@@ -45,7 +51,7 @@ read
 echo "building"
 
 set -x
-wincargo build --release
+$CARGO_COMMAND build --release
 set +x
 
 echo "committing"
@@ -64,7 +70,7 @@ set +x
 echo "publishing"
 
 set -x
-wincargo publish
+$CARGO_COMMAND publish
 git push origin main
 set +x
 
