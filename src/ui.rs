@@ -6,11 +6,10 @@ use std::io::prelude::*;
 pub fn select_level() -> usize {
     loop {
         let response = request("Choose level to play [1-9] ");
-        if let Ok(n) = response.parse::<usize>() {
-            if (1..=9).contains(&n) {
+        if let Ok(n) = response.parse::<usize>()
+            && (1..=9).contains(&n) {
                 break n;
             }
-        }
         println!("{} is not a valid level.", response);
     }
 }

@@ -374,12 +374,12 @@ pub fn write_profile(profile: &Profile, directory: Option<&Path>) {
         Some(player_dir) => player_dir.join(".profile"),
         _ => Path::new(".profile").to_path_buf(),
     };
-    fs::write(profile_toml, &profile.to_toml()).expect("failed to write .profile");
+    fs::write(profile_toml, profile.to_toml()).expect("failed to write .profile");
 }
 
 fn create_game_files(profile: &mut Profile) -> io::Result<()> {
     let profile_dir = &profile.directory();
-    let player_dir = Path::new("rustwarrior").join(&profile_dir);
+    let player_dir = Path::new("rustwarrior").join(profile_dir);
     fs::create_dir(&player_dir)?;
     let src_dir = player_dir.join("src");
     fs::create_dir(&src_dir)?;

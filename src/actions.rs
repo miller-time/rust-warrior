@@ -3,16 +3,13 @@
 /// Certain `Action`s are done one tile away, and must be done either
 /// while facing forwards or backwards.
 #[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Default)]
 pub enum Direction {
+    #[default]
     Forward,
     Backward,
 }
 
-impl Default for Direction {
-    fn default() -> Direction {
-        Direction::Forward
-    }
-}
 
 /// Certain [`Warrior`](crate::warrior::Warrior) methods correlate to
 /// an `Action`. Each turn only one action can be taken. If an action

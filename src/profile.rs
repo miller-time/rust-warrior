@@ -41,7 +41,7 @@ impl Profile {
     /// convert Profile to base64 encoded TOML String
     pub fn to_toml(&self) -> String {
         let profile_toml = toml::to_string(&self).unwrap();
-        base64::encode(&profile_toml.as_bytes())
+        base64::encode(profile_toml.as_bytes())
     }
 
     pub fn directory(&self) -> String {
